@@ -9,6 +9,7 @@ __pycache__/
 .env
 .venv/
 venv/
+Lib/  # Optional, prevents committing full Python env
 
 # System files
 .DS_Store
@@ -22,4 +23,10 @@ Thumbs.db
 
 # Model files (optional if using Git LFS)
 *.pkl
+
+# Large DLLs and binaries (handled via LFS)
+*.dll
+
+# Data files (if large, handled via LFS)
+*.csv
 
