@@ -1,0 +1,30 @@
+project:
+  name: nyc-policy-shock-simulator
+  city: NYC
+
+paths:
+  raw_data: data/raw
+  intermediate_data: data/intermediate
+  processed_data: data/processed
+  figures: figures
+
+keys:
+  borough_map_sales:
+    MANHATTAN: "1"
+    BRONX: "2"
+    BROOKLYN: "3"
+    QUEENS: "4"
+    STATEN ISLAND: "5"
+
+  borough_map_pluto:
+    MN: "1"
+    BX: "2"
+    BK: "3"
+    QN: "4"
+    SI: "5"
+
+time:
+  ideology_min_year: 2013
+  ideology_max_year: 2021
+  controlled_train_year: 2017
+  controlled_test_year: 2018

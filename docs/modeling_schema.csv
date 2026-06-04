@@ -1,0 +1,133 @@
+column,dtype
+BOROUGH,int64
+NEIGHBORHOOD,object
+BUILDING CLASS CATEGORY,object
+TAX CLASS AS OF FINAL ROLL,object
+BLOCK,int64
+LOT,int64
+EASE-MENT,float64
+BUILDING CLASS AS OF FINAL ROLL,object
+ADDRESS,object
+APARTMENT NUMBER,object
+ZIP CODE,float64
+RESIDENTIAL UNITS,object
+COMMERCIAL UNITS,object
+TOTAL UNITS,object
+LAND SQUARE FEET,object
+GROSS SQUARE FEET,object
+YEAR BUILT,float64
+TAX CLASS AT TIME OF SALE,int64
+BUILDING CLASS AT TIME OF SALE,object
+SALE PRICE,object
+SALE DATE,object
+Latitude,float64
+Longitude,float64
+Community Board,float64
+Council District,float64
+BIN,float64
+BBL,float64
+Census Tract 2020,float64
+Neighborhood Tabulation Area (NTA) (2020),object
+borough,object
+Tax block,float64
+Tax lot,float64
+community board,float64
+census tract 2010,float64
+cb2010,float64
+schooldist,float64
+council district,float64
+postcode,float64
+firecomp,object
+policeprct,float64
+healtharea,float64
+sanitboro,float64
+sanitsub,object
+address,object
+zonedist1,object
+zonedist2,object
+zonedist3,object
+zonedist4,object
+overlay1,object
+overlay2,object
+spdist1,object
+spdist2,object
+spdist3,float64
+ltdheight,object
+splitzone,object
+bldgclass,object
+landuse,float64
+easements,float64
+ownertype,object
+ownername,object
+lotarea,object
+bldgarea,object
+comarea,object
+resarea,object
+officearea,object
+retailarea,object
+garagearea,object
+strgearea,object
+factryarea,object
+otherarea,object
+areasource,float64
+numbldgs,object
+numfloors,float64
+unitsres,object
+unitstotal,object
+lotfront,object
+lotdepth,object
+bldgfront,object
+bldgdepth,object
+ext,object
+proxcode,float64
+irrlotcode,object
+lottype,float64
+bsmtcode,float64
+assessland,float64
+assesstot,float64
+exempttot,float64
+yearbuilt,float64
+yearalter1,object
+yearalter2,object
+histdist,object
+landmark,object
+builtfar,object
+residfar,float64
+commfar,float64
+facilfar,float64
+borocode,float64
+condono,object
+tract2010,float64
+xcoord,float64
+ycoord,float64
+latitude,float64
+longitude,float64
+zonemap,object
+zmcode,object
+sanborn,object
+taxmap,float64
+edesignum,object
+appbbl,float64
+appdate,object
+plutomapid,float64
+version,object
+sanitdistrict,float64
+healthcenterdistrict,float64
+firm07_flag,float64
+pfirm15_flag,float64
+dcpedited,object
+notes,float64
+bct2020,float64
+bctcb2020,float64
+geom,float64
+basempdate,float64
+dcasdate,float64
+edesigdate,float64
+landmkdate,float64
+masdate,float64
+polidate,float64
+rpaddate,float64
+zoningdate,float64
+SALE_YEAR,int64
+COUNCIL_DISTRICT,int64
+district_ideology,float64
