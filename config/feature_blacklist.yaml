@@ -1,0 +1,86 @@
+leakage_features:
+  # ============================
+  # Target & direct leakage
+  # ============================
+  - target_log_price
+  - sale price
+  - sale_price
+  - sale_price_num
+  - log_sale_price
+
+  # ============================
+  # PLUTO assessment leakage — 2026 snapshot values encode historical price appreciation
+  # These fields originate from the PLUTO 2026 snapshot and leak future assessment information
+  # into historical sales features. They must be excluded from model training.
+  # ============================
+  - assesstot
+  - exempttot
+  - assessland
+  - appbbl
+  - taxmap
+  - plutomapid
+
+  # ============================
+  # Temporal identifiers (split-only)
+  # ============================
+  - sale date
+  - sale_date
+  - sale_year
+  - sale_month
+  - sale_quarter
+  - sale_day
+  - sale_timestamp
+
+  # ============================
+  # Administrative date fields
+  # ============================
+  - basempdate
+  - dcasdate
+  - edesigdate
+  - landmkdate
+  - masdate
+  - polidate
+  - rpaddate
+  - zoningdate
+  - appdate
+
+  # ============================
+  # Post-sale identifiers / row keys
+  # ============================
+  - bin
+  - bbl
+  - lot
+  - block
+  - taxlot
+  - record_id
+  - sale_id
+
+  # ============================
+  # Duplicate / raw geo fields
+  # ============================
+  - latitude
+  - longitude
+  - xcoord
+  - ycoord
+
+  # ============================
+  # Raw ideology / election variables
+  # (ONLY included in political models)
+  # ============================
+  - district_ideology
+  - weighted_dem
+  - weighted_rep
+  - dem_vote_share
+  - rep_vote_share
+  - turnout
+
+  # ============================
+  # Derived target encodings (forbidden)
+  # ============================
+  - mean_price
+  - borough_mean_price
+  - council_district_mean_price
+  - building class category_mean_price
+
+  # 100% null features — contribute zero signal, waste model capacity
+  - EASE-MENT

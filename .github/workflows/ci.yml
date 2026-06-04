@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  smoke-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Run smoke check
+        run: |
+          python src/ci_smoke_check.py
+
+  sanity-and-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; else pip install pandas pyarrow fastparquet lightgbm scikit-learn; fi
+
+      - name: Run pipeline sanity check
+        run: python src/pipeline_sanity_check.py
+
+      - name: Generate splits
+        run: python src/split_temporal.py
+
+      - name: Run smoke training
+        run: python models/training/train_smoke.py
+
+      - name: Upload smoke result
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-result
+          path: experiments/results/smoke_train_result.json

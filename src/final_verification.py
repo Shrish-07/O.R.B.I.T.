@@ -1,0 +1,32 @@
+import json
+import pandas as pd
+from pathlib import Path
+print('=== CHAMPION ===')
+c = json.load(open('experiments/champion.json'))
+print('MAE:', c['metric'])
+print()
+print('=== REGISTRY ===')
+reg = json.load(open('experiments/registry.json'))
+print('Total entries:', len(reg))
+print()
+print('=== FEATURES ===')
+b = json.load(open('models/artifacts/lgbm_all_years_base_features.json'))
+p = json.load(open('models/artifacts/lgbm_all_years_political_features.json'))
+print('EASE-MENT in base (must be False):', 'EASE-MENT' in b)
+print('dem_share in political:', 'dem_share' in p)
+print('assesstot in either (must be False):', 'assesstot' in b or 'assesstot' in p)
+print()
+print('=== SCENARIOS ===')
+for s in ['liberal_policy', 'conservative_policy', 'mixed_governance']:
+    df = pd.read_csv(f'results/political_scenarios/{s}_by_council.csv')
+    print(f'{s}: max pct_change = {df["mean_pct_change"].abs().max():.4f}')
+print()
+print('=== RESEARCH SUMMARY ===')
+content = open('docs/research_summary.md').read()
+print('0.0147 in summary (must be False):', '0.0147' in content)
+print('st.image in app (must be True):', 'st.image' in open('app/app.py').read())
+print()
+print('=== APP ===')
+import subprocess, sys
+r = subprocess.run([sys.executable, '-m', 'py_compile', 'app/app.py'], capture_output=True, text=True)
+print('py_compile:', 'PASS' if r.returncode == 0 else 'FAIL: ' + r.stderr)

@@ -1,0 +1,52 @@
+﻿venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.env
+.env.*
+mlflow.db
+mlruns/
+*.log
+.DS_Store
+Thumbs.db
+
+# Data
+data/raw/
+data/intermediate/
+data/processed/
+data/output/
+data/splits/
+data/canonical/
+
+# Model artifacts
+models/artifacts/
+models/*.joblib
+models/*.cbm
+models/*.model
+
+# Experiment outputs
+experiments/predictions/
+results/
+
+# Training logs
+catboost_info/
+
+# Large file formats
+*.parquet
+*.joblib
+*.cbm
+*.model
+
+# Large datasets
+data/**/*.csv
+
+# Keep documentation CSVs
+!docs/*.csv
+!figures/*.csv
+

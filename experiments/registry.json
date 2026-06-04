@@ -1,0 +1,356 @@
+[
+  {
+    "id": "exp-20260518T000002Z",
+    "created_utc": "2026-05-18T00:00:02.000000Z",
+    "git_commit": "8f45937",
+    "script": "models/training/train_lgbm.py",
+    "name": "lgbm_all_years_political",
+    "mode": "political",
+    "scope": "all_years",
+    "hypothesis": "Pipeline v2: political LGBM after canonical rebuild",
+    "reasoning": "Rebuilt canonical with ideology and leakage fixes; political model includes ideology features",
+    "metrics": {
+      "variant": "all_years",
+      "mode": "political",
+      "train_rows": 121622,
+      "test_rows": 56817,
+      "num_features": 18,
+      "r2_temporal": 0.541345,
+      "mae_log_price": 0.429342,
+      "best_iteration": 1446
+    },
+    "results": {
+      "model": "LightGBM",
+      "mode": "political",
+      "scope": "all",
+      "train_rows": 121622,
+      "test_rows": 56817,
+      "features_used": 18,
+      "r2": 0.541345,
+      "mae": 0.429342
+    },
+    "features_path": "models\\artifacts\\lgbm_all_years_political_features.json",
+    "model_path": "models\\lgbm_all_years_political.txt",
+    "pipeline_v2": true
+  },
+  {
+    "id": "exp-20260518T000001Z",
+    "created_utc": "2026-05-18T00:00:01.000000Z",
+    "git_commit": "8f45937",
+    "script": "models/training/train_lgbm.py",
+    "name": "lgbm_all_years_base",
+    "mode": "base",
+    "scope": "all_years",
+    "hypothesis": "Pipeline v2: baseline LGBM after canonical rebuild",
+    "reasoning": "Rebuilt canonical with ideology and leakage fixes; expect improved MAE",
+    "metrics": {
+      "variant": "all_years",
+      "mode": "base",
+      "train_rows": 121622,
+      "test_rows": 56817,
+      "num_features": 17,
+      "r2_temporal": 0.541772,
+      "mae_log_price": 0.428972,
+      "best_iteration": 1490
+    },
+    "results": {
+      "model": "LightGBM",
+      "mode": "base",
+      "scope": "all",
+      "train_rows": 121622,
+      "test_rows": 56817,
+      "features_used": 17,
+      "r2": 0.541772,
+      "mae": 0.428972
+    },
+    "features_path": "models\\artifacts\\lgbm_all_years_base_features.json",
+    "model_path": "models\\lgbm_all_years_base.txt",
+    "pipeline_v2": true
+  },
+  {
+    "id": "exp-20260515T200734Z",
+    "created_utc": "2026-05-15T20:07:34.999231Z",
+    "git_commit": "8f45937",
+    "script": "models/training/train_lgbm_tune.py",
+    "name": "lgbm_tuned_all_years_political_lr0.08_nl128",
+    "mode": "political",
+    "scope": "all_years",
+    "hypothesis": "Tuned LGBM: lr variant",
+    "reasoning": "Automated hyperparameter exploration",
+    "metrics": {
+      "r2": 0.05556357184235916,
+      "mae": 0.8377829274437089
+    },
+    "results": {
+      "model": "LightGBM",
+      "name": "lgbm_tuned_all_years_political_lr0.08_nl128",
+      "variant": "all_years",
+      "mode": "political",
+      "n_train": 120407,
+      "n_test": 56798,
+      "n_features": 48,
+      "r2": 0.05556357184235916,
+      "mae": 0.8377829274437089
+    },
+    "features_path": "models\\artifacts\\lgbm_tuned_all_years_political_lr0.08_nl128_features.json",
+    "model_path": "models\\lgbm_tuned_all_years_political_lr0.08_nl128.txt",
+    "stale": true
+  },
+  {
+    "id": "exp-20260515T200746Z",
+    "created_utc": "2026-05-15T20:07:46.800333Z",
+    "git_commit": "8f45937",
+    "script": "models/training/train_lgbm_tune.py",
+    "name": "lgbm_tuned_all_years_base_lr0.08_nl128",
+    "mode": "base",
+    "scope": "all_years",
+    "hypothesis": "Tuned LGBM: lr variant",
+    "reasoning": "Automated hyperparameter exploration",
+    "metrics": {
+      "r2": 0.05556357184235916,
+      "mae": 0.8377829274437089
+    },
+    "results": {
+      "model": "LightGBM",
+      "name": "lgbm_tuned_all_years_base_lr0.08_nl128",
+      "variant": "all_years",
+      "mode": "base",
+      "n_train": 120407,
+      "n_test": 56798,
+      "n_features": 48,
+      "r2": 0.05556357184235916,
+      "mae": 0.8377829274437089
+    },
+    "features_path": "models\\artifacts\\lgbm_tuned_all_years_base_lr0.08_nl128_features.json",
+    "model_path": "models\\lgbm_tuned_all_years_base_lr0.08_nl128.txt",
+    "stale": true
+  },
+  {
+    "id": "exp-20260520T091029Z",
+    "created_utc": "2026-05-20T09:10:29.248926Z",
+    "git_commit": "8f45937",
+    "script": "models/training/train_xgboost.py",
+    "name": "xgb_all_years_political_lr0.05_md6",
+    "mode": "political",
+    "scope": "all",
+    "hypothesis": "XGBoost baseline for diversity",
+    "reasoning": "Automated model family comparison",
+    "metrics": {
+      "r2": 0.5286943913095352,
+      "mae": 0.4392201484272884
+    },
+    "results": {
+      "model": "XGBoost",
+      "name": "xgb_all_years_political_lr0.05_md6",
+      "variant": "all_years",
+      "mode": "political",
+      "n_train": 121622,
+      "n_test": 56817,
+      "n_features": 18,
+      "r2": 0.5286943913095352,
+      "mae": 0.4392201484272884
+    },
+    "features_path": "models\\artifacts\\xgb_all_years_political_lr0.05_md6_features.json",
+    "model_path": "models\\xgb_all_years_political_lr0.05_md6.model"
+  },
+  {
+    "id": "exp-20260520T091520Z",
+    "created_utc": "2026-05-20T09:15:20.863056Z",
+    "git_commit": "8f45937",
+    "script": "models/training/train_catboost.py",
+    "name": "cat_all_years_political_lr0.05_d6",
+    "mode": "political",
+    "scope": "all",
+    "hypothesis": "CatBoost baseline for diversity",
+    "reasoning": "Automated model family comparison",
+    "metrics": {
+      "r2": 0.5057437362685357,
+      "mae": 0.4539147018162985
+    },
+    "results": {
+      "model": "CatBoost",
+      "name": "cat_all_years_political_lr0.05_d6",
+      "variant": "all_years",
+      "mode": "political",
+      "n_train": 121622,
+      "n_test": 56817,
+      "n_features": 18,
+      "r2": 0.5057437362685357,
+      "mae": 0.4539147018162985
+    },
+    "features_path": "models\\artifacts\\cat_all_years_political_lr0.05_d6_features.json",
+    "model_path": "models\\cat_all_years_political_lr0.05_d6.cbm"
+  },
+  {
+    "id": "exp-20260520T091912Z",
+    "created_utc": "2026-05-20T09:19:12.321550Z",
+    "git_commit": "8f45937",
+    "script": "models/training/train_random_forest.py",
+    "name": "rf_all_years_political_n200",
+    "mode": "political",
+    "scope": "all",
+    "hypothesis": "RandomForest baseline for diversity",
+    "reasoning": "Automated model family comparison",
+    "metrics": {
+      "r2": 0.5066343950498919,
+      "mae": 0.4370477634963115
+    },
+    "results": {
+      "model": "RandomForest",
+      "name": "rf_all_years_political_n200",
+      "variant": "all_years",
+      "mode": "political",
+      "n_train": 121622,
+      "n_test": 56817,
+      "n_features": 18,
+      "r2": 0.5066343950498919,
+      "mae": 0.4370477634963115
+    },
+    "features_path": "models\\artifacts\\rf_all_years_political_n200_features.json",
+    "model_path": "models\\rf_all_years_political_n200.joblib"
+  },
+  {
+    "id": "exp-20260520T091925Z",
+    "created_utc": "2026-05-20T09:19:25.959044Z",
+    "git_commit": "8f45937",
+    "script": "models/training/train_linear_baselines.py",
+    "name": "ridge_all_years_political",
+    "mode": "political",
+    "scope": "all",
+    "hypothesis": "Ridge baseline",
+    "reasoning": "Baseline linear models for comparison",
+    "metrics": {
+      "r2": 0.11137927403013992,
+      "mae": 0.6558020430385062
+    },
+    "results": {
+      "model": "Ridge",
+      "name": "ridge_all_years_political",
+      "variant": "all_years",
+      "mode": "political",
+      "n_train": 121622,
+      "n_test": 56817,
+      "n_features": 18,
+      "r2": 0.11137927403013992,
+      "mae": 0.6558020430385062
+    },
+    "features_path": "models\\artifacts\\ridge_all_years_political_features.json",
+    "model_path": "models\\ridge_all_years_political.joblib"
+  },
+  {
+    "id": "exp-20260520T091926Z",
+    "created_utc": "2026-05-20T09:19:26.049636Z",
+    "git_commit": "8f45937",
+    "script": "models/training/train_linear_baselines.py",
+    "name": "elasticnet_all_years_political",
+    "mode": "political",
+    "scope": "all",
+    "hypothesis": "Elasticnet baseline",
+    "reasoning": "Baseline linear models for comparison",
+    "metrics": {
+      "r2": -0.00964726048578668,
+      "mae": 0.6903724545495283
+    },
+    "results": {
+      "model": "Elasticnet",
+      "name": "elasticnet_all_years_political",
+      "variant": "all_years",
+      "mode": "political",
+      "n_train": 121622,
+      "n_test": 56817,
+      "n_features": 18,
+      "r2": -0.00964726048578668,
+      "mae": 0.6903724545495283
+    },
+    "features_path": "models\\artifacts\\elasticnet_all_years_political_features.json",
+    "model_path": "models\\elasticnet_all_years_political.joblib"
+  },
+  {
+    "id": "exp-20260516T042338Z",
+    "created_utc": "2026-05-16T04:23:38.001643Z",
+    "git_commit": "8f45937",
+    "script": "models/training/train_stacking.py",
+    "name": "stack_top3_all_years_political",
+    "mode": "political",
+    "scope": "all",
+    "hypothesis": "Stacking top-3 models improves performance",
+    "reasoning": "Meta-learner (Ridge) on model predictions",
+    "metrics": {
+      "r2": 0.11512037184639223,
+      "mae": 0.8463940477484847
+    },
+    "results": {
+      "model": "StackingRidge",
+      "name": "stack_top3_all_years_political",
+      "variant": "all_years",
+      "mode": "political",
+      "n_train": 120407,
+      "n_test": 56798,
+      "n_base_models": 3,
+      "r2": 0.11512037184639223,
+      "mae": 0.8463940477484847
+    },
+    "features_path": "models\\artifacts\\stack_top3_all_years_political_features.json",
+    "model_path": "models\\stack_top3_all_years_political.joblib",
+    "stale": true
+  },
+  {
+    "id": "exp-20260516T045602Z",
+    "created_utc": "2026-05-16T04:56:02.705785Z",
+    "git_commit": "8f45937",
+    "script": "models/training/train_ensemble.py",
+    "name": "ensemble_top3_all_years_political",
+    "mode": "political",
+    "scope": "all",
+    "hypothesis": "Ensemble Ridge meta-learner on top-3 models",
+    "reasoning": "Meta-learner (Ridge) on model predictions",
+    "metrics": {
+      "r2": -0.00196656719661803,
+      "mae": 0.9320274818107206
+    },
+    "results": {
+      "model": "EnsembleRidge",
+      "name": "ensemble_top3_all_years_political",
+      "variant": "all_years",
+      "mode": "political",
+      "n_train": 120407,
+      "n_test": 56798,
+      "n_base_models": 3,
+      "r2": -0.00196656719661803,
+      "mae": 0.9320274818107206
+    },
+    "features_path": "models\\artifacts\\ensemble_top3_all_years_political_features.json",
+    "model_path": "models\\ensemble_top3_all_years_political.joblib",
+    "stale": true
+  },
+  {
+    "id": "exp-20260516T093015Z",
+    "created_utc": "2026-05-16T09:30:15.515719Z",
+    "git_commit": "8f45937",
+    "script": "models/training/train_ensemble_fixed.py",
+    "name": "ensemble_fixed_top3_all_years_political",
+    "mode": "political",
+    "scope": "all",
+    "hypothesis": "Ensemble Ridge meta-learner on top-3 distinct families",
+    "reasoning": "Diverse base models (LGBM, CatBoost, XGBoost) to improve stacking robustness",
+    "metrics": {
+      "r2": -0.001858909405425102,
+      "mae": 0.9323408656466818
+    },
+    "results": {
+      "model": "EnsembleRidge",
+      "name": "ensemble_fixed_top3_all_years_political",
+      "variant": "all_years",
+      "mode": "political",
+      "n_train": 120407,
+      "n_test": 56798,
+      "n_base_models": 3,
+      "r2": -0.001858909405425102,
+      "mae": 0.9323408656466818
+    },
+    "features_path": "models\\artifacts\\ensemble_fixed_top3_all_years_political_features.json",
+    "model_path": "models\\ensemble_fixed_top3_all_years_political.joblib",
+    "tainted": true,
+    "stale": true
+  }
+]
