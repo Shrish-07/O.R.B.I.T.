@@ -156,6 +156,63 @@ def property_page():
     if 'BBL' not in test.columns:
         st.error('Test split missing BBL column; explorer requires BBL to select samples.')
         return
+    # --- Address Search ---
+    st.subheader('Search by Address')
+    address_input = st.text_input('Enter NYC address (e.g. 350 Fifth Avenue, New York)', key='address_input')
+    if st.button('Search address', key='btn_search_address'):
+        if address_input.strip():
+            try:
+                sys.path.append(str(ROOT))
+                from src.geocoder import geocode_address
+                geo = geocode_address(address_input.strip())
+                if geo is None:
+                    st.warning('Address not found. Try adding borough: "350 Fifth Ave, Manhattan, NY"')
+                else:
+                    st.success(f"Found: {geo['label']} | BBL: {geo['bbl']} | Borough: {geo['borough']}")
+                    test_bbl_match = test[test['BBL'].astype(str).str.replace('.0', '', regex=False) == str(geo['bbl']).replace('.0', '')]
+                    if not test_bbl_match.empty:
+                        st.session_state['selected_bbl'] = str(geo['bbl'])
+                        st.info('Property found in dataset. It has been pre-selected in the dropdown below.')
+                    else:
+                        st.warning(f"BBL {geo['bbl']} not in test split. Use the sliders below for a prediction.")
+                        st.session_state['geo_result'] = geo
+            except Exception as e:
+                st.error(f'Geocoding error: {e}')
+    # --- End Address Search ---
+
+    # --- Fallback prediction for addresses not in test split ---
+    if st.session_state.get('geo_result'):
+        geo = st.session_state['geo_result']
+        st.subheader(f"Prediction for {geo['label']}")
+        st.info('This property was not in the training/test set. Using borough-level defaults — adjust sliders for a better estimate.')
+        borough_map = {'Manhattan': 1, 'Bronx': 2, 'Brooklyn': 3, 'Queens': 4, 'Staten Island': 5}
+        with open(FEATURES_PATH) as _f:
+            feat_list = json.load(_f)
+        default_row = {feat: 0 for feat in feat_list}
+        if 'BOROUGH' in default_row and geo.get('borough') in borough_map:
+            default_row['BOROUGH'] = borough_map[geo['borough']]
+        st.write('Adjust property characteristics:')
+        _col1, _col2 = st.columns(2)
+        with _col1:
+            if 'yearbuilt' in default_row:
+                default_row['yearbuilt'] = st.slider('Year Built', 1800, 2024, 1970, key='fb_yearbuilt')
+            if 'numfloors' in default_row:
+                default_row['numfloors'] = st.slider('Number of Floors', 1, 50, 5, key='fb_numfloors')
+        with _col2:
+            if 'landuse' in default_row:
+                default_row['landuse'] = st.slider('Land Use Code (1-11)', 1, 11, 1, key='fb_landuse')
+            if 'commfar' in default_row:
+                default_row['commfar'] = st.slider('Commercial FAR', 0.0, 15.0, 1.0, step=0.1, key='fb_commfar')
+        _X_df = pd.DataFrame([default_row])[feat_list].fillna(0)
+        _pred_log = float(model.predict(_X_df)[0])
+        _pred_price = float(np.exp(_pred_log))
+        st.metric('Predicted log price', round(_pred_log, 4))
+        st.metric('Predicted price (approx)', f'${_pred_price:,.0f}')
+        if st.button('Clear address result', key='btn_clear_geo'):
+            del st.session_state['geo_result']
+            st.rerun()
+    # --- End fallback prediction ---
+
     bbls = test['BBL'].astype(str).tolist()
     sel = st.selectbox('Pick a sample property (BBL)', options=bbls)
     row = test[test['BBL'].astype(str) == str(sel)].iloc[0]

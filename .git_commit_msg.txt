@@ -1,0 +1,11 @@
+feat: address lookup, foundation hardening, geocoder, path normalization, schema freeze, .gitignore
+
+- src/geocoder.py: NYC GeoSearch API geocoder returning BBL, lat/lon, borough
+- app/app.py: address search panel + fallback prediction in property_page()
+- app/app.py: all paths normalized to ROOT-anchored
+- config: .gitignore added (venv, pycache, mlflow.db, logs)
+- models/artifacts: canonical_schema.json frozen at (514618, 53)
+- models/artifacts: legacy leaky lgbm_all_years_features.json archived to trash
+- src/political_scenarios.py: debug prints removed
+- .github/workflows/ci.yml: duplicate blocks consolidated
+- Smoke test PASS, py_compile PASS, all 3 scenarios non-zero
