@@ -261,6 +261,39 @@ def property_page():
     pred_price = float(np.exp(pred_log)) if pred_log is not None else None
     st.metric('Predicted log price', round(pred_log, 4))
     st.metric('Predicted price (exp)', f"${pred_price:,.0f}")
+    # -- Prediction intervals (if available) --
+    try:
+        intervals_path = ROOT / 'experiments' / 'predictions' / 'lgbm_all_years_base_prediction_intervals.parquet'
+        if intervals_path.exists():
+            iv = pd.read_parquet(intervals_path)
+        else:
+            iv = None
+    except Exception:
+        iv = None
+
+    if iv is not None:
+        try:
+            # match by test split integer index (row.name should be range index)
+            idx = int(row.name)
+            if idx in iv.index:
+                r_iv = iv.loc[idx]
+                lower_log = float(r_iv['lower'])
+                upper_log = float(r_iv['upper'])
+                lower_price = float(np.exp(lower_log))
+                upper_price = float(np.exp(upper_log))
+                c1, c2, c3, c4 = st.columns(4)
+                with c1:
+                    st.metric('Lower (log)', round(lower_log, 4))
+                with c2:
+                    st.metric('Upper (log)', round(upper_log, 4))
+                with c3:
+                    st.metric('Lower (price)', f"${lower_price:,.0f}")
+                with c4:
+                    st.metric('Upper (price)', f"${upper_price:,.0f}")
+            else:
+                st.info('Prediction intervals not available for this property')
+        except Exception:
+            st.info('Unable to load prediction intervals for this property')
     # save prediction to user history
     try:
         from src.auth import get_user_data, save_user_data
