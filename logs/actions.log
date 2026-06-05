@@ -1,0 +1,77 @@
+2026-05-15T19:49:22.795374Z - Saved feature importance to models\artifacts\lgbm_all_years_political_importance.json
+2026-05-15T19:49:22.795423Z - Saved test predictions to experiments\predictions\lgbm_all_years_political_test_preds.parquet
+2026-05-15T19:54:58.027583Z - Training completed: models/lgbm_all_years_political.txt
+2026-05-15T19:54:58.027638Z - Experiment registered in experiments/registry.json
+2026-05-15T19:54:58.027661Z - SHAP summary & sample saved in models/artifacts
+2026-05-15T19:54:58.027678Z - Streamlit app started at http://localhost:8501
+2026-05-15T19:55:40.186710Z - Champion selected: exp-20260515T194904Z (mae=0.806286)
+2026-05-15T20:04:07.555391Z - Champion selected: exp-20260515T194904Z (mae=0.806286)
+2026-05-15T20:06:29.547494Z - Champion selected: exp-20260515T200629Z (mae=0.014707890276060832)
+2026-05-15T20:06:43.610352Z - Champion selected: exp-20260515T200629Z (mae=0.014707890276060832)
+2026-05-15T20:07:35.057466Z - Champion selected: exp-20260515T200629Z (mae=0.014707890276060832)
+2026-05-15T20:07:46.856465Z - Champion selected: exp-20260515T200629Z (mae=0.014707890276060832)
+2026-05-15T20:08:16.189147Z - Champion selected: exp-20260515T200629Z (mae=0.014707890276060832)
+2026-05-15T20:08:31.955549Z - Champion selected: exp-20260515T194904Z (mae=0.806286)
+2026-05-16T09:30:15.516427Z - ensemble ensemble_fixed_top3_all_years_political MAE 0.932341 worse than best single lgbm_all_years_political MAE 0.806286. Marked tainted. Reason: stacking homogeneous models adds noise; prefer diverse families.
+
+
+2026-05-16T09:44:18.001538Z - SESSION SUMMARY START
+
+Champion: lgbm_all_years_political (MAE=0.806286)
+
+Models trained (name : MAE):
+- lgbm_all_years_political : 0.8062860509032006
+- lgbm_all_years_base : 0.8062860509032006
+- lgbm_tuned_all_years_political_lr0.08_nl128 : 0.014707890276060832
+- lgbm_tuned_all_years_base_lr0.08_nl128 : 0.014707890276060832
+- lgbm_tuned_all_years_political_lr0.08_nl128 : 0.8377829274437089
+- lgbm_tuned_all_years_base_lr0.08_nl128 : 0.8377829274437089
+- xgb_all_years_political_lr0.05_md6 : 0.8210174755638276
+- cat_all_years_political_lr0.05_d6 : 0.8101360518122865
+- rf_all_years_political_n200 : 0.8792760661175434
+- ridge_all_years_political : 0.8933519101043426
+- elasticnet_all_years_political : 0.9295877053883943
+- stack_top3_all_years_political : 0.8463940477484847
+- xgb_all_years_political_lr0.05_md6 : 0.8210174755638276
+- cat_all_years_political_lr0.05_d6 : 0.8101360518122865
+- rf_all_years_political_n200 : 0.8792760661175434
+- ridge_all_years_political : 0.8933519101043426
+- elasticnet_all_years_political : 0.9295877053883943
+- ensemble_top3_all_years_political : 0.9320274818107206
+- ensemble_fixed_top3_all_years_political : 0.9323408656466818
+
+Steps completed this session:
+- Step 1: Fixed ensemble (retrained fixed ensemble, flagged tainted)
+- Step 2: Added folium choropleth to Political Scenarios page
+- Step 3: Added borough MAE chart and dashboard median trend
+- Step 4: Generated publication figures (docs/figures)
+- Step 5: Froze requirements.txt and added Dockerfile
+- Step 6: Compiled app and verified pages + dark theme
+- Step 7: Generated research summary and logged session
+
+Known weaknesses:
+- Geospatial runtime dependencies (geopandas/fiona) — choropleth conversion may fail if missing
+- Ensemble stacking historically underperformed and may remain tainted — stacking requires careful OOF training
+- Potential schema mismatches between saved preprocessor and model feature ordering could silently produce wrong predictions
+
+Most likely single failure point and fix:
+ - Failure: requirements.txt was created by PowerShell redirection in UTF-16 and could break Docker/CI pipelines.
+ - Fix applied: requirements.txt was regenerated using the virtualenv pip freeze and written as UTF-8 bytes to ensure portability.
+
+
+SESSION SUMMARY END
+
+2026-05-17T12:56:28.339259Z - Champion selected: exp-20260515T194904Z (mae=0.806286)
+2026-05-17T13:03:28.051162Z - PIPELINE REBUILT: leakage features removed (assesstot/exempttot/assessland blacklisted), ideology pipeline rebuilt from raw election results, ideology_by_council.parquet has 51 districts dem_share 0.20-0.97, canonical v2 created, base MAE: 0.428972, political MAE: 0.428551, models are different feature sets: yes, political scenarios non-zero: yes
+2026-05-18T03:48:11.563660Z - Champion selected: exp-20260515T194904Z (mae=0.806286)
+2026-05-18T04:00:17.508622Z - Champion selected: exp-20260518T000001Z (mae=0.428972)
+PIPELINE COMPLETE: champion updated to leakage-clean model MAE=0.429, scenario outliers fixed and clipped, ideology 153 rows across 2017/2021/2025, dem_share coverage 97.56%, base MAE 0.429, political MAE 0.429, scenarios non-zero and bounded, figures and summary regenerated
+FINAL VERIFICATION COMPLETE: champion MAE=0.429 (clean pipeline), SHAP/PDPs/intervals regenerated, app loads correct model, all 51 council districts have non-zero scenario effects, figures present, app compiles clean
+2026-05-20T09:19:38.065330Z - Champion selected: exp-20260518T000001Z (mae=0.428972)
+2026-05-25T17:56:57.533979Z - Champion selected: exp-20260518T000001Z (mae=0.428972)
+2026-06-02T16:09:08.648618Z - SYSTEM COMPLETE. Champion: lgbm_all_years_base MAE=0.428972. Pipeline v2 clean (leakage removed, ideology 97.56% coverage, 2017/2021/2025). All 3 scenarios non-zero: liberal 32.4%, conservative 7.3%, mixed_governance 16.7%. Registry: 12 clean entries. EASE-MENT removed. assesstot absent. App: 7 pages, auth, folium choropleth, What-If, portfolio scenarios, research figures. py_compile PASS. Smoke test: SMOKE TEST: PASS � status 200. Temp files moved to trash.
+2026-06-03T13:42:56Z - Hardening complete: app path anchoring, removed political_scenarios debug prints, consolidated CI workflow, schema frozen, verification passed.
+...
+2026-06-04T19:00:34Z - FINAL FOUNDATION CHECK: schema corrected to canonical_v2, all paths ROOT-anchored, smoke test PASS, all scenarios non-zero, leakage features absent
+2026-06-05T08:37:59Z - ADDRESS LOOKUP COMPLETE: src/geocoder.py working (NYC GeoSearch API, text param), address search panel added to property_page, fallback prediction slider panel added, smoke test PASS
+2026-06-05T09:01:27.525161Z - INTERVALS WIRED: prediction intervals displayed; smoke test PASS on 8507
