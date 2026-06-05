@@ -1,3 +1,4 @@
+check_intervals.py, check_test_split.py, write_log.py, src/smoke_test_app_8507.py — temporary diagnostic scripts accidentally committed during development. Moved to trash 2026-06-05.
 Moved files
 ===========
 
@@ -28,4 +29,4 @@ Notes:
 - NOTE: mixed_governance scenario remains unresponsive to dem_share mutation even at ±0.35. This is a known limitation of the current LightGBM political model. Documented for reproducibility. Proceeding with remaining fixes.
 
 - check_app_response.py, check_political_feature_importance.py, check_shap_sample.py, script_temp.py, temp_check.py — temporary diagnostic scripts created during debugging sessions. Moved 2026-05-25.
-lgbm_all_years_features.json � legacy pre-v2 feature list containing leakage features (assesstot, EASE-MENT). Superseded by lgbm_all_years_base_features.json and lgbm_all_years_political_features.json. Moved 2026-05-25.
+lgbm_all_years_features.json � legacy pre-v2 feature list containing leakage features (assesstot, EASE-MENT). Superseded by lgbm_all_years_base_features.json and lgbm_all_years_political_features.json. Moved 2026-05-25.
