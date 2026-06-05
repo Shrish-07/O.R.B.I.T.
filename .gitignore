@@ -11,8 +11,10 @@ build/
 .env
 .env.*
 mlflow.db
-mlruns/
-*.log
+.mlruns/
+# Ignore log files except the audit trail
+logs/*.log
+!logs/actions.log
 .DS_Store
 Thumbs.db
 
