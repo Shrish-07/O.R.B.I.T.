@@ -151,7 +151,8 @@
       "mae": 0.4392201484272884
     },
     "features_path": "models\\artifacts\\xgb_all_years_political_lr0.05_md6_features.json",
-    "model_path": "models\\xgb_all_years_political_lr0.05_md6.model"
+    "model_path": "models\\xgb_all_years_political_lr0.05_md6.model",
+    "pipeline_v2": true
   },
   {
     "id": "exp-20260520T091520Z",
@@ -179,7 +180,8 @@
       "mae": 0.4539147018162985
     },
     "features_path": "models\\artifacts\\cat_all_years_political_lr0.05_d6_features.json",
-    "model_path": "models\\cat_all_years_political_lr0.05_d6.cbm"
+    "model_path": "models\\cat_all_years_political_lr0.05_d6.cbm",
+    "pipeline_v2": true
   },
   {
     "id": "exp-20260520T091912Z",
@@ -207,7 +209,8 @@
       "mae": 0.4370477634963115
     },
     "features_path": "models\\artifacts\\rf_all_years_political_n200_features.json",
-    "model_path": "models\\rf_all_years_political_n200.joblib"
+    "model_path": "models\\rf_all_years_political_n200.joblib",
+    "pipeline_v2": true
   },
   {
     "id": "exp-20260520T091925Z",
@@ -235,7 +238,8 @@
       "mae": 0.6558020430385062
     },
     "features_path": "models\\artifacts\\ridge_all_years_political_features.json",
-    "model_path": "models\\ridge_all_years_political.joblib"
+    "model_path": "models\\ridge_all_years_political.joblib",
+    "pipeline_v2": true
   },
   {
     "id": "exp-20260520T091926Z",
@@ -263,7 +267,8 @@
       "mae": 0.6903724545495283
     },
     "features_path": "models\\artifacts\\elasticnet_all_years_political_features.json",
-    "model_path": "models\\elasticnet_all_years_political.joblib"
+    "model_path": "models\\elasticnet_all_years_political.joblib",
+    "pipeline_v2": true
   },
   {
     "id": "exp-20260516T042338Z",

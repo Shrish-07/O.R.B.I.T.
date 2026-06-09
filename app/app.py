@@ -21,7 +21,12 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# Project root
 ROOT = Path(__file__).resolve().parents[1]
+
+# Appreciation constants for 5-year forecast (annual rates)
+BOROUGH_APPRECIATION = {1: 0.043, 2: 0.038, 3: 0.045, 4: 0.042, 5: 0.035}
+DEFAULT_APPRECIATION = 0.040
 # Prefer loading the champion experiment (pipeline_v2 if present). Fallback to political model hardcode.
 MODEL_PATH = ROOT / 'models' / 'lgbm_all_years_political.txt'
 FEATURES_PATH = ROOT / 'models' / 'artifacts' / 'lgbm_all_years_political_features.json'
@@ -294,6 +299,58 @@ def property_page():
                 st.info('Prediction intervals not available for this property')
         except Exception:
             st.info('Unable to load prediction intervals for this property')
+
+    # --- 5-Year Price Forecast ---
+    st.write('---')
+    st.subheader('5-Year Price Forecast')
+    _borough_val = int(row.get('BOROUGH', 0)) if 'BOROUGH' in row.index else 0
+    _annual_rate = BOROUGH_APPRECIATION.get(_borough_val, DEFAULT_APPRECIATION)
+    _forecast_cols = st.columns(5)
+    for _yr in range(1, 6):
+        _future_price = pred_price * ((1 + _annual_rate) ** _yr)
+        _forecast_cols[_yr - 1].metric(
+            label=f'Year +{_yr}',
+            value=f'${_future_price:,.0f}',
+            delta=f'+{_annual_rate*100:.1f}%/yr'
+        )
+    st.caption(f'Forecast uses {_annual_rate*100:.1f}% annual appreciation for Borough {_borough_val} (NYC DOF historical average). Not financial advice.')
+    # --- End 5-Year Forecast ---
+
+    # --- Risk Indicators ---
+    st.write('---')
+    st.subheader('Risk Indicators')
+    _risk_cols = st.columns(3)
+
+    # Overvaluation risk: compare prediction to borough median
+    try:
+        _borough_median_log = float(test[test['BOROUGH'] == _borough_val]['target_log_price'].median()) if _borough_val > 0 else pred_log
+        _overval_pct = (pred_log - _borough_median_log) / abs(_borough_median_log) * 100
+        _overval_label = 'Above Median' if _overval_pct > 0 else 'Below Median'
+        _risk_cols[0].metric('vs Borough Median', f'{abs(_overval_pct):.1f}% {_overval_label}')
+    except Exception:
+        _risk_cols[0].metric('vs Borough Median', 'N/A')
+
+    # Interval width risk: wide interval = high uncertainty
+    try:
+        if iv is not None and int(row.name) in iv.index:
+            _r_iv = iv.loc[int(row.name)]
+            _interval_width = float(_r_iv['upper']) - float(_r_iv['lower'])
+            _uncertainty = 'High' if _interval_width > 1.5 else ('Medium' if _interval_width > 0.8 else 'Low')
+            _risk_cols[1].metric('Prediction Uncertainty', _uncertainty, delta=f'Width: {_interval_width:.2f}')
+        else:
+            _risk_cols[1].metric('Prediction Uncertainty', 'N/A')
+    except Exception:
+        _risk_cols[1].metric('Prediction Uncertainty', 'N/A')
+
+    # Age risk: older buildings have higher maintenance/obsolescence risk
+    try:
+        _yearbuilt_val = int(row.get('yearbuilt', row.get('YEAR BUILT', 0)))
+        _age = 2024 - _yearbuilt_val if _yearbuilt_val > 1800 else 0
+        _age_risk = 'High' if _age > 80 else ('Medium' if _age > 40 else 'Low')
+        _risk_cols[2].metric('Age Risk', _age_risk, delta=f'{_age} years old' if _age > 0 else 'Unknown')
+    except Exception:
+        _risk_cols[2].metric('Age Risk', 'N/A')
+    # --- End Risk Indicators ---
     # save prediction to user history
     try:
         from src.auth import get_user_data, save_user_data
@@ -596,7 +653,7 @@ def scenarios_page():
         return
 
     # Prepare GeoJSON for council districts (convert from shapefile if needed)
-    shp_dir = Path('data') / 'raw' / 'election_districts'
+    shp_dir = ROOT / 'data' / 'raw' / 'election_districts'
     shp_path = shp_dir / 'NYC_City_Council_Districts.shp'
     geojson_path = shp_dir / 'NYC_City_Council_Districts.geojson'
     if not geojson_path.exists():
@@ -729,7 +786,7 @@ def model_explorer_page():
         exp = next((e for e in reg if e.get('id') == champ.get('selected_experiment')), None)
         if exp:
             exp_name = exp.get('name')
-            preds_dir = Path('experiments/predictions')
+            preds_dir = ROOT / 'experiments' / 'predictions'
             preds_file = preds_dir / f"{exp_name}_test_preds.parquet"
             if not preds_file.exists():
                 # try to find a matching file
@@ -746,7 +803,7 @@ def model_explorer_page():
                     target_col = next((c for c in preds.columns if 'target' in c.lower() or ('log' in c.lower() and 'price' in c.lower())), None)
                     # ensure BOROUGH present, else join with test split
                     if 'BOROUGH' not in preds.columns:
-                        test_df = pd.read_parquet(Path('data/splits/all_years_test.parquet'))
+                        test_df = pd.read_parquet(ROOT / 'data' / 'splits' / 'all_years_test.parquet')
                         # try join by index
                         try:
                             joined = test_df[['BOROUGH', 'target_log_price']].join(preds, how='left')
@@ -819,15 +876,15 @@ def model_explorer_page():
 def research_page():
     st.header('Research Outputs')
     st.markdown('Publication-quality figures, model summaries, and downloadable artifacts.')
-    summary_path = Path('docs/research_summary.md')
+    summary_path = ROOT / 'docs' / 'research_summary.md'
     if summary_path.exists():
         st.markdown(summary_path.read_text())
     st.subheader('Publication Figures')
-    figs_dir = Path('docs/figures')
+    figs_dir = ROOT / 'docs' / 'figures'
     if figs_dir.exists():
         for f in sorted(figs_dir.glob('*.png')):
             st.image(str(f), caption=f.stem.replace('_', ' ').title(), use_column_width=True)
-    paper_path = Path('paper/orbit_paper.tex')
+    paper_path = ROOT / 'paper' / 'orbit_paper.tex'
     if paper_path.exists():
         st.download_button('Download Research Paper (LaTeX)', paper_path.read_bytes(), file_name='orbit_paper.tex')
     st.subheader('Clean Model Comparison (Pipeline v2)')
