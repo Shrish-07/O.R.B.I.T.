@@ -25,6 +25,13 @@ data/processed/
 data/output/
 data/splits/
 data/canonical/
+data/*.zip
+data/*.7z
+data/*.rar
+data/*.tar.gz
+data/*.tar
+data/*.gzip
+data/*.bz2
 
 # Model artifacts
 models/artifacts/
@@ -44,6 +51,9 @@ catboost_info/
 *.joblib
 *.cbm
 *.model
+
+# MLflow tracking artifacts
+mlruns/
 
 # Large datasets
 data/**/*.csv
