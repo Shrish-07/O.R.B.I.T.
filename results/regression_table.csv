@@ -1,0 +1,12 @@
+Model,Variable,Coef,SE,p,R2,N
+Bivariate,dem_share,0.889,0.007,0.0,0.0336,470535
++ Controls,dem_share,0.5741,0.0071,0.0,0.0932,470535
++ Controls,yearbuilt,-0.0001,0.0,0.0,0.0932,470535
++ Controls,numfloors,0.0043,0.0002,0.0,0.0932,470535
++ Controls,landuse,0.0778,0.0013,0.0,0.0932,470535
++ Controls,commfar,0.0585,0.0006,0.0,0.0932,470535
++ Borough FE,dem_share,0.1843,0.0093,0.0,0.1478,470535
++ Borough FE,yearbuilt,0.0,0.0,0.1191,0.1478,470535
++ Borough FE,numfloors,-0.0035,0.0002,0.0,0.1478,470535
++ Borough FE,landuse,0.0307,0.0013,0.0,0.1478,470535
++ Borough FE,commfar,0.0494,0.0006,0.0,0.1478,470535
