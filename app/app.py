@@ -9,17 +9,74 @@ from datetime import datetime
 
 st.set_page_config(page_title='O.R.B.I.T — Forecast Explorer', layout='wide')
 
-# Inject a minimal dark theme CSS to keep UI consistent
-st.markdown(
-    """
-    <style>
-    .stApp { background-color: #0b1020; color: #e6eef8; }
-    .block-container { background-color: #0b1020; }
-    .css-18e3th9 { background-color: #0b1020; }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+st.markdown("""
+
+/* O.R.B.I.T. Dark Theme */
+.stApp {
+    background-color: #0d1117;
+    color: #e6edf3;
+}
+.stSidebar {
+    background-color: #161b22;
+    border-right: 1px solid #30363d;
+}
+.stSidebar .stRadio label {
+    color: #e6edf3 !important;
+    font-size: 15px;
+}
+.stSidebar .stRadio label:hover {
+    color: #58a6ff !important;
+}
+h1, h2, h3, h4 {
+    color: #58a6ff !important;
+}
+.stMetric label {
+    color: #8b949e !important;
+}
+.stMetric .metric-container {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 12px;
+}
+.stDataFrame {
+    background-color: #161b22;
+    color: #e6edf3;
+}
+.stSelectbox label, .stTextInput label, .stSlider label {
+    color: #e6edf3 !important;
+}
+.stButton > button {
+    background-color: #238636;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+}
+.stButton > button:hover {
+    background-color: #2ea043;
+}
+.stSuccess {
+    background-color: #1f4e2c;
+    color: #56d364;
+}
+.stWarning {
+    background-color: #4d3800;
+    color: #e3b341;
+}
+.stError {
+    background-color: #4d1c20;
+    color: #f85149;
+}
+.stInfo {
+    background-color: #1c3044;
+    color: #79c0ff;
+}
+div[data-testid="stSidebarNav"] {
+    background-color: #161b22;
+}
+
+""", unsafe_allow_html=True)
 
 # Project root
 ROOT = Path(__file__).resolve().parents[1]
@@ -79,47 +136,17 @@ def load_test():
 model, features = load_model()
 test = load_test()
 
-# Authentication: require login before using pages
-if 'user_id' not in st.session_state:
-    st.session_state['user_id'] = None
+# Ensure session state is available for optional app state
+if 'geo_result' not in st.session_state:
+    st.session_state['geo_result'] = None
 
-
-def login_widget():
-    st.header('Login / Sign up')
-    email = st.text_input('Email')
-    pwd = st.text_input('Password', type='password')
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button('Log in'):
-            try:
-                sys.path.append(str(ROOT))
-                from src.auth import login_user
-
-                uid = login_user(email, pwd)
-                if uid:
-                    st.session_state['user_id'] = uid
-                    st.success('Logged in')
-                else:
-                    st.error('Login failed')
-            except Exception:
-                st.error('Auth error')
-    with col2:
-        if st.button('Sign up'):
-            try:
-                from src.auth import create_user
-
-                ok = create_user(email, pwd)
-                if ok:
-                    st.success('User created — please log in')
-                else:
-                    st.error('User exists')
-            except Exception:
-                st.error('Signup error')
-
-
-if not st.session_state.get('user_id'):
-    login_widget()
-    st.stop()
+# Add a product header in the sidebar for clearer navigation
+st.sidebar.markdown(
+    """
+    ### O.R.B.I.T Forecast Explorer
+    Explore property-level forecasts, prediction intervals, political scenarios, and batch analysis.
+    """
+)
 
 
 def home_page():

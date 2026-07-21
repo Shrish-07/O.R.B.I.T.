@@ -76,3 +76,4 @@ FINAL VERIFICATION COMPLETE: champion MAE=0.429 (clean pipeline), SHAP/PDPs/inte
 2026-06-05T08:37:59Z - ADDRESS LOOKUP COMPLETE: src/geocoder.py working (NYC GeoSearch API, text param), address search panel added to property_page, fallback prediction slider panel added, smoke test PASS
 2026-06-05T09:01:27.525161Z - INTERVALS WIRED: prediction intervals displayed; smoke test PASS on 8507
 2026-06-09T09:40:36Z - 5-YEAR FORECAST + RISK INDICATORS: BOROUGH_APPRECIATION constants added, 5-year forecast panel added, 3 risk indicators (overvaluation, uncertainty, age), all bare Path() calls fixed to ROOT-anchored, XGB/CatBoost/RF/Ridge/ElasticNet marked pipeline_v2=True, research summary regenerated, smoke test PASS
+2026-06-11T11:57:46Z - PROJECT COMPLETE: README updated to reflect full system state, all commits pushed to remote, system at production-ready prototype state
