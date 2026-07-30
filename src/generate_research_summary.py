@@ -32,8 +32,16 @@ plt.tight_layout()
 plt.savefig(FIGS / 'model_comparison_mae.png', dpi=300)
 plt.close()
 
-# SHAP top-10 if available
-shap_path = Path('models/artifacts/lgbm_all_years_political_shap_summary.json')
+# SHAP top-10 if available — use champion dynamically, not hardcoded
+champ_id = json.loads(Path('experiments/champion.json').read_text()).get('selected_experiment')
+champ_name = None
+for e in registry:
+    if e.get('id') == champ_id:
+        champ_name = e.get('name')
+        break
+if champ_name is None:
+    champ_name = 'lgbm_all_years_base'  # fallback
+shap_path = Path('models/artifacts') / f"{champ_name}_shap_summary.json"
 shap_list = []
 if shap_path.exists():
     shap = json.loads(shap_path.read_text())

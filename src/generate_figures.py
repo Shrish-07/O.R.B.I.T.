@@ -8,8 +8,18 @@ DOCS = Path('docs')
 FIGS = DOCS / 'figures'
 FIGS.mkdir(parents=True, exist_ok=True)
 
-# 1) SHAP top-15
-shap_path = Path('models/artifacts/lgbm_all_years_political_shap_summary.json')
+# 1) SHAP top-15 — use champion dynamically, not hardcoded
+champ_json = json.loads(Path('experiments/champion.json').read_text())
+reg_json = json.loads(Path('experiments/registry.json').read_text())
+champ_id = champ_json.get('selected_experiment')
+champ_name = None
+for e in reg_json:
+    if e.get('id') == champ_id:
+        champ_name = e.get('name')
+        break
+if champ_name is None:
+    champ_name = 'lgbm_all_years_base'  # fallback
+shap_path = Path('models/artifacts') / f"{champ_name}_shap_summary.json"
 if shap_path.exists():
     s = json.loads(shap_path.read_text())
     summary = s.get('summary', [])[:15]
