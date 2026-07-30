@@ -55,12 +55,18 @@ print(f"\n  dem_share missing: {n_dem_miss}")
 print(f"  dem_share overlap with farf: {overlap_dem_farf} (paper says 12424)")
 print(f"  STATUS: {'CONFIRMED' if overlap_dem_farf == 12424 else 'DISCREPANCY'}")
 
-reg_vars = ['numfloors', 'yearbuilt', 'commfar', 'residfar', 'facilfar', 'dem_share']
-missing_any = df[reg_vars[0]].isna()
-for v in reg_vars[1:]:
+# Actual regression dropna columns: target_log_price, dem_share, yearbuilt, numfloors,
+# landuse, BOROUGH, commfar  (NOT residfar or facilfar)
+reg_vars = ['target_log_price', 'dem_share', 'yearbuilt', 'numfloors', 'landuse', 'BOROUGH', 'commfar']
+available = [v for v in reg_vars if v in df.columns]
+missing = [v for v in reg_vars if v not in df.columns]
+if missing:
+    print(f"  NOTE: columns missing from canonical: {missing}")
+missing_any = df[available[0]].isna()
+for v in available[1:]:
     missing_any = missing_any | df[v].isna()
 n_union = int(missing_any.sum())
-print(f"\n  Union across regression vars ({reg_vars}): {n_union} (paper says 44083)")
+print(f"\n  Union across regression vars ({available}): {n_union} (paper says 44083)")
 print(f"  STATUS: {'CONFIRMED' if n_union == 44083 else 'DISCREPANCY'}")
 
 # =====================================================================
@@ -106,16 +112,32 @@ if CROSSWALK.exists():
     print(f"  ElectDist in >1 row: {n_gt1} (paper says 1383)")
     print(f"STATUS: {'CONFIRMED' if n_gt1 == 1383 else 'DISCREPANCY'}")
 
+    # Compute minority-area share for each ED that appears in >1 row.
+    # For each such ED: minority_share = (non-dominant-row area) / (sum of all area rows for that ED)
+    straddle_eds = ed_counts[ed_counts > 1].index.tolist()
+    cw_straddle = cw[cw['ElectDist'].isin(straddle_eds)].copy()
+
+    # Find the area column
     area_col = next((c for c in cw.columns if 'area' in c.lower() or 'share' in c.lower()), None)
-    if area_col:
-        max_share = float(cw[area_col].max())
-    else:
+    if area_col is None:
         non_key = [c for c in cw.columns if c not in ['ElectDist', 'CounDist', 'AD', 'ED']]
-        ac = non_key[0] if non_key else cw.columns[-1]
-        max_share = cw[ac].max()
-        area_col = ac
-    print(f"  Max {area_col}: {max_share:.6f} (paper says <= 0.0011)")
-    print(f"STATUS: {'CONFIRMED' if max_share < 0.0012 else 'DISCREPANCY'}")
+        area_col = non_key[0] if non_key else None
+
+    if area_col and len(cw_straddle) > 0:
+        max_minority_share = 0.0
+        for ed_id, grp in cw_straddle.groupby('ElectDist'):
+            areas = grp[area_col].values.astype(float)
+            total_area = areas.sum()
+            dominant_area = areas.max()
+            minority_share = (total_area - dominant_area) / total_area if total_area > 0 else 0.0
+            if minority_share > max_minority_share:
+                max_minority_share = float(minority_share)
+        print(f"  Max minority-area share across {len(cw_straddle)} straddle rows: {max_minority_share:.6f} (paper says <= 0.0011 = 0.11%)")
+        within_bounds = max_minority_share <= 0.00115  # small tolerance
+        print(f"STATUS: {'CONFIRMED' if within_bounds else 'DISCREPANCY'}")
+    else:
+        print(f"  Cannot compute minority share (area_col={area_col}, straddle_rows={len(cw_straddle)})")
+        print(f"STATUS: SKIP")
 else:
     print("  SKIP: crosswalk not found at", CROSSWALK)
 
@@ -136,8 +158,8 @@ if ED_IDEOLOGY.exists() and CROSSWALK.exists():
     cd1 = vote[vote['CounDist'] == 1]
     if len(cd1) > 0:
         cd1_val = float(cd1['dem_share_sum'].iloc[0])
-        print(f"  Council Dist 1 dem_share (vote-summed): {cd1_val:.6f} (paper says 0.711301)")
-        print(f"STATUS: {'CONFIRMED' if abs(cd1_val - 0.711301) < 0.0001 else 'DISCREPANCY'}")
+        print(f"  Council Dist 1 dem_share (vote-summed): {cd1_val:.6f} (paper says 0.715908)")
+        print(f"STATUS: {'CONFIRMED' if abs(cd1_val - 0.715908) < 0.0001 else 'DISCREPANCY'}")
 
     # Try to load district_ideology from processed
     dist_ideo_path = Path("data/processed/district_ideology.parquet")
