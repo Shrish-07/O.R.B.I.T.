@@ -39,8 +39,9 @@ Moved items:
   - Superseded by: fresh docs/figures/shap_top15.png (champion model)
   - Moved: 2026-07-30 (TASK 3 + TASK 4)
 
-Probes / scratch scripts deleted (2026-07-30 TASK 4 cleanup):
+Probes / scratch scripts moved to trash (2026-07-30 TASK 4 cleanup):
   - _probe_data.py, _probe_data2.py, _probe_recompute_shap.py, _probe_shap_sources.py, _probe_shp.py
+  - _env_probe.py, _env_probe2.py (root-level env diagnosis probes)
   - check_app_response.py, check_intervals.py, check_political_feature_importance.py
   - check_shap_sample.py, check_test_split.py
   - script_temp.py, temp_check.py, smoke_test_app_8507.py, write_log.py
