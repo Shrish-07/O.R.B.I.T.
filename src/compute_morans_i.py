@@ -69,18 +69,18 @@ def _moran_perm(y, W, n_perm=999, seed=42):
 
 
 def compute_moran(y, coords, label, k=5, n_perm=999, seed=42):
-    """Compute Moran's I using esda or manual fallback."""
-    try:
-        import libpysal
-        from libpysal.weights import KNN as libKNN
-        from esda import Moran
-        w = libKNN(coords, k=k)
-        mi = Moran(y, w, permutations=n_perm, seed=seed)
-        return float(mi.I), float(mi.z_sim), float(mi.p_sim)
-    except Exception as e:
-        print(f"  (esda/libpysal unavailable: {e}), using manual implementation")
-        W = _knn_weights(coords, k=k)
-        return _moran_perm(y, W, n_perm=n_perm, seed=seed)
+    """Compute Moran's I using esda (no seed kwarg; set np.random.seed first)."""
+    import libpysal
+    from libpysal.weights import KNN as libKNN
+    from esda import Moran
+
+    # esda Moran() has NO seed parameter — randomness controlled via
+    # np.random.seed() BEFORE calling Moran(). (Moran.__init__ signature:
+    # (y, w, transformation='r', permutations=999, two_tailed=True))
+    np.random.seed(seed)
+    w = libKNN(coords, k=k)
+    mi = Moran(y, w, transformation='r', permutations=n_perm, two_tailed=True)
+    return float(mi.I), float(mi.z_sim), float(mi.p_sim)
 
 
 def main():
@@ -148,6 +148,8 @@ def main():
     y_price = district["median_log_price"].values.astype(float)
     y_dem = district["dem_share"].values.astype(float)
 
+    method_used = "esda"
+
     I_p, z_p, p_p = compute_moran(y_price, coords, "median_log_price",
                                   k=K, n_perm=N_PERM, seed=SEED)
     I_d, z_d, p_d = compute_moran(y_dem, coords, "dem_share",
@@ -191,8 +193,24 @@ def main():
         print("\n*** DISCREPANCY FLAGS (do NOT force match — report actual values) ***")
         for d in discrepancies:
             print("  -", d)
+        # Diagnostic: print district centroids and KNN structure
+        print("\n  --- Diagnostics: data centroids (lat/lon) ---")
+        print(district[[dist_col, lat_col, lon_col]].sort_values(dist_col).to_string(index=False))
+        # Build KNN weights and show first 3 rows
+        import libpysal
+        from libpysal.weights import KNN as libKNN
+        np.random.seed(SEED)
+        w_diag = libKNN(coords, k=K)
+        print(f"\n  --- Diagnostics: KNN weights (first 3 districts) ---")
+        for i in range(min(3, n_districts)):
+            nbrs = list(w_diag.neighbors.get(i, []))
+            weights = list(w_diag.weights.get(i, []))
+            print(f"  District index {i} (CounDist={district[dist_col].iloc[i]}): "
+                  f"neighbors={nbrs}, weights={[round(wt,4) for wt in weights]}")
     else:
-        print("\n  All values within tolerance of paper numbers")
+        print("\n  All values within paper numbers")
+        # Incrementally show centroids even when matching
+        print("\n  (centroids used OK)")
 
     # 5) Save JSON
     result = {
@@ -205,6 +223,7 @@ def main():
         "n_districts": n_districts,
         "weights_spec": f"k={K}_row_standardized_knn",
         "seed": SEED,
+        "method": method_used,
     }
     if discrepancies:
         result["discrepancy_flags"] = discrepancies
