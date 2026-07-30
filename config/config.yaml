@@ -24,7 +24,10 @@ keys:
     SI: "5"
 
 time:
-  ideology_min_year: 2013
-  ideology_max_year: 2021
-  controlled_train_year: 2017
-  controlled_test_year: 2018
+  # DEPRECATED — legacy fields only for the abandoned year-2017-only pipeline.
+  # The production dem_share construction uses 2017, 2021, 2025 election data.
+  # ideology_year_range in production is determined by the pipeline, not these keys.
+  ideology_min_year: 2013    # DEPRECATED (abandoned year2017 pipeline)
+  ideology_max_year: 2021    # DEPRECATED (abandoned year2017 pipeline)
+  controlled_train_year: 2017  # DEPRECATED (abandoned year2017 pipeline)
+  controlled_test_year: 2018   # DEPRECATED (abandoned year2017 pipeline)
