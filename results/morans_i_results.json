@@ -1,17 +1,17 @@
 {
-  "moran_i_price": 0.7700186057923173,
-  "z_price": 7.940632688087198,
-  "p_sim_price": 0.0,
-  "moran_i_dem_share": 0.6914700268514798,
-  "z_dem_share": 7.58108362210676,
-  "p_sim_dem_share": 0.0,
+  "moran_i_price": 0.6736116483946607,
+  "z_price": 8.597606353318966,
+  "p_sim_price": 0.001,
+  "moran_i_dem_share": 0.544227274328657,
+  "z_dem_share": 7.690902384042535,
+  "p_sim_dem_share": 0.001,
   "n_districts": 51,
   "weights_spec": "k=5_row_standardized_knn",
   "seed": 42,
+  "method": "esda",
   "discrepancy_flags": [
-    "PRICE I: got 0.7700 vs paper 0.5959 (diff +0.1741)",
-    "PRICE z: got 7.94 vs paper 7.58 (diff +0.36)",
-    "DEM I: got 0.6915 vs paper 0.5797 (diff=+0.1118)",
-    "DEM z: got 7.58 vs paper 7.69 (diff -0.11)"
+    "PRICE I: got 0.6736 vs paper 0.5959 (diff +0.0777)",
+    "PRICE z: got 8.60 vs paper 7.58 (diff +1.02)",
+    "DEM I: got 0.5442 vs paper 0.5797 (diff=-0.0355)"
   ]
 }
