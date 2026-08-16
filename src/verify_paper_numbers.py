@@ -145,23 +145,48 @@ else:
 # 4. Council District 1, 2017
 # =====================================================================
 print("\n=== 4. Council District 1, 2017 ===")
-if ED_IDEOLOGY.exists() and CROSSWALK.exists():
-    ideo = pd.read_parquet(ED_IDEOLOGY)
-    cw = pd.read_parquet(CROSSWALK)
-    ideo['ElectDist'] = (ideo['AD'] * 1000 + ideo['ED']).astype(float)
-    cw['ElectDist'] = cw['ElectDist'].astype(float)
-    idea = ideo[['ElectDist', 'dem', 'rep']].dropna()
-    idea['dem_share'] = idea['dem'] / (idea['dem'] + idea['rep'])
-    merged = idea.merge(cw, on='ElectDist', how='inner')
-    vote = merged.groupby('CounDist').agg(dem=('dem', 'sum'), rep=('rep', 'sum')).reset_index()
-    vote['dem_share_sum'] = vote['dem'] / (vote['dem'] + vote['rep'])
-    cd1 = vote[vote['CounDist'] == 1]
+# Ground truth (traced in src/rebuild_canonical.py line 15): the paper's
+# dem_share feature comes from data/processed/ideology_by_council.parquet
+# (built by src/build_ideology_scores.py), NOT ed_ideology.parquet (the
+# abandoned src/compute_ideology.py -> build_district_ideology.py pipeline,
+# which is BLACKLISTED and feeds no model). A PRIOR version of this check read
+# ed_ideology.parquet and reported 0.721132 as a discrepancy — a false positive
+# caused by reading the wrong file. We now read the PRODUCTION file directly.
+IDEO_BY_COUNCIL = Path("data/processed/ideology_by_council.parquet")
+if IDEO_BY_COUNCIL.exists():
+    ideo = pd.read_parquet(IDEO_BY_COUNCIL)
+    cd1 = ideo[(ideo["CounDist"] == 1) & (ideo["election_year"] == 2017)]
     if len(cd1) > 0:
-        cd1_val = float(cd1['dem_share_sum'].iloc[0])
-        print(f"  Council Dist 1 dem_share (vote-summed): {cd1_val:.6f} (paper says 0.715908)")
-        print(f"STATUS: {'CONFIRMED' if abs(cd1_val - 0.715908) < 0.0001 else 'DISCREPANCY'}")
+        cd1_val = float(cd1["dem_share"].iloc[0])
+        print(f"  CD1 dem_share (ideology_by_council.parquet, PRODUCTION): {cd1_val:.6f} (paper says 0.715908)")
+        print(f"STATUS: {'CONFIRMED' if abs(cd1_val - 0.715908) < 1e-6 else 'DISCREPANCY'}")
+    else:
+        print("  CD1 row not found in ideology_by_council.parquet")
+else:
+    print(f"  SKIP: ideology_by_council.parquet not found at {IDEO_BY_COUNCIL}")
 
-    # Try to load district_ideology from processed
+# Diagnostic (NOT a correction): the WRONG file the prior audit used
+# (ed_ideology.parquet, abandoned pipeline). Reported here only so the
+# magnitude of the misattribution is visible.
+if ED_IDEOLOGY.exists() and CROSSWALK.exists():
+    ideo_ed = pd.read_parquet(ED_IDEOLOGY)
+    cw = pd.read_parquet(CROSSWALK)
+    if {"AD", "ED", "year"} <= set(ideo_ed.columns):
+        ideo_ed = ideo_ed[ideo_ed["year"] == 2017].copy()
+    ideo_ed["ElectDist"] = (ideo_ed["AD"].astype(float) * 1000 + ideo_ed["ED"].astype(float))
+    cw["ElectDist"] = cw["ElectDist"].astype(float)
+    idea = ideo_ed[["ElectDist", "dem", "rep"]].dropna()
+    idea["dem_share"] = idea["dem"] / (idea["dem"] + idea["rep"])
+    merged = idea.merge(cw, on="ElectDist", how="inner")
+    vote = merged.groupby("CounDist").agg(dem=("dem", "sum"), rep=("rep", "sum")).reset_index()
+    vote["dem_share_sum"] = vote["dem"] / (vote["dem"] + vote["rep"])
+    cd1 = vote[vote["CounDist"] == 1]
+    if len(cd1) > 0:
+        cd1_wrong = float(cd1["dem_share_sum"].iloc[0])
+        print(f"  [diag] CD1 dem_share via WRONG file (ed_ideology.parquet, abandoned parser): {cd1_wrong:.6f}  "
+              f"(NOT used by any model; prior check mis-attributed this as the 'discrepancy')")
+
+    # Try to load district_ideology from processed (abandoned-pipeline area-weighted value)
     dist_ideo_path = Path("data/processed/district_ideology.parquet")
     if dist_ideo_path.exists():
         di = pd.read_parquet(dist_ideo_path)
@@ -169,22 +194,37 @@ if ED_IDEOLOGY.exists() and CROSSWALK.exists():
         cd1_di = di[di[dist_col] == 1]
         if len(cd1_di) > 0:
             di_val = float(cd1_di.iloc[0]['district_ideology'] if 'district_ideology' in cd1_di.columns else cd1_di.iloc[0]['ideology'])
-            print(f"  CD1 district_ideology (area-weighted): {di_val:.6f} (paper says 0.711309)")
+            print(f"  CD1 district_ideology (area-weighted, abandoned pipeline): {di_val:.6f} (paper says 0.711309)")
             print(f"STATUS: {'CONFIRMED' if abs(di_val - 0.711309) < 0.001 else 'DISCREPANCY'}")
 else:
-    print("  Missing ed_ideology or crosswalk")
+    print("  SKIP: ed_ideology or crosswalk not found for diagnostic")
 
 # =====================================================================
 # 5. SCENARIO CLIPPING
 # =====================================================================
 print("\n=== 5. SCENARIO CLIPPING ===")
+# Clip detection: the scenario machinery clips pct_change to the +/-100% bound,
+# so a clipped row's pct_change EXACTLY equals 100 (or -100). A loose
+# `pct >= 99.9` threshold sweeps up rows that organically landed just under
+# the cap (e.g. 99.937%) WITHOUT being clipped — for the liberal scenario there
+# are 3 such rows, which caused the earlier checker to report 112 instead of
+# 109 and flag a false DISCREPANCY against the (correct) paper value.
+# Use np.isclose against the clip boundary itself so only genuine clip rows
+# are counted. (Paper's counts: liberal 109, conservative 9, mixed 816; all at
+# the upper bound only, zero at the lower bound — confirmed by the raw parquets.)
 for name in ['liberal_policy', 'conservative_policy', 'mixed_governance']:
     path = SCENARIO_DIR / f"{name}_all_properties.parquet"
     if path.exists():
         sdf = pd.read_parquet(path)
         pct = sdf['pct_change']
-        at_upper = int((pct >= 99.9).sum())
-        at_lower = int((pct <= -99.9).sum())
+        # Exact/near-exact match against the clip boundaries themselves.
+        at_upper = int(np.isclose(pct, 100.0).sum())
+        at_lower = int(np.isclose(pct, -100.0).sum())
+        # Keep the loose-threshold values as diagnostics so the false-positive
+        # is visible in the report.
+        loose_upper = int((pct >= 99.9).sum())
+        loose_lower = int((pct <= -99.9).sum())
+        near_cap_unclipped = int(((pct >= 99.9) & ~np.isclose(pct, 100.0)).sum())
         if name == 'liberal_policy':
             target_u = 109
         elif name == 'conservative_policy':
@@ -192,7 +232,14 @@ for name in ['liberal_policy', 'conservative_policy', 'mixed_governance']:
         else:
             target_u = 816
         st = 'CONFIRMED' if at_upper == target_u and at_lower == 0 else 'DISCREPANCY'
-        print(f"  {name}: total={len(sdf)}, +100={at_upper}, -100={at_lower}, paper +100={target_u} => {st}")
+        print(f"  {name}: total={len(sdf)}")
+        print(f"    exact-clip upper (+100.0): {at_upper}  lower (-100.0): {at_lower}  "
+              f"=> paper +100={target_u}  => {st}")
+        print(f"    [diag] loose >=99.9 upper: {loose_upper}  loose <=-99.9 lower: {loose_lower}")
+        if near_cap_unclipped > 0:
+            print(f"    [diag] rows >=99.9 NOT at the exact 100.0 clip "
+                  f"(near-cap but unclipped): {near_cap_unclipped} "
+                  f"(these were what the old loose check mis-counted as clipped)")
     else:
         print(f"  {name}: FILE NOT FOUND ({path})")
 

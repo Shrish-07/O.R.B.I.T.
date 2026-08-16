@@ -79,8 +79,15 @@ axes[0].spines[['bottom','left','top','right']].set_color('#30363d')
 
 # Right: top shifting districts bar chart
 try:
-    top_shift = pivot.nlargest(10, 'shift_2017_2025')
-    bottom_shift = pivot.nsmallest(5, 'shift_2017_2025')
+    # The paper's Figure 2 caption is fixed: "the eight largest positive and
+    # four largest negative district-level shifts" (12 districts total:
+    # 5, 49, 43, 50, 20, 29, 44, 47 on top; 15, 14, 16, 17 on bottom).
+    # Earlier versions used nlargest(10)/nsmallest(5) (15 districts), which
+    # added districts 4, 26 and 42 not described by the caption. Changing the
+    # code here is the single-place fix (the caption text is the source of
+    # truth and stays untouched).
+    top_shift = pivot.nlargest(8, 'shift_2017_2025')
+    bottom_shift = pivot.nsmallest(4, 'shift_2017_2025')
     combined = pd.concat([top_shift, bottom_shift]).sort_values('shift_2017_2025')
     colors = ['#f85149' if x < 0 else '#56d364' for x in combined['shift_2017_2025']]
     axes[1].barh(combined['CounDist'].astype(str), combined['shift_2017_2025'], color=colors, alpha=0.9)

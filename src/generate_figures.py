@@ -8,31 +8,88 @@ DOCS = Path('docs')
 FIGS = DOCS / 'figures'
 FIGS.mkdir(parents=True, exist_ok=True)
 
-# 1) SHAP top-15 — use champion dynamically, not hardcoded
-champ_json = json.loads(Path('experiments/champion.json').read_text())
-reg_json = json.loads(Path('experiments/registry.json').read_text())
-champ_id = champ_json.get('selected_experiment')
-champ_name = None
-for e in reg_json:
-    if e.get('id') == champ_id:
-        champ_name = e.get('name')
-        break
+# The paper's headline SHAP result (Section 4.4.2 / Table 3 / Figure 4) is the
+# POLITICAL model (lgbm_all_years_political, 17 trained features, dem_share at
+# rank 12). Earlier versions of this script resolved whichever model
+# experiments/champion.json currently selected and wrote the figure to a generic
+# filename, silently swapping models when champion.json changed. We now
+# explicitly produce BOTH the paper-model figure and a clearly-named champion
+# figure so neither overwrites the other.
+PAPER_SHAP_MODEL = 'lgbm_all_years_political'
+
+def _resolve_champion_name():
+    """Return the experiment name champion.json currently points at, or None."""
+    champ_path = Path('experiments/champion.json')
+    reg_path = Path('experiments/registry.json')
+    if not (champ_path.exists() and reg_path.exists()):
+        return None
+    champ_id = json.loads(champ_path.read_text()).get('selected_experiment')
+    reg = json.loads(reg_path.read_text())
+    for e in reg:
+        if e.get('id') == champ_id:
+            return e.get('name')
+    return None
+
+champ_name = _resolve_champion_name()
 if champ_name is None:
     champ_name = 'lgbm_all_years_base'  # fallback
-shap_path = Path('models/artifacts') / f"{champ_name}_shap_summary.json"
-if shap_path.exists():
+
+def _plot_shap_topN(shap_path, n, out_png, title_suffix):
+    """Read a *_shap_summary.json and render a horizontal bar chart of the top N."""
+    if not shap_path.exists():
+        print(f'  SHAP summary not found: {shap_path} — skipping {out_png.name}')
+        return None
     s = json.loads(shap_path.read_text())
-    summary = s.get('summary', [])[:15]
-    df_shap = pd.DataFrame(summary)
-    df_shap = df_shap.sort_values('mean_abs_shap', ascending=True)
+    summary = s.get('summary', [])[:n]
+    df_shap = pd.DataFrame(summary).sort_values('mean_abs_shap', ascending=True)
     plt.style.use('dark_background')
     fig, ax = plt.subplots(figsize=(8, 6))
     ax.barh(df_shap['feature'], df_shap['mean_abs_shap'], color='#1f77b4')
     ax.set_xlabel('Mean |SHAP|')
-    ax.set_title('Top 15 features by mean |SHAP| (Champion)')
+    ax.set_title(f'Top {n} features by mean |SHAP| ({title_suffix})')
     plt.tight_layout()
-    fig.savefig(FIGS / 'shap_top15.png', dpi=300)
+    fig.savefig(out_png, dpi=300)
     plt.close(fig)
+    print(f'  saved {out_png}')
+    return df_shap
+
+# 1) SHAP figures — paper/political model is primary, champion model is secondary.
+print('SHAP figures:')
+print('  paper model (political):', PAPER_SHAP_MODEL)
+print('  current champion       :', champ_name)
+
+# Primary (paper) figures: shap_top10.png / shap_top15.png = POLITICAL model.
+paper_top15 = _plot_shap_topN(
+    Path('models/artifacts') / f"{PAPER_SHAP_MODEL}_shap_summary.json",
+    15,
+    FIGS / 'shap_top15.png',
+    'Political model (paper)',
+)
+paper_top10 = _plot_shap_topN(
+    Path('models/artifacts') / f"{PAPER_SHAP_MODEL}_shap_summary.json",
+    10,
+    FIGS / 'shap_top10.png',
+    'Political model (paper)',
+)
+
+# Secondary (champion) figures: kept under distinct, clearly-labeled names so
+# they never overwrite the paper figures and never silently swap models.
+if champ_name != PAPER_SHAP_MODEL:
+    print('  (champion differs from paper model -> also emitting champion figures)')
+    _plot_shap_topN(
+        Path('models/artifacts') / f"{champ_name}_shap_summary.json",
+        15,
+        FIGS / 'shap_top15_champion.png',
+        f'Champion ({champ_name})',
+    )
+    _plot_shap_topN(
+        Path('models/artifacts') / f"{champ_name}_shap_summary.json",
+        10,
+        FIGS / 'shap_top10_champion.png',
+        f'Champion ({champ_name})',
+    )
+else:
+    print('  (champion == paper model; no separate champion figure needed)')
 
 # 2) Model comparison (non-tainted experiments)
 reg_path = Path('experiments/registry.json')
