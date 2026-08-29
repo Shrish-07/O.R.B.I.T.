@@ -12,8 +12,12 @@ if CANON_V2.exists():
 elif CANON_FALLBACK.exists():
     df = pd.read_parquet(CANON_FALLBACK)
 else:
-    # last resort: fall back to processed modeling dataset
-    df = pd.read_parquet("data/processed/modeling_dataset.parquet")
+    # The old processed fallback (data/processed/modeling_dataset.parquet)
+    # was removed; there is no valid fallback anymore. Fail loudly.
+    raise SystemExit(
+        f"❌ No canonical dataset found. Tried:\n  {CANON_V2}\n  {CANON_FALLBACK}\n"
+        "Reproduce/copy the canonical dataset before freezing a schema."
+    )
 
 schema = (
     df.dtypes

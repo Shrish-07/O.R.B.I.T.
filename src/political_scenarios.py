@@ -45,8 +45,13 @@ if CANON.exists():
 elif CANON_FALLBACK.exists():
     df = pd.read_parquet(CANON_FALLBACK)
 else:
-    # fallback to processed fe imputed
-    df = pd.read_parquet(Path('data/processed/modeling_dataset_fe_imputed.parquet'))
+    # The old processed fallback (data/processed/modeling_dataset_fe_imputed.parquet)
+    # was removed; there is no valid fallback anymore. Fail loudly instead of
+    # silently loading a missing/legacy dataset.
+    raise SystemExit(
+        f"❌ No canonical dataset found. Tried:\n  {CANON}\n  {CANON_FALLBACK}\n"
+        "Reproduce/copy the canonical dataset before running political scenarios."
+    )
 
 # detect council district column
 council_candidates = [c for c in df.columns if 'council' in c.lower()]

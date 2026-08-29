@@ -62,3 +62,11 @@ data/**/*.csv
 !docs/*.csv
 !figures/*.csv
 
+# Local snapshot/backup archives (never commit; .github/workflows/ci.yml is tracked directly)
+.github.zip
+Read Everything.zip
+
+# Transient truth-harness scratch files (write gitignored results/TRUTH.md; not source)
+src/_truth_*.py
+src/_truth_assemble_data.json
+

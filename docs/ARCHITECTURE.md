@@ -17,7 +17,7 @@ At its core, O.R.B.I.T. separates data ingestion, canonicalization, modeling, an
 ## ML pipeline
 
 - Feature blacklisting: a curated `config/feature_blacklist.yaml` drives the removal of leaky features (for example `assesstot`, `EASE-MENT`) before model training.
-- Training entry points: training code is found in `src/train_model.py` and `src/train_baseline.py`. Typical runs: preprocess canonical table → create features → train LightGBM models (`train_lgbm.py` semantics captured via `train_model.py`).
+- Training entry points: training code is found in `models/training/train_lgbm.py` (champion LightGBM base/political models), with additional model families in `models/training/train_random_forest.py`, `train_ridge.py`, `train_elasticnet.py`, `train_catboost.py`, `train_xgboost.py`, `train_ensemble.py`, and `train_stacking.py`. Typical runs: load `data/canonical/modeling_dataset_canonical_v2.parquet` → train via `models/training/train_lgbm.py --mode base` or `--mode political` → results land in `experiments/results/` and `models/artifacts/`.
 - Registry: experiments are registered in `experiments/registry.json`, and the current champion is recorded at `experiments/champion.json`. Each experiment entry lists `model_path`, `features_path`, and metadata.
 - Champion selection: evaluation metrics (MAE, log-MAE) and OOF performance are used to select the champion. A lightweight selection procedure marks the champion and writes SHAP/summary artifacts under `models/artifacts/`.
 

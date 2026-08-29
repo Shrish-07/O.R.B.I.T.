@@ -4,8 +4,9 @@ O.R.B.I.T — Automation & Reproducibility Summary
 This document summarizes automated actions taken by the agent to validate and run the canonical pipeline, produce reproducible artifacts, and provide an interactive explorer.
 
 Artifacts created
-- data/canonical/LOCK.json — canonical dataset snapshot metadata (sha256, rows, columns)
-- data/canonical/modeling_dataset_canonical.parquet — copied canonical dataset snapshot
+- data/canonical/modeling_dataset_canonical_v2.parquet — authoritative canonical modeling dataset (current)
+- data/canonical/modeling_dataset_canonical.parquet — superseded v1 snapshot (no longer on disk)
+- data/canonical/LOCK.json — canonical dataset snapshot metadata (sha256, rows, columns) *(no longer present on disk — see LOCK.md/other records)*
 - data/splits/* — canonical temporal train/test splits (all_years, year2017)
 - models/lgbm_all_years_political.txt — trained LightGBM model artifact
 - models/artifacts/lgbm_all_years_political_metrics.json — metrics
