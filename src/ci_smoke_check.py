@@ -8,7 +8,7 @@ sys.path.insert(0, os.getcwd())
 FILES = [
     'src/data_loader.py',
     'src/feature_engineering.py',
-    'src/train_model.py',
+    'models/training/train_lgbm.py',
     'src/auth.py',
     'app/app.py'
 ]

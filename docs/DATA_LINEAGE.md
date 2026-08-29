@@ -26,8 +26,14 @@ Processed datasets:
 - data\processed\ed_ideology.parquet
 - data\processed\ed_results_clean.parquet
 - data\processed\ed_to_council_crosswalk.parquet
+- data\processed\ideology_by_council.parquet
+
+Superseded / removed processed modeling artifacts (no longer on disk; replaced by the canonical dataset below):
 - data\processed\modeling_dataset.parquet
 - data\processed\modeling_dataset_fe.parquet
 - data\processed\modeling_dataset_fe_imputed.parquet
 - data\processed\modeling_dataset_with_target.parquet
 - data\processed\sales_pluto_ideology.parquet
+
+Authoritative canonical modeling dataset (used by pipeline_sanity_check.py, freeze_schema.py, split_temporal.py, political_scenarios.py):
+- data\canonical\modeling_dataset_canonical_v2.parquet
