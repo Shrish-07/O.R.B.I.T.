@@ -38,16 +38,30 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; else pip install pandas pyarrow fastparquet lightgbm scikit-learn; fi
 
+      - name: Check canonical dataset availability
+        id: check_data
+        run: |
+          if [ -f "data/canonical/modeling_dataset_canonical_v2.parquet" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::data/canonical/modeling_dataset_canonical_v2.parquet is gitignored and not present in CI checkout. Skipping pipeline sanity/smoke steps. Run this job locally with real data, or add a data-fetch step to this workflow if you want it enforced in CI."
+          fi
+
       - name: Run pipeline sanity check
+        if: steps.check_data.outputs.exists == 'true'
         run: python src/pipeline_sanity_check.py
 
       - name: Generate splits
+        if: steps.check_data.outputs.exists == 'true'
         run: python src/split_temporal.py
 
       - name: Run smoke training
+        if: steps.check_data.outputs.exists == 'true'
         run: python models/training/train_smoke.py
 
       - name: Upload smoke result
+        if: steps.check_data.outputs.exists == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: smoke-result

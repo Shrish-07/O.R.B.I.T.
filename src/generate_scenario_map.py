@@ -42,9 +42,9 @@ for ax, scen, title, cmap in zip(axes, colors_map, titles, cmaps):
 fig.patch.set_facecolor('#0d1117')
 fig.suptitle('Political Scenario Impact on Property Prices by NYC Council District', color='white', fontsize=14, y=1.01)
 plt.tight_layout()
-plt.savefig(OUT / 'scenario_impact_all_three.png', dpi=150, bbox_inches='tight', facecolor='#0d1117')
+plt.savefig(OUT / 'scenario_impact_all_three_FIXED.png', dpi=150, bbox_inches='tight', facecolor='#0d1117')
 plt.close()
-print('Saved scenario_impact_all_three.png')
+print('Saved scenario_impact_all_three_FIXED.png')
 print()
 for scen in colors_map:
     df_s = scenarios[scen]
