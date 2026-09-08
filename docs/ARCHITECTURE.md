@@ -9,7 +9,7 @@ At its core, O.R.B.I.T. separates data ingestion, canonicalization, modeling, an
 ## Data pipeline
 
 - Raw sources: raw data lands in `data/raw/` and may include PAD/PLUTO extracts, election result CSVs, sales records, and geospatial crosswalks.
-- Preprocessing: ingestion scripts under `src/` (e.g., `build_sales_pluto.py`, `normalize_ed_results.py`) standardize column names, handle coordinate reprojection, and correct encoding/format issues.
+- Preprocessing: ingestion scripts under `src/` (e.g., `normalize_ed_results.py`) standardize column names, handle coordinate reprojection, and correct encoding/format issues. (The former sales/PLUTO ingestion step `build_sales_pluto.py` no longer exists under `src/` — it was folded into `src/data_pipeline/rebuild_canonical.py` before this reorganization.)
 - Canonical dataset: the canonical modeling table is stored as `data/canonical/modeling_dataset_canonical_v2.parquet`. This is the authoritative feature table used for training and downstream inference. Canonicalization includes leakage removal, feature imputation, and the application of the feature blacklist.
 - Splits: temporal train/test splits are persisted under `data/splits/` (for example `all_years_test.parquet`). Splits are constructed to respect temporal holdouts and avoid information leakage from future data.
 - Outputs: intermediate and processed data are under `data/processed/`, while final split files and canonical artifacts are versioned inside `data/canonical/` and checked into experiments and artifacts folders where appropriate.
@@ -24,24 +24,24 @@ At its core, O.R.B.I.T. separates data ingestion, canonicalization, modeling, an
 ## Political modeling pipeline
 
 - Sources: raw election CSVs (multiple years) are processed to compute vote shares at the council and precinct level.
-- Ideology derivation: the **production** `dem_share` feature comes from `src/build_ideology_scores.py`, which writes `data/processed/ideology_by_council.parquet` (a custom line-by-line parser of the raw ED `ed_results_{year}_mayor.csv` files, aggregated to council+year). `src/rebuild_canonical.py` merges it per `(CounDist, election_year)` into the canonical dataset, and it is aggregated across three election years (2017/2021/2025) for robustness. A SEPARATE abandoned pipeline — `src/compute_ideology.py` → `ed_ideology.parquet` → `src/build_district_ideology.py` → `district_ideology.parquet` (+ `src/impute_ideology.py`) — is **blacklisted** in `config/feature_blacklist.yaml` and feeds no model.
+- Ideology derivation: the **production** `dem_share` feature comes from `src/data_pipeline/build_ideology_scores.py`, which writes `data/processed/ideology_by_council.parquet` (a custom line-by-line parser of the raw ED `ed_results_{year}_mayor.csv` files, aggregated to council+year). `src/data_pipeline/rebuild_canonical.py` merges it per `(CounDist, election_year)` into the canonical dataset, and it is aggregated across three election years (2017/2021/2025) for robustness. A SEPARATE abandoned pipeline — `src/compute_ideology.py` → `ed_ideology.parquet` → `src/build_district_ideology.py` → `district_ideology.parquet` (+ `src/impute_ideology.py`) — is **blacklisted** in `config/feature_blacklist.yaml` and feeds no model.
 - Political model: a dedicated LightGBM political model (`models/lgbm_all_years_political.txt`) is trained on features tailored to political sensitivity (ideology features, demographic indicators) and stored with accompanying feature lists.
-- Scenarios: `src/political_scenarios.py` applies scenario transformations (liberal_policy, conservative_policy, mixed_governance) and uses the political model for the mixed governance variant where appropriate. Scenario outputs are stored in `results/political_scenarios/` for aggregation and visualization.
+- Scenarios: `src/analysis/political_scenarios.py` applies scenario transformations (liberal_policy, conservative_policy, mixed_governance) and uses the political model for the mixed governance variant where appropriate. Scenario outputs are stored in `results/political_scenarios/` for aggregation and visualization.
 
 ## Spatial statistics pipeline
 
-- Moran's I (paper Section 4.2) is computed by `src/compute_morans_i.py`. Unlike earlier internal versions that erroneously built the spatial-weights neighborhoods from the mean lat/lon of *individual sale transactions* grouped by council district, the production path now:
+- Moran's I (paper Section 4.2) is computed by `src/analysis/compute_morans_i.py`. Unlike earlier internal versions that erroneously built the spatial-weights neighborhoods from the mean lat/lon of *individual sale transactions* grouped by council district, the production path now:
   - Loads the **official NYC City Council District boundary shapefile** at `data/raw/election_districts/NYC_City_Council_Districts.shp` (note: the co-located `geo_export_9895bb0a-*.shp` is the *Election District* boundary file used by the ED-to-council crosswalk's area-overlap column — they must not be confused).
   - Merges polygon geometries onto council-district aggregates (`CounDist`, in both the shapefile's attribute table and the canonical dataset).
   - Builds the spatial weights from **polygon centroids** (`geometry.centroid`) using `libpysal.weights.KNN` with `k=5` nearest neighbours, row-standardized.
   - Computes Moran's I via `esda.Moran` with 999 conditional permutations (seed=42), for both the median `target_log_price` and the mean `dem_share` per council district.
-- This script declares its own dependencies (`esda`, `libpysal`) in `requirements.txt` and writes a self-documenting artifact at `results/morans_i_results.json` (including the shapefile path, join key, CRS, and weights construction). OLS regression diagnostics for Section 4.3/Appendix A.2 are emitted by `src/generate_regression_table.py` into `results/regression_diagnostics.json` and `results/regression_model3_full_summary.txt`.
+- This script declares its own dependencies (`esda`, `libpysal`) in `requirements.txt` and writes a self-documenting artifact at `results/morans_i_results.json` (including the shapefile path, join key, CRS, and weights construction). OLS regression diagnostics for Section 4.3/Appendix A.2 are emitted by `src/analysis/generate_regression_table.py` into `results/regression_diagnostics.json` and `results/regression_model3_full_summary.txt`.
 
 ## Application architecture
 
 - Streamlit frontend: `app/app.py` is the single entry point that renders multiple pages: Home, Individual Property Analysis, Portfolio Analysis, Political Scenarios, Model Explorer, Research Outputs, and User Dashboard.
-- Authentication: a minimal auth layer exists under `src/auth.py` which supports lightweight session storage and user history persistence.
-- Geocoding: `src/geocoder.py` integrates the NYC GeoSearch API to accept freeform addresses and map them to BBLs for direct property lookup.
+- Authentication: a minimal auth layer exists under `app/auth.py` which supports lightweight session storage and user history persistence.
+- Geocoding: `src/data_pipeline/geocoder.py` integrates the NYC GeoSearch API to accept freeform addresses and map them to BBLs for direct property lookup.
 - Model loading: the app resolves the champion using `experiments/champion.json` and loads the corresponding LightGBM model and feature list from `models/` and `models/artifacts/`.
 - Prediction serving: predictions are computed in-memory using the loaded LightGBM booster and optional serialized preprocessor; prediction intervals (when present) are loaded from `experiments/predictions/`.
 
@@ -81,13 +81,13 @@ pip install -r requirements.txt
 3. Build the canonical dataset and splits (production pipeline; see "Rebuild the modeling pipeline" in `README.md` for the full sequence):
 
 ```powershell
-python src/rebuild_canonical.py
-python src/split_temporal.py
+python src/data_pipeline/rebuild_canonical.py
+python src/data_pipeline/split_temporal.py
 ```
 
    Notes:
-   - `rebuild_canonical.py` is the production canonicalizer. It pulls the production `dem_share` from `src/build_ideology_scores.py` → `data/processed/ideology_by_council.parquet`. Do **not** run the abandoned `src/compute_ideology.py` pipeline — it is blacklisted in `config/feature_blacklist.yaml` and feeds no model (see the "Political modeling pipeline" section above).
-   - The earlier `build_sales_pluto.py` / `freeze_schema.py` steps are folded into `rebuild_canonical.py`; they are not a required standalone sequence.
+   - `rebuild_canonical.py` is the production canonicalizer. It pulls the production `dem_share` from `src/data_pipeline/build_ideology_scores.py` → `data/processed/ideology_by_council.parquet`. Do **not** run the abandoned `src/compute_ideology.py` pipeline — it is blacklisted in `config/feature_blacklist.yaml` and feeds no model (see the "Political modeling pipeline" section above).
+   - The earlier `build_sales_pluto.py` ingestion step was folded into `rebuild_canonical.py` and is not a required standalone script. `src/data_pipeline/freeze_schema.py`, by contrast, was **not** folded in — it is a real, currently-active standalone stage (wired into `main.py` as `freeze_schema`) that writes `docs/modeling_schema.csv` from the canonical dataset.
 
 4. Train a model (example; training config/overrides come from experiment entries in `experiments/registry.json`, not a top-level YAML):
 
@@ -104,7 +104,8 @@ python -m streamlit run app/app.py --server.headless true --server.port 8501
 6. Run smoke/CI checks:
 
 ```powershell
-python src/pipeline_sanity_check.py
+python src/ops/pipeline_sanity_check.py
+python src/ops/ci_smoke_check.py
 ```
 
 Maintainers should pin package versions in `requirements.txt` and record experiment metadata in `experiments/registry.json` to enable deterministic rebuilds.

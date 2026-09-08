@@ -1,0 +1,18 @@
+{
+  "mode": "political",
+  "scope": "2017",
+  "target": "log_sale_price",
+  "features": [
+    "log_land_square_feet",
+    "log_gross_square_feet",
+    "log_total_units",
+    "building_age",
+    "far",
+    "SALE_YEAR",
+    "Latitude",
+    "Longitude",
+    "district_ideology"
+  ],
+  "r2": 0.192488072971144,
+  "mae": 0.7074231495231434
+}

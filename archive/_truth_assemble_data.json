@@ -1,0 +1,1805 @@
+{
+  "HEAD_SHA": "1a0999434e405e7691f2ad52a1a96d70d09cdd06",
+  "ORIGIN_SHA": "1a0999434e405e7691f2ad52a1a96d70d09cdd06",
+  "IN_SYNC": true,
+  "stale_train": false,
+  "computed_by_line": [
+    "- `dem_share` is computed by `src/build_ideology_scores.py`, which writes `data/processed/ideology_by_council.parquet` (a custom line-by-line parser of the raw ED `ed_results_{year}_mayor.csv` election files, aggregated to council+year). `src/rebuild_canonical.py` merges this per `(CounDist, election_year)` into the canonical dataset; this is the production `dem_share` feature the political model trains on."
+  ],
+  "n_commits_origin": 16,
+  "n_commits_head": 16,
+  "ols_txt": "                            OLS Regression Results                            \n==============================================================================\nDep. Variable:       target_log_price   R-squared:                       0.148\nModel:                            OLS   Adj. R-squared:                  0.148\nMethod:                 Least Squares   F-statistic:                     9067.\nDate:                Tue, 18 Aug 2026   Prob (F-statistic):               0.00\nTime:                        20:42:35   Log-Likelihood:            -6.2745e+05\nNo. Observations:              470535   AIC:                         1.255e+06\nDf Residuals:                  470525   BIC:                         1.255e+06\nDf Model:                           9                                         \nCovariance Type:            nonrobust                                         \n==============================================================================\n                 coef    std err          t      P>|t|      [0.025      0.975]\n------------------------------------------------------------------------------\nconst         13.7219      0.025    557.921      0.000      13.674      13.770\ndem_share      0.1843      0.009     19.859      0.000       0.166       0.202\nyearbuilt   1.848e-05   1.19e-05      1.559      0.119   -4.76e-06    4.17e-05\nnumfloors     -0.0035      0.000    -19.215      0.000      -0.004      -0.003\nlanduse        0.0307      0.001     23.812      0.000       0.028       0.033\ncommfar        0.0494      0.001     79.687      0.000       0.048       0.051\nBOROUGH_2     -0.8127      0.006   -138.285      0.000      -0.824      -0.801\nBOROUGH_3     -0.2850      0.004    -64.342      0.000      -0.294      -0.276\nBOROUGH_4     -0.6609      0.005   -142.580      0.000      -0.670      -0.652\nBOROUGH_5     -0.6583      0.008    -86.587      0.000      -0.673      -0.643\n==============================================================================\nOmnibus:                    50100.014   Durbin-Watson:                   1.517\nProb(Omnibus):                  0.000   Jarque-Bera (JB):           352014.397\nSkew:                           0.264   Prob(JB):                         0.00\nKurtosis:                       7.204   Cond. No.                     3.64e+04\n==============================================================================\n\nNotes:\n[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.\n[2] The condition number is large, 3.64e+04. This might indicate that there are\nstrong multicollinearity or other numerical problems.",
+  "reg_csv": "Model,Variable,Coef,SE,p,R2,N\nBivariate,dem_share,0.889,0.007,0.0,0.0336,470535\n+ Controls,dem_share,0.5741,0.0071,0.0,0.0932,470535\n+ Controls,yearbuilt,-0.0001,0.0,0.0,0.0932,470535\n+ Controls,numfloors,0.0043,0.0002,0.0,0.0932,470535\n+ Controls,landuse,0.0778,0.0013,0.0,0.0932,470535\n+ Controls,commfar,0.0585,0.0006,0.0,0.0932,470535\n+ Borough FE,dem_share,0.1843,0.0093,0.0,0.1478,470535\n+ Borough FE,yearbuilt,0.0,0.0,0.1191,0.1478,470535\n+ Borough FE,numfloors,-0.0035,0.0002,0.0,0.1478,470535\n+ Borough FE,landuse,0.0307,0.0013,0.0,0.1478,470535\n+ Borough FE,commfar,0.0494,0.0006,0.0,0.1478,470535",
+  "morans": {
+    "moran_i_price": 0.5958926001898267,
+    "z_price": 7.459690697630827,
+    "p_sim_price": 0.001,
+    "moran_i_dem_share": 0.5796642128463974,
+    "z_dem_share": 7.9933883538489,
+    "p_sim_dem_share": 0.001,
+    "n_districts": 51,
+    "n_polygons_matched": 51,
+    "weights_spec": "k=5_row_standardized_knn",
+    "seed": 42,
+    "method": "esda_KNN_polygon_centroids",
+    "methodology": {
+      "shapefile_path": "data\\raw\\election_districts\\NYC_City_Council_Districts.shp",
+      "shapefile_crs": "EPSG:2263",
+      "coordinate_source": "council-district POLYGON CENTROIDS (geometry.centroid of the official NYC City Council District boundary shapefile)",
+      "join_key_shapefile": "CounDist",
+      "join_key_canonical": "CounDist",
+      "weights_construction": "libpysal KNN k=5, row-standardized (esda Moran transformation='r')",
+      "permutations": 999,
+      "aggregates": {
+        "median_log_price": "median of canonical target_log_price grouped by CounDist",
+        "dem_share": "mean of canonical dem_share grouped by CounDist"
+      },
+      "ideology_by_council_cross_reference": {
+        "1": {
+          "2017": 0.7159080199792668,
+          "2021": 0.7637474541751528,
+          "2025": 0.9286671036507167
+        },
+        "2": {
+          "2017": 0.7783282291479012,
+          "2021": 0.839572192513369,
+          "2025": 0.9462070529538497
+        },
+        "3": {
+          "2017": 0.7645862389586239,
+          "2021": 0.8610869676363823,
+          "2025": 0.9416953473550032
+        },
+        "4": {
+          "2017": 0.6519823788546255,
+          "2021": 0.8047998188747595,
+          "2025": 0.9194850759745118
+        },
+        "5": {
+          "2017": 0.6056939802868142,
+          "2021": 0.8053579983048974,
+          "2025": 0.9304386585909437
+        },
+        "6": {
+          "2017": 0.785735994326816,
+          "2021": 0.8692272796007864,
+          "2025": 0.9483277330624366
+        },
+        "7": {
+          "2017": 0.8812140042437102,
+          "2021": 0.9093180208061449,
+          "2025": 0.9652977156409936
+        },
+        "8": {
+          "2017": 0.881578947368421,
+          "2021": 0.8606610119918104,
+          "2025": 0.9370448672774254
+        },
+        "9": {
+          "2017": 0.9126028543535866,
+          "2021": 0.9148334227598653,
+          "2025": 0.9668829548290492
+        },
+        "10": {
+          "2017": 0.9095022624434389,
+          "2021": 0.8621353558926488,
+          "2025": 0.94721048798252
+        },
+        "11": {
+          "2017": 0.7793408360128617,
+          "2021": 0.7463710214409376,
+          "2025": 0.8931447939064835
+        },
+        "12": {
+          "2017": 0.7840026811148969,
+          "2021": 0.7641293694870958,
+          "2025": 0.9217724794381296
+        },
+        "13": {
+          "2017": 0.6577340088064012,
+          "2021": 0.608693253902587,
+          "2025": 0.7545441165648686
+        },
+        "14": {
+          "2017": 0.90588048567574,
+          "2021": 0.8277543366150961,
+          "2025": 0.9129179696896801
+        },
+        "15": {
+          "2017": 0.9013465429428591,
+          "2021": 0.8289462547608971,
+          "2025": 0.9099946836788942
+        },
+        "16": {
+          "2017": 0.937645056475321,
+          "2021": 0.8785360678925035,
+          "2025": 0.9340095864452124
+        },
+        "17": {
+          "2017": 0.9230674544559331,
+          "2021": 0.8567629459998523,
+          "2025": 0.917561409940816
+        },
+        "18": {
+          "2017": 0.8623122022718944,
+          "2021": 0.8012827725891752,
+          "2025": 0.9177835661851764
+        },
+        "19": {
+          "2017": 0.4590769230769231,
+          "2021": 0.47998684581415013,
+          "2025": 0.6328866681807859
+        },
+        "20": {
+          "2017": 0.47629177245591164,
+          "2021": 0.47034279111567595,
+          "2025": 0.7679585287583313
+        },
+        "21": {
+          "2017": 0.7247141600703606,
+          "2021": 0.6641785181111024,
+          "2025": 0.8664896029021183
+        },
+        "22": {
+          "2017": 0.7015521570417713,
+          "2021": 0.6878358294272322,
+          "2025": 0.9110213847764319
+        },
+        "23": {
+          "2017": 0.5535356016869345,
+          "2021": 0.5602711585866886,
+          "2025": 0.8147592870231551
+        },
+        "24": {
+          "2017": 0.6837069827216907,
+          "2021": 0.6598522510802397,
+          "2025": 0.8757170893719807
+        },
+        "25": {
+          "2017": 0.6714618440882313,
+          "2021": 0.6183992258777993,
+          "2025": 0.8882738827388273
+        },
+        "26": {
+          "2017": 0.6350010555203716,
+          "2021": 0.6235215166512876,
+          "2025": 0.9014539199283644
+        },
+        "27": {
+          "2017": 0.9341175613664506,
+          "2021": 0.9206840390879479,
+          "2025": 0.9508123748052526
+        },
+        "28": {
+          "2017": 0.8577599110464867,
+          "2021": 0.8338730114036322,
+          "2025": 0.9255066079295154
+        },
+        "29": {
+          "2017": 0.572280512958479,
+          "2021": 0.5744178337614984,
+          "2025": 0.8625988622172888
+        },
+        "30": {
+          "2017": 0.5426948594339173,
+          "2021": 0.5302225538826215,
+          "2025": 0.7336451492999628
+        },
+        "31": {
+          "2017": 0.8258420939712509,
+          "2021": 0.7979922606696204,
+          "2025": 0.9123148499810102
+        },
+        "32": {
+          "2017": 0.45764514306603304,
+          "2021": 0.44786919571375783,
+          "2025": 0.6750822948506936
+        },
+        "33": {
+          "2017": 0.8597701942652083,
+          "2021": 0.8770917109871579,
+          "2025": 0.9600802773216567
+        },
+        "34": {
+          "2017": 0.8328836424957842,
+          "2021": 0.7602747909199522,
+          "2025": 0.9539337963926794
+        },
+        "35": {
+          "2017": 0.9284028832789217,
+          "2021": 0.9214050198506157,
+          "2025": 0.9826259178152776
+        },
+        "36": {
+          "2017": 0.9572728416285798,
+          "2021": 0.9455493516681279,
+          "2025": 0.982332423415226
+        },
+        "37": {
+          "2017": 0.8617308595584782,
+          "2021": 0.800734378073569,
+          "2025": 0.9520321548509929
+        },
+        "38": {
+          "2017": 0.6174283353460879,
+          "2021": 0.5552686275744788,
+          "2025": 0.8680456273764259
+        },
+        "39": {
+          "2017": 0.8262563187630092,
+          "2021": 0.8423096454282044,
+          "2025": 0.969887748814531
+        },
+        "40": {
+          "2017": 0.8928622209583392,
+          "2021": 0.8813110669936549,
+          "2025": 0.9722984092155788
+        },
+        "41": {
+          "2017": 0.9582126381289561,
+          "2021": 0.9431146842073208,
+          "2025": 0.9704730831973899
+        },
+        "42": {
+          "2017": 0.9072700967537752,
+          "2021": 0.8720294373179333,
+          "2025": 0.9175803242602548
+        },
+        "43": {
+          "2017": 0.42182208639629964,
+          "2021": 0.3813167664216986,
+          "2025": 0.7274274905422446
+        },
+        "44": {
+          "2017": 0.4679646819107992,
+          "2021": 0.44423428920073216,
+          "2025": 0.7564462375021926
+        },
+        "45": {
+          "2017": 0.7934940871479811,
+          "2021": 0.7775180059579924,
+          "2025": 0.9444823798355253
+        },
+        "46": {
+          "2017": 0.6664426080423866,
+          "2021": 0.6468282537397009,
+          "2025": 0.7840440165061898
+        },
+        "47": {
+          "2017": 0.45076060848678945,
+          "2021": 0.4374951014969825,
+          "2025": 0.7349626003929544
+        },
+        "48": {
+          "2017": 0.48275686931789324,
+          "2021": 0.5029616155962875,
+          "2025": 0.675718629076838
+        },
+        "49": {
+          "2017": 0.4038426549252211,
+          "2021": 0.4332620058231312,
+          "2025": 0.7269832846908995
+        },
+        "50": {
+          "2017": 0.2491403643828586,
+          "2021": 0.28903003963895124,
+          "2025": 0.5409518539014941
+        },
+        "51": {
+          "2017": 0.1549376739682924,
+          "2021": 0.18524201798309373,
+          "2025": 0.3552790346907994
+        }
+      }
+    },
+    "discrepancy_flags": [
+      "PRICE z: got 7.46 vs paper 7.58 (diff -0.12)",
+      "DEM z: got 7.99 vs paper 7.69 (diff +0.30)"
+    ],
+    "paper_targets": {
+      "moran_i_price": 0.5959,
+      "z_price": 7.58,
+      "moran_i_dem_share": 0.5797,
+      "z_dem_share": 7.69
+    }
+  },
+  "rdiag": {
+    "model": "Model 3 (dem_share + structural controls + borough FE)",
+    "n_observations": 470535,
+    "n_predictors": 9,
+    "r2": 0.14779721834135273,
+    "adj_r2": 0.1477809177727646,
+    "durbin_watson": 1.5173268248533618,
+    "condition_number": 36407.11780608966,
+    "residual_skew": 0.2643843385746497,
+    "residual_kurtosis_fisher_excess": 4.204242345051539,
+    "residual_kurtosis_pearson": 7.204242345051539,
+    "kurtosis_paper_reports": "Pearson convention (kurtosis = excess + 3)",
+    "kurtosis_matches_paper": true,
+    "jarque_bera": 352014.397,
+    "jarque_bera_pvalue": 0.0,
+    "omnibus": 50100.014,
+    "omnibus_pvalue": 0.0,
+    "paper_targets_appendix_a2": {
+      "durbin_watson": 1.517,
+      "omnibus": 50100.014,
+      "jarque_bera": 352014.397,
+      "skew": 0.264,
+      "kurtosis": 7.204,
+      "condition_number": 36400.0
+    },
+    "note": "residual_skew uses scipy.stats.skew(bias=False) on m3.resid. Two kurtosis conventions are saved to resolve a labeling ambiguity: residual_kurtosis_fisher_excess is the Fisher excess kurtosis (normal => 0), and residual_kurtosis_pearson is the Pearson (non-excess) kurtosis = excess + 3 (normal => 3). The paper's Appendix A.2 kurtosis field (7.204) is the Pearson convention, so it equals residual_kurtosis_fisher_excess + 3 exactly. All diagnostics computed from the same m3 fit as regression_table.csv."
+  },
+  "AB": {
+    "section": {
+      "A_abstract": {
+        "transaction_count": {
+          "paper": 514618,
+          "recomputed": 514618
+        },
+        "council_districts": {
+          "paper": 51,
+          "recomputed": 51
+        },
+        "election_years": {
+          "paper": [
+            2017,
+            2021,
+            2025
+          ],
+          "recomputed": [
+            2017,
+            2021,
+            2025
+          ]
+        },
+        "bivariate_beta": {
+          "paper": 0.889,
+          "recomputed": 0.889,
+          "p": 0.0
+        },
+        "controlled_boroughFE_beta": {
+          "paper": 0.184,
+          "recomputed": 0.1843,
+          "p": 0.0
+        },
+        "shrinking_80pct": {
+          "paper": "shrinking 80 percent",
+          "recomputed_pct": 79.3
+        },
+        "lgbm_base_mae": {
+          "paper": 0.428972,
+          "recomputed": 0.428972
+        },
+        "lgbm_political_mae": {
+          "paper": 0.429342,
+          "recomputed": 0.429342
+        },
+        "shap_rank_dem_share": {
+          "paper": "12th of 17",
+          "recomputed_rank_among_nonzero": 12,
+          "n_nonzero_features": 16,
+          "n_total_entries_in_json": 18
+        },
+        "morans_i_price": {
+          "paper": 0.596,
+          "stored_full": 0.5958926001898267,
+          "rounds_to_3dec": 0.596
+        },
+        "morans_i_dem_share": {
+          "paper": 0.58,
+          "stored_full": 0.5796642128463974,
+          "rounds_to_3dec": 0.58
+        },
+        "morans_p_paper": 0.001,
+        "morans_p_stored": 0.001
+      },
+      "B_intro_ranges": {
+        "dem_share_per_cd_mean_min": {
+          "value": 0.18962977737125936,
+          "cd": 51
+        },
+        "dem_share_per_cd_mean_max": {
+          "value": 0.9529767527336696,
+          "cd": 36
+        },
+        "median_logprice_per_cd_min": {
+          "value": 12.834681304952548,
+          "cd": 11
+        },
+        "median_logprice_per_cd_max": {
+          "value": 14.389310980891652,
+          "cd": 1
+        },
+        "dem_share_ideology_min_any_cdyear": 0.1549376739682924,
+        "dem_share_ideology_max_any_cdyear": 0.9826259178152776
+      }
+    },
+    "raw": {
+      "canonical_file": "modeling_dataset_canonical_v2.parquet",
+      "n_rows": 514618,
+      "n_cols": 53
+    }
+  },
+  "C": {
+    "section_C_ideology": {
+      "cd1_2017_dem_share": {
+        "paper": 0.715908,
+        "recomputed": 0.7159080199792668,
+        "diff": 1.9979266796532613e-08
+      },
+      "district_ideology_columns": [
+        "year",
+        "COUNCIL_DISTRICT",
+        "district_ideology"
+      ],
+      "district_ideology_years_present": [
+        2017
+      ],
+      "cd1_district_ideology": {
+        "paper": 0.711309,
+        "recomputed": 0.7113089490787546,
+        "value_column_used": "district_ideology"
+      },
+      "dem_share_missing": {
+        "paper": 12558,
+        "recomputed": 12558
+      },
+      "dem_share_coverage_pct": {
+        "paper": 97.56,
+        "recomputed": 97.5597
+      },
+      "dem_share_missing_pct": {
+        "paper": 2.44,
+        "recomputed": 2.4403
+      },
+      "canonical_total": 514618,
+      "crosswalk_columns": [
+        "ElectDist",
+        "CounDist",
+        "area"
+      ],
+      "crosswalk_n_rows": {
+        "paper": 5783,
+        "recomputed": 5783
+      },
+      "crosswalk_n_distinct_ed": {
+        "paper": 4264,
+        "recomputed": 4264
+      },
+      "crosswalk_ed_in_gt1_row": {
+        "paper": 1383,
+        "recomputed": 1383
+      },
+      "crosswalk_ed_multi_pct": {
+        "paper": 32.4,
+        "recomputed": 32.43
+      },
+      "crosswalk_max_minority_share": {
+        "paper_le": 0.11,
+        "recomputed_fraction": 0.0010647895207527291,
+        "recomputed_pct": 0.1065,
+        "n_split_eds": 1383
+      }
+    }
+  },
+  "DE": {
+    "raw": {
+      "canonical_file": "modeling_dataset_canonical_v2.parquet"
+    },
+    "section_D": {
+      "dataset_rows": {
+        "paper": 514618,
+        "recomputed": 514618,
+        "actual_loaded": 514618
+      },
+      "dataset_cols": {
+        "paper": 53,
+        "recomputed": 53,
+        "actual_loaded": 53
+      },
+      "base_feature_count": {
+        "paper": 16,
+        "from_feature_names_line": 16,
+        "from_max_feature_idx_plus1": 16,
+        "feature_names": [
+          "BOROUGH",
+          "ZIP_CODE",
+          "YEAR_BUILT",
+          "TAX_CLASS_AT_TIME_OF_SALE",
+          "Community_Board",
+          "Council_District",
+          "Census_Tract_2020",
+          "landuse",
+          "numfloors",
+          "yearbuilt",
+          "residfar",
+          "commfar",
+          "facilfar",
+          "BBL_pluto",
+          "election_year",
+          "CounDist"
+        ]
+      },
+      "political_feature_count": {
+        "paper": 17,
+        "from_feature_names_line": 17,
+        "from_max_feature_idx_plus1": 17,
+        "feature_names": [
+          "BOROUGH",
+          "ZIP_CODE",
+          "YEAR_BUILT",
+          "TAX_CLASS_AT_TIME_OF_SALE",
+          "Community_Board",
+          "Council_District",
+          "Census_Tract_2020",
+          "landuse",
+          "numfloors",
+          "yearbuilt",
+          "residfar",
+          "commfar",
+          "facilfar",
+          "BBL_pluto",
+          "election_year",
+          "CounDist",
+          "dem_share"
+        ]
+      },
+      "yearbuilt_vs_YEARBUILT": {
+        "paper_both_populated": 464204,
+        "recomputed_both_populated": 464204,
+        "paper_agree": 410164,
+        "recomputed_agree": 410164,
+        "paper_disagree": 54040,
+        "recomputed_disagree": 54040,
+        "paper_max_disagreement_years": 2025,
+        "recomputed_max_disagreement_years": 2025.0,
+        "paper_correlation": 0.146,
+        "recomputed_correlation": 0.145953,
+        "paper_agree_pct": 88.4,
+        "recomputed_agree_pct": 88.36,
+        "paper_disagree_pct": 11.6,
+        "recomputed_disagree_pct": 11.64
+      }
+    },
+    "section_E": {
+      "train_rows": {
+        "paper": 121622,
+        "recomputed": 121622
+      },
+      "test_rows": {
+        "paper": 56817,
+        "recomputed": 56817
+      },
+      "election_year_distribution": {
+        "2017": {
+          "rows": 178439,
+          "pct": 34.67
+        },
+        "2021": {
+          "rows": 285617,
+          "pct": 55.5
+        },
+        "2025": {
+          "rows": 50562,
+          "pct": 9.83
+        }
+      },
+      "election_year_distribution_paper": {
+        "2017": {
+          "rows": 178439,
+          "pct": 34.7
+        },
+        "2021": {
+          "rows": 285617,
+          "pct": 55.5
+        },
+        "2025": {
+          "rows": 50562,
+          "pct": 9.8
+        }
+      },
+      "train_plus_test": {
+        "value": 178439,
+        "paper": 178439
+      },
+      "election_year_2017_subset": {
+        "value": 178439,
+        "paper": 178439
+      },
+      "identity_holds": true,
+      "train_sale_year_range": [
+        2016,
+        2017
+      ],
+      "test_sale_year_range": [
+        2018,
+        2018
+      ]
+    }
+  },
+  "F": {
+    "section_F": {
+      "bivariate_r_51districts": {
+        "paper": 0.163,
+        "recomputed": 0.163015,
+        "n_districts": 51
+      },
+      "district_1": {
+        "paper_dem_share_range": "0.75-0.85",
+        "dem_share_min_across_years": 0.7159,
+        "dem_share_max_across_years": 0.9287,
+        "dem_share_per_year": {
+          "2017": 0.7159080199792668,
+          "2021": 0.7637474541751528,
+          "2025": 0.9286671036507167
+        },
+        "paper_logprice_range": "14.4-14.6",
+        "median_logprice_per_year": {
+          "2017": 14.457364444136669,
+          "2021": 14.368268599237528,
+          "2025": 14.305063987610733
+        },
+        "median_logprice_min_across_years": 14.305063987610733,
+        "median_logprice_max_across_years": 14.457364444136669
+      },
+      "districts_11_16_18_27": {
+        "11": {
+          "dem_share_min_across_years": 0.7463710214409376,
+          "dem_share_max_across_years": 0.8931447939064835,
+          "dem_share_any_above_080": true,
+          "median_logprice_min_across_years": 12.676076274775909,
+          "median_logprice_max_across_years": 13.17115354157376,
+          "dem_share_per_year": {
+            "2017": 0.7793408360128617,
+            "2021": 0.7463710214409376,
+            "2025": 0.8931447939064835
+          },
+          "median_logprice_per_year": {
+            "2017": 12.676076274775909,
+            "2021": 12.896716695872,
+            "2025": 13.17115354157376
+          }
+        },
+        "16": {
+          "dem_share_min_across_years": 0.8785360678925035,
+          "dem_share_max_across_years": 0.937645056475321,
+          "dem_share_any_above_080": true,
+          "median_logprice_min_across_years": 12.951973553525985,
+          "median_logprice_max_across_years": 13.38472764187182,
+          "dem_share_per_year": {
+            "2017": 0.937645056475321,
+            "2021": 0.8785360678925035,
+            "2025": 0.9340095864452124
+          },
+          "median_logprice_per_year": {
+            "2017": 12.951973553525985,
+            "2021": 13.38472764187182,
+            "2025": 13.12236137740233
+          }
+        },
+        "18": {
+          "dem_share_min_across_years": 0.8012827725891752,
+          "dem_share_max_across_years": 0.9177835661851764,
+          "dem_share_any_above_080": true,
+          "median_logprice_min_across_years": 12.680598061096585,
+          "median_logprice_max_across_years": 13.004654086309417,
+          "dem_share_per_year": {
+            "2017": 0.8623122022718944,
+            "2021": 0.8012827725891752,
+            "2025": 0.9177835661851764
+          },
+          "median_logprice_per_year": {
+            "2017": 12.680598061096585,
+            "2021": 12.995097865126407,
+            "2025": 13.004654086309417
+          }
+        },
+        "27": {
+          "dem_share_min_across_years": 0.9206840390879479,
+          "dem_share_max_across_years": 0.9508123748052526,
+          "dem_share_any_above_080": true,
+          "median_logprice_min_across_years": 12.995665724358371,
+          "median_logprice_max_across_years": 13.415032991367148,
+          "dem_share_per_year": {
+            "2017": 0.9341175613664506,
+            "2021": 0.9206840390879479,
+            "2025": 0.9508123748052526
+          },
+          "median_logprice_per_year": {
+            "2017": 12.995665724358371,
+            "2021": 13.272506035834049,
+            "2025": 13.415032991367148
+          }
+        }
+      },
+      "shift_2017_to_2025": {
+        "paper_positive": "49 of 51",
+        "recomputed_positive": 49,
+        "paper_negative_districts": [
+          16,
+          17
+        ],
+        "recomputed_negative_districts": [
+          16,
+          17
+        ],
+        "n_negative": 2,
+        "all_shifts": {
+          "1": 0.212759,
+          "2": 0.167879,
+          "3": 0.177109,
+          "4": 0.267503,
+          "5": 0.324745,
+          "6": 0.162592,
+          "7": 0.084084,
+          "8": 0.055466,
+          "9": 0.05428,
+          "10": 0.037708,
+          "11": 0.113804,
+          "12": 0.13777,
+          "13": 0.09681,
+          "14": 0.007037,
+          "15": 0.008648,
+          "16": -0.003635,
+          "17": -0.005506,
+          "18": 0.055471,
+          "19": 0.17381,
+          "20": 0.291667,
+          "21": 0.141775,
+          "22": 0.209469,
+          "23": 0.261224,
+          "24": 0.19201,
+          "25": 0.216812,
+          "26": 0.266453,
+          "27": 0.016695,
+          "28": 0.067747,
+          "29": 0.290318,
+          "30": 0.19095,
+          "31": 0.086473,
+          "32": 0.217437,
+          "33": 0.10031,
+          "34": 0.12105,
+          "35": 0.054223,
+          "36": 0.02506,
+          "37": 0.090301,
+          "38": 0.250617,
+          "39": 0.143631,
+          "40": 0.079436,
+          "41": 0.01226,
+          "42": 0.01031,
+          "43": 0.305605,
+          "44": 0.288482,
+          "45": 0.150988,
+          "46": 0.117601,
+          "47": 0.284202,
+          "48": 0.192962,
+          "49": 0.323141,
+          "50": 0.291811,
+          "51": 0.200341
+        }
+      }
+    }
+  },
+  "H_ols": {
+    "section_H_ols": {
+      "N": {
+        "paper": 470535,
+        "recomputed": 470535
+      },
+      "model1": {
+        "dem_share": {
+          "paper_coef": 0.889,
+          "paper_se": 0.007,
+          "coef": 0.8889774021166222,
+          "se": 0.0069517168857020275,
+          "t": 127.87882716355008,
+          "p": 0.0
+        },
+        "R2": {
+          "paper": 0.0336,
+          "recomputed": 0.033586906634363034
+        }
+      },
+      "model2": {
+        "dem_share": {
+          "paper_coef": 0.5741,
+          "paper_se": 0.0071,
+          "coef": 0.5741061028060054,
+          "se": 0.007051755212777469,
+          "t": 81.41322060722563,
+          "p": 0.0
+        },
+        "yearbuilt": {
+          "paper_coef": -0.0001,
+          "paper_se": null,
+          "coef": -8.617824048166091e-05,
+          "se": 1.2195813996929429e-05,
+          "t": -7.066214727722006,
+          "p": 1.5943640235578282e-12
+        },
+        "numfloors": {
+          "paper_coef": 0.0043,
+          "paper_se": 0.0002,
+          "coef": 0.004251036981117191,
+          "se": 0.00017478684088720036,
+          "t": 24.321264458693552,
+          "p": 1.4072871448525853e-130
+        },
+        "landuse": {
+          "paper_coef": 0.0778,
+          "paper_se": 0.0013,
+          "coef": 0.07778176372303897,
+          "se": 0.0012835891822603925,
+          "t": 60.59708573273091,
+          "p": 0.0
+        },
+        "commfar": {
+          "paper_coef": 0.0585,
+          "paper_se": 0.0006,
+          "coef": 0.05845170458602397,
+          "se": 0.0006356882762225809,
+          "t": 91.95026363134878,
+          "p": 0.0
+        },
+        "R2": {
+          "paper": 0.0932,
+          "recomputed": 0.09322656573712262
+        }
+      },
+      "model3": {
+        "dem_share": {
+          "paper_coef": 0.1843,
+          "paper_se": 0.0093,
+          "paper_t": 19.859,
+          "coef": 0.18425848868323655,
+          "se": 0.009278522420740613,
+          "t": 19.85860251534845,
+          "p": 1.008952449475397e-87
+        },
+        "yearbuilt": {
+          "paper_coef": 0.0,
+          "paper_se": null,
+          "paper_t": 1.559,
+          "paper_p": 0.119,
+          "coef": 1.8477781329844587e-05,
+          "se": 1.1856112177485076e-05,
+          "t": 1.558502572616861,
+          "p": 0.11911483118326203
+        },
+        "numfloors": {
+          "paper_coef": -0.0035,
+          "paper_se": 0.0002,
+          "paper_t": -19.215,
+          "coef": -0.0034766217211341997,
+          "se": 0.00018092966952374734,
+          "t": -19.21532123661944,
+          "p": 2.963264951476228e-82
+        },
+        "landuse": {
+          "paper_coef": 0.0307,
+          "paper_se": 0.0013,
+          "paper_t": 23.812,
+          "coef": 0.030717095573523923,
+          "se": 0.0012899901532812826,
+          "t": 23.811883753833627,
+          "p": 2.985545928496253e-125
+        },
+        "commfar": {
+          "paper_coef": 0.0494,
+          "paper_se": 0.0006,
+          "paper_t": 79.687,
+          "coef": 0.049449459955513475,
+          "se": 0.0006205464437312057,
+          "t": 79.6869605088461,
+          "p": 0.0
+        },
+        "const": {
+          "paper_coef": 13.7219,
+          "paper_t": 557.921,
+          "coef": 13.721895168071269,
+          "se": 0.02459470570644371,
+          "t": 557.920689592809,
+          "p": 0.0
+        },
+        "BOROUGH_2": {
+          "paper_coef": -0.8127,
+          "paper_t": -138.285,
+          "coef": -0.812665530099178,
+          "se": 0.00587673304265009,
+          "t": -138.28525546443905,
+          "p": 0.0
+        },
+        "BOROUGH_3": {
+          "paper_coef": -0.285,
+          "paper_t": -64.342,
+          "coef": -0.28499067937892647,
+          "se": 0.004429299204600253,
+          "t": -64.34216028642551,
+          "p": 0.0
+        },
+        "BOROUGH_4": {
+          "paper_coef": -0.6609,
+          "paper_t": -142.58,
+          "coef": -0.6609248866798493,
+          "se": 0.004635470860302732,
+          "t": -142.57988165557916,
+          "p": 0.0
+        },
+        "BOROUGH_5": {
+          "paper_coef": -0.6583,
+          "paper_t": -86.587,
+          "coef": -0.6582972247131502,
+          "se": 0.0076027098493751015,
+          "t": -86.58718243301873,
+          "p": 0.0
+        },
+        "R2": {
+          "paper": 0.1478,
+          "recomputed": 0.14779721834135273
+        },
+        "adj_R2": {
+          "paper": 0.148,
+          "recomputed": 0.1477809177727646
+        },
+        "F_stat": {
+          "paper": 9067,
+          "recomputed": 9066.99772724599
+        },
+        "F_p": {
+          "paper": 0.0,
+          "recomputed": 0.0
+        },
+        "borough_FE": "Yes (drop_first=True => BOROUGH_1=Manhattan reference)"
+      },
+      "borough_borough_codes": {
+        "2": "Bronx",
+        "3": "Brooklyn",
+        "4": "Queens",
+        "5": "Staten Island"
+      }
+    }
+  },
+  "H_miss": {
+    "section_H_missingness": {
+      "total_rows": {
+        "paper": 514618,
+        "recomputed": 514618
+      },
+      "n_after_dropna": {
+        "paper": 470535,
+        "recomputed": 470535
+      },
+      "rows_dropped": {
+        "paper": 44083,
+        "recomputed": 44083
+      },
+      "farf_group_size": {
+        "paper": 31692,
+        "recomputed": 31692
+      },
+      "numfloors_additional": {
+        "paper": 11918,
+        "recomputed": 11930,
+        "round2_corrected_value_used": 11930,
+        "diff_from_paper": 12
+      },
+      "dem_share_missing": {
+        "paper": 12558,
+        "recomputed": 12558
+      },
+      "dem_overlap_with_farf_group": {
+        "paper": 12424,
+        "recomputed": 12424
+      },
+      "dem_unique_to_dem_share": {
+        "paper": 134,
+        "recomputed": 134
+      },
+      "other_drops_beyond_captured": 380,
+      "check_sum": {
+        "farf": 31692,
+        "numfloors_beyond_farf": 11930,
+        "dem_unique_to_dem_share": 134,
+        "other_beyond_captured": 380,
+        "total": 44136,
+        "matches_dropped": false
+      },
+      "shrinkage_pct_0.889_0.184": {
+        "paper": "~80 percent",
+        "recomputed_using_paper_rounding": 79.3,
+        "recomputed_using_4dp_values": 79.27
+      },
+      "shrinkage_pct_m1_to_m2": 35.42,
+      "dem_share_0.10_effect": {
+        "paper_logpoints": "0.0184",
+        "recomputed_products": 0.01843,
+        "paper_pct": "~1.9% (also stated 1.86-1.9%)",
+        "recomputed_pct": 1.8601
+      }
+    }
+  },
+  "I": {
+    "section_I_model_comparison": {
+      "comparison_table_source": "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\O.R.B.I.T v2\\docs\\model_comparison_table.csv",
+      "rows_in_table": 7,
+      "models": {
+        "lgbm_all_years_base": {
+          "paper": {
+            "mae": 0.428972,
+            "r2": 0.541772
+          },
+          "comparison_csv": {
+            "mae": 0.428972,
+            "r2": 0.541772
+          },
+          "mae_match_rounded_5dp": true,
+          "r2_match_rounded_5dp": true
+        },
+        "lgbm_all_years_political": {
+          "paper": {
+            "mae": 0.429342,
+            "r2": 0.541345
+          },
+          "comparison_csv": {
+            "mae": 0.429342,
+            "r2": 0.541345
+          },
+          "mae_match_rounded_5dp": true,
+          "r2_match_rounded_5dp": true
+        },
+        "rf_all_years_political_n200": {
+          "paper": {
+            "mae": 0.43705,
+            "r2": 0.50663
+          },
+          "comparison_csv": {
+            "mae": 0.4370477634963115,
+            "r2": 0.5066343950498919
+          },
+          "mae_match_rounded_5dp": true,
+          "r2_match_rounded_5dp": true
+        },
+        "xgb_all_years_political_lr0.05_md6": {
+          "paper": {
+            "mae": 0.43922,
+            "r2": 0.52869
+          },
+          "comparison_csv": {
+            "mae": 0.4392201484272884,
+            "r2": 0.5286943913095352
+          },
+          "mae_match_rounded_5dp": true,
+          "r2_match_rounded_5dp": true
+        },
+        "cat_all_years_political_lr0.05_d6": {
+          "paper": {
+            "mae": 0.45391,
+            "r2": 0.50574
+          },
+          "comparison_csv": {
+            "mae": 0.4539147018162985,
+            "r2": 0.5057437362685357
+          },
+          "mae_match_rounded_5dp": true,
+          "r2_match_rounded_5dp": true
+        },
+        "ridge_all_years_political": {
+          "paper": {
+            "mae": 0.6558,
+            "r2": 0.11138
+          },
+          "comparison_csv": {
+            "mae": 0.6558020430385062,
+            "r2": 0.1113792740301399
+          },
+          "mae_match_rounded_5dp": true,
+          "r2_match_rounded_5dp": true
+        },
+        "elasticnet_all_years_political": {
+          "paper": {
+            "mae": 0.69037,
+            "r2": -0.00965
+          },
+          "comparison_csv": {
+            "mae": 0.6903724545495283,
+            "r2": -0.0096472604857866
+          },
+          "mae_match_rounded_5dp": true,
+          "r2_match_rounded_5dp": true
+        }
+      },
+      "mae_delta_base_to_political": {
+        "paper": 0.00037,
+        "recomputed": 0.00037
+      },
+      "r2_delta_base_to_political": {
+        "paper": -0.000427,
+        "recomputed": -0.000427
+      },
+      "tier1_spot_label": "Political MAE recomputed from raw prediction file if both pred+truth columns present; else read from comparison CSV (Tier 2). No point-prediction file exists for the base LGBM, so base MAE remains Tier 2 unless a paired truth file is found.",
+      "tier1_spot_check": {
+        "political_test_preds_columns": [
+          "BBL",
+          "pred_log_price"
+        ],
+        "political_pred_or_truth_not_found": [
+          "pred_log_price",
+          null
+        ],
+        "intervals_csv_columns": [
+          "pred",
+          "lower",
+          "upper"
+        ],
+        "intervals_csv_rows": 56798,
+        "base_prediction_intervals_columns": [
+          "pred",
+          "lower",
+          "upper"
+        ],
+        "base_prediction_intervals_rows": 56817
+      }
+    }
+  },
+  "J": {
+    "section_J_shap": {
+      "n_entries_in_json": 18,
+      "paper_shap_table_size": 17,
+      "row_by_row": {
+        "Community Board": {
+          "paper_value": 0.27472,
+          "json_value": 0.27472310195018673,
+          "json_value_rounded5": 0.27472,
+          "rank_in_paper_table": 1
+        },
+        "landuse": {
+          "paper_value": 0.11688,
+          "json_value": 0.11688048078548474,
+          "json_value_rounded5": 0.11688,
+          "rank_in_paper_table": 2
+        },
+        "yearbuilt": {
+          "paper_value": 0.106,
+          "json_value": 0.10599664771011037,
+          "json_value_rounded5": 0.106,
+          "rank_in_paper_table": 3
+        },
+        "numfloors": {
+          "paper_value": 0.09722,
+          "json_value": 0.09721568905462592,
+          "json_value_rounded5": 0.09722,
+          "rank_in_paper_table": 4
+        },
+        "TAX CLASS AT TIME OF SALE": {
+          "paper_value": 0.08728,
+          "json_value": 0.08728320655500665,
+          "json_value_rounded5": 0.08728,
+          "rank_in_paper_table": 5
+        },
+        "BBL_pluto": {
+          "paper_value": 0.07654,
+          "json_value": 0.07653668349348247,
+          "json_value_rounded5": 0.07654,
+          "rank_in_paper_table": 6
+        },
+        "YEAR BUILT": {
+          "paper_value": 0.06552,
+          "json_value": 0.06551596005667455,
+          "json_value_rounded5": 0.06552,
+          "rank_in_paper_table": 7
+        },
+        "ZIP CODE": {
+          "paper_value": 0.05823,
+          "json_value": 0.05822707191603916,
+          "json_value_rounded5": 0.05823,
+          "rank_in_paper_table": 8
+        },
+        "Council District": {
+          "paper_value": 0.05419,
+          "json_value": 0.054185475277348065,
+          "json_value_rounded5": 0.05419,
+          "rank_in_paper_table": 9
+        },
+        "facilfar": {
+          "paper_value": 0.04773,
+          "json_value": 0.047730860304526466,
+          "json_value_rounded5": 0.04773,
+          "rank_in_paper_table": 10
+        },
+        "Census Tract 2020": {
+          "paper_value": 0.045,
+          "json_value": 0.04500291522257181,
+          "json_value_rounded5": 0.045,
+          "rank_in_paper_table": 11
+        },
+        "dem_share": {
+          "paper_value": 0.03473,
+          "json_value": 0.03473107757361662,
+          "json_value_rounded5": 0.03473,
+          "rank_in_paper_table": 12
+        },
+        "residfar": {
+          "paper_value": 0.02662,
+          "json_value": 0.026623143812885147,
+          "json_value_rounded5": 0.02662,
+          "rank_in_paper_table": 13
+        },
+        "commfar": {
+          "paper_value": 0.01983,
+          "json_value": 0.019828444476695753,
+          "json_value_rounded5": 0.01983,
+          "rank_in_paper_table": 14
+        },
+        "BOROUGH": {
+          "paper_value": 0.01099,
+          "json_value": 0.010986315844223465,
+          "json_value_rounded5": 0.01099,
+          "rank_in_paper_table": 15
+        },
+        "CounDist": {
+          "paper_value": 0.00446,
+          "json_value": 0.004461298195896053,
+          "json_value_rounded5": 0.00446,
+          "rank_in_paper_table": 16
+        },
+        "Election Year": {
+          "paper_value": 0.0,
+          "json_value": null,
+          "json_value_rounded5": null,
+          "rank_in_paper_table": 17
+        }
+      },
+      "nonzero_count": 16,
+      "zero_count": 2,
+      "zero_features": [
+        "EASE-MENT",
+        "election_year"
+      ],
+      "dem_share_rank_by_descending_nonzero": 12,
+      "paper_dem_share_rank": "12th of 17",
+      "all_features_sorted_descending": [
+        [
+          "Community Board",
+          0.27472310195018673
+        ],
+        [
+          "landuse",
+          0.11688048078548474
+        ],
+        [
+          "yearbuilt",
+          0.10599664771011037
+        ],
+        [
+          "numfloors",
+          0.09721568905462592
+        ],
+        [
+          "TAX CLASS AT TIME OF SALE",
+          0.08728320655500665
+        ],
+        [
+          "BBL_pluto",
+          0.07653668349348247
+        ],
+        [
+          "YEAR BUILT",
+          0.06551596005667455
+        ],
+        [
+          "ZIP CODE",
+          0.05822707191603916
+        ],
+        [
+          "Council District",
+          0.054185475277348065
+        ],
+        [
+          "facilfar",
+          0.047730860304526466
+        ],
+        [
+          "Census Tract 2020",
+          0.04500291522257181
+        ],
+        [
+          "dem_share",
+          0.03473107757361662
+        ],
+        [
+          "residfar",
+          0.026623143812885147
+        ],
+        [
+          "commfar",
+          0.019828444476695753
+        ],
+        [
+          "BOROUGH",
+          0.010986315844223465
+        ],
+        [
+          "CounDist",
+          0.004461298195896053
+        ],
+        [
+          "EASE-MENT",
+          0.0
+        ],
+        [
+          "election_year",
+          0.0
+        ]
+      ],
+      "dem_share_rank_including_zeros": 12,
+      "base_model_community_board_shap": {
+        "paper": 0.30101,
+        "recomputed": 0.3010066497698798
+      }
+    }
+  },
+  "K_mech": {
+    "section_K_mechanics": {
+      "mechanics_liberal": "R3->R7 substring substitution on zonedist1 + residfar (*first far col*) x1.5 (Tier 1: read from src/political_scenarios.py)",
+      "mechanics_conservative": "R7->R3 substring substitution on zonedist1 + residfar (*first far col*) x0.7 (Tier 1: read from src/political_scenarios.py)",
+      "mechanics_mixed": "dem_share + 0.15 clipped to [0,1], re-predicted through political model (Tier 1: read from src/political_scenarios.py)",
+      "filter_base_pred_lt_9_removed": "base_pred >= 9.0 keeps rows; removes rows with base predicted log-price < 9.0",
+      "clip_to_neg100_100": "pct_change clipped to [-100, 100]",
+      "base_pred_min": 9.563523718823927,
+      "base_pred_max": 20.35015818010914,
+      "filter_9.0_removed_rows": 0,
+      "filter_9.0_removes_zero_rows": true,
+      "clip_counts": {
+        "liberal_upper": 109,
+        "liberal_lower": 0,
+        "conservative_upper": 9,
+        "conservative_lower": 0,
+        "mixed_upper": 816,
+        "mixed_lower": 0
+      }
+    }
+  },
+  "K_apx": {
+    "section_K_appendixA1_diff": {
+      "paper_table_rows": 51,
+      "actual_csv_rows": 51,
+      "merged_rows": 51,
+      "n_values_compared": 153,
+      "tolerance_pct_points": 0.02,
+      "n_exceptions": 0,
+      "exceptions": [],
+      "borough_mapping_mismatches": [],
+      "borough_mapping_all_match": true,
+      "summary_stats_from_actual_csv": {
+        "liberal_mean_pct": 7.4231,
+        "liberal_n_positive": 49,
+        "conservative_mean_pct": -0.7771,
+        "conservative_n_negative": 35,
+        "mixed_mean_pct": -3.3914,
+        "mixed_n_positive": 14
+      },
+      "paper_summary_stats": {
+        "liberal_mean": 7.42,
+        "liberal_n_positive": "49 of 51",
+        "conservative_mean": -0.78,
+        "conservative_n_negative": "35 of 51",
+        "mixed_mean": -3.39,
+        "mixed_n_positive": "14 of 51"
+      },
+      "named_extremes": {
+        "liberal_top5_positive_paper": [
+          51,
+          31,
+          50,
+          49,
+          32
+        ],
+        "liberal_top5_positive_actual": [
+          51,
+          31,
+          50,
+          49,
+          32
+        ],
+        "liberal_only_two_negatives_paper": [
+          41,
+          42
+        ],
+        "liberal_negatives_actual": [
+          41,
+          42
+        ],
+        "conservative_two_named_paper": [
+          10,
+          25
+        ],
+        "conservative_two_most_negative_actual": [
+          10,
+          25
+        ],
+        "mixed_top5_positive_paper": [
+          5,
+          4,
+          38,
+          45,
+          1
+        ],
+        "mixed_top5_positive_actual": [
+          5,
+          4,
+          38,
+          45,
+          1
+        ],
+        "mixed_top5_negative_paper": [
+          33,
+          10,
+          39,
+          17,
+          3
+        ],
+        "mixed_top5_negative_actual": [
+          33,
+          10,
+          39,
+          17,
+          3
+        ]
+      }
+    }
+  },
+  "L": {
+    "section_L_borough_mapping": {
+      "borough_mapping_from_csv": {
+        "Manhattan": {
+          "paper_districts": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "actual_districts": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "match": true
+        },
+        "Bronx": {
+          "paper_districts": [
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "actual_districts": [
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "match": true
+        },
+        "Queens": {
+          "paper_districts": [
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "actual_districts": [
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "match": true
+        },
+        "Brooklyn": {
+          "paper_districts": [
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48
+          ],
+          "actual_districts": [
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48
+          ],
+          "match": true
+        },
+        "Staten Island": {
+          "paper_districts": [
+            49,
+            50,
+            51
+          ],
+          "actual_districts": [
+            49,
+            50,
+            51
+          ],
+          "match": true
+        }
+      },
+      "all_borough_ranges_match": true,
+      "borough_mapping_from_canonical_BOROUGH": {
+        "Manhattan": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "Bronx": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "Queens": [
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32
+        ],
+        "Brooklyn": [
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48
+        ],
+        "Staten Island": [
+          49,
+          50,
+          51
+        ]
+      }
+    }
+  },
+  "M": {
+    "section_M_cross_cutting": {
+      "champion_base_feature_count": {
+        "paper": 16,
+        "from_feature_names_line": 16,
+        "max_feature_idx_plus_1": 16,
+        "blacklist_clean": true,
+        "easement_in_model": false
+      },
+      "champion_political_feature_count": {
+        "paper": 17,
+        "from_feature_names_line": 17,
+        "max_feature_idx_plus_1": 17,
+        "blacklist_clean": true,
+        "easement_in_model": false
+      },
+      "blacklist_rerun_fresh_this_session": true,
+      "blacklist_output_captured": "results/_r5_blacklist_out.txt",
+      "blacklist_summary": "Champion base (lgbm_all_years_base.txt): 16 features, CLEAN, EASE-MENT=False. Champion political (lgbm_all_years_political.txt): 17 features, CLEAN, EASE-MENT=False. Older legacy .txt models in /models are blacklisted (EASE-MENT, assessland, etc.) but are NOT the champion models and never feed any paper claim.",
+      "shap_top10_png_opens": true,
+      "shap_top10_png_size": [
+        2400,
+        1800
+      ],
+      "tex_files": [],
+      "docx_files": [],
+      "no_manuscript_file_in_repo": true
+    }
+  },
+  "cc": {
+    "pil_all_figures": {
+      "model_comparison.png": {
+        "opens": true,
+        "size": [
+          3000,
+          1800
+        ],
+        "bytes": 166075
+      },
+      "model_comparison_mae.png": {
+        "opens": true,
+        "size": [
+          2400,
+          1200
+        ],
+        "bytes": 120662
+      },
+      "political_ideology_vs_price.png": {
+        "opens": true,
+        "size": [
+          1411,
+          1029
+        ],
+        "bytes": 161866
+      },
+      "scenario_impact_all_three.png": {
+        "opens": true,
+        "size": [
+          2685,
+          916
+        ],
+        "bytes": 131178
+      },
+      "scenario_impact_all_three_FIXED.png": {
+        "opens": true,
+        "size": [
+          2834,
+          924
+        ],
+        "bytes": 118424
+      },
+      "scenario_impact_by_district.png": {
+        "opens": true,
+        "size": [
+          4200,
+          1800
+        ],
+        "bytes": 129066
+      },
+      "shap_top10.png": {
+        "opens": true,
+        "size": [
+          2400,
+          1800
+        ],
+        "bytes": 99788
+      },
+      "shap_top10_champion.png": {
+        "opens": true,
+        "size": [
+          2400,
+          1800
+        ],
+        "bytes": 108319
+      },
+      "shap_top15.png": {
+        "opens": true,
+        "size": [
+          2400,
+          1800
+        ],
+        "bytes": 124167
+      },
+      "shap_top15_champion.png": {
+        "opens": true,
+        "size": [
+          2400,
+          1800
+        ],
+        "bytes": 127323
+      },
+      "temporal_ideology_shift.png": {
+        "opens": true,
+        "size": [
+          2085,
+          924
+        ],
+        "bytes": 128936
+      }
+    },
+    "requirements_declared_packages": {
+      "esda": "esda==2.10.0",
+      "libpysal": "libpysal==4.14.1",
+      "geopandas": "geopandas==1.1.2",
+      "shap": "shap==0.51.0",
+      "lightgbm": "lightgbm==4.6.0",
+      "xgboost": "xgboost==3.1.2",
+      "catboost": "catboost==1.2.10",
+      "scikit-learn": "scikit-learn==1.8.0",
+      "statsmodels": null,
+      "pytz": "pytz==2025.2",
+      "pillow": "pillow==12.2.0"
+    },
+    "no_tex": true,
+    "no_docx": true,
+    "no_pdf_in_repo": true,
+    "tex_files": [],
+    "docx_files": [],
+    "pdf_files_outside_venv": [],
+    "fresh_imports": {
+      "esda": "2.10.0",
+      "libpysal": "4.14.1",
+      "geopandas": "1.1.2"
+    },
+    "print_done": true
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "mode": "base",
+  "scope": "all",
+  "target": "log_sale_price",
+  "features": [
+    "log_land_square_feet",
+    "log_gross_square_feet",
+    "log_total_units",
+    "building_age",
+    "far",
+    "SALE_YEAR",
+    "Latitude",
+    "Longitude"
+  ],
+  "r2": 0.14726298664699866,
+  "mae": 0.7780711778516531
+}

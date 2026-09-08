@@ -81,6 +81,12 @@ div[data-testid="stSidebarNav"] {
 # Project root
 ROOT = Path(__file__).resolve().parents[1]
 
+# Make `src.<subpackage>...` importable regardless of how this app is launched,
+# and make same-directory modules (e.g. auth.py) importable too.
+for _p in (str(ROOT), str(Path(__file__).resolve().parent)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
 # Appreciation constants for 5-year forecast (annual rates)
 BOROUGH_APPRECIATION = {1: 0.043, 2: 0.038, 3: 0.045, 4: 0.042, 5: 0.035}
 DEFAULT_APPRECIATION = 0.040
@@ -195,7 +201,7 @@ def property_page():
         if address_input.strip():
             try:
                 sys.path.append(str(ROOT))
-                from src.geocoder import geocode_address
+                from src.data_pipeline.geocoder import geocode_address
                 geo = geocode_address(address_input.strip())
                 if geo is None:
                     st.warning('Address not found. Try adding borough: "350 Fifth Ave, Manhattan, NY"')
@@ -380,7 +386,7 @@ def property_page():
     # --- End Risk Indicators ---
     # save prediction to user history
     try:
-        from src.auth import get_user_data, save_user_data
+        from auth import get_user_data, save_user_data
 
         uid = st.session_state.get('user_id')
         if uid:
@@ -396,7 +402,7 @@ def property_page():
     st.subheader('Counterfactual Analysis')
     try:
         sys.path.append(str(ROOT))
-        from src.counterfactual import run_counterfactual
+        from src.analysis.counterfactual import run_counterfactual
 
         cf_available = True
     except Exception:
@@ -435,7 +441,7 @@ def property_page():
                     st.metric('Pct price change', f"{res['pct_price_change']*100:.2f}%")
                 # save counterfactual to user history
                 try:
-                    from src.auth import get_user_data, save_user_data
+                    from auth import get_user_data, save_user_data
 
                     uid = st.session_state.get('user_id')
                     if uid:
@@ -512,7 +518,7 @@ def property_page():
                 if res2.get('pct_price_change') is not None:
                     st.metric('Pct price change', f"{res2['pct_price_change']*100:.2f}%")
                 try:
-                    from src.auth import get_user_data, save_user_data
+                    from auth import get_user_data, save_user_data
                     uid = st.session_state.get('user_id')
                     if uid:
                         data = get_user_data(uid) or {}
@@ -549,7 +555,7 @@ def property_page():
                             if floor_field:
                                 muts[floor_field] = float(floors_new)
                             try:
-                                from src.counterfactual import run_counterfactual_batch
+                                from src.analysis.counterfactual import run_counterfactual_batch
                                 res_df = run_counterfactual_batch(df_port, muts)
                                 out_df = pd.concat([df_port.reset_index(drop=True), res_df.reset_index(drop=True)], axis=1)
                                 csv_out = out_df.to_csv(index=False)
@@ -932,7 +938,7 @@ def user_dashboard_page():
     st.header('User Dashboard')
     st.markdown('Your saved predictions, portfolios, and scenarios')
     try:
-        from src.auth import get_user_data
+        from auth import get_user_data
 
         uid = st.session_state.get('user_id')
         data = get_user_data(uid) or {}

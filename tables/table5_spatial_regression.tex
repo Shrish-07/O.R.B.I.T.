@@ -1,0 +1,28 @@
+\begin{table}[H]
+\centering
+\caption{District-Level ($N=51$) Spatial Regression: Median Log Price on \texttt{dem\_share} and Structural Controls}\label{tab:spatial}
+\begin{tabular}{lccc}
+\toprule
+ & OLS (no spatial term) & Spatial Lag (ML) & Spatial Error (ML) \\
+\midrule
+\texttt{dem\_share} & 0.2007 & 0.2246 & 0.2288 \\
+ & (0.2290) & (0.1637) & (0.2573) \\
+Mean \texttt{numfloors} & 0.0023 & -0.0077 & -0.0149 \\
+ & (0.0131) & (0.0093) & (0.0120) \\
+Mean \texttt{yearbuilt} & 0.0011 & 0.0010** & 0.0008 \\
+ & (0.0006) & (0.0005) & (0.0004) \\
+Mean \texttt{commfar} & 0.1620** & 0.1024** & 0.1354** \\
+ & (0.0543) & (0.0389) & (0.0448) \\
+\midrule
+$\rho$ (spatial lag) & -- & 0.7086*** & -- \\
+ & & (0.1035) & \\
+$\lambda$ (spatial error) & -- & -- & 0.7872*** \\
+ & & & (0.0867) \\
+\midrule
+$N$ & 51 & 51 & 51 \\
+Pseudo-$R^2$ & -- & 0.708 & 0.406 \\
+\bottomrule
+\end{tabular}
+\\[4pt]
+\footnotesize ** $p<0.01$, *** $p<0.001$. Standard errors in parentheses. Weights: $k=5$ row-standardized KNN on official Council District polygon centroids, the identical construction used for the Moran's I statistics in Section~\ref{sec:moran}. OLS residual Moran's I on this same specification is $0.389$ ($z=6.05$, $p<0.001$), confirming the spatial dependence a plain OLS at this level ignores. Full output in \texttt{results/spatial\_regression.json}, produced by \texttt{src/analysis/spatial\_regression\_model.py}.
+\end{table}

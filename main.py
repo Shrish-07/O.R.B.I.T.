@@ -1,0 +1,503 @@
+﻿#!/usr/bin/env python3
+"""
+main.py — O.R.B.I.T. single-command pipeline orchestrator.
+
+Runs the full research pipeline behind "Political Ideology and Property Values
+in New York City" end to end: builds the canonical dataset from raw sources,
+trains every model reported in the paper, computes every statistic (Moran's I,
+OLS regression, SHAP, counterfactual scenarios), regenerates every figure and
+table, and re-runs the independent fact-check harness that verifies the
+paper's numbers against freshly recomputed values.
+
+Usage
+-----
+    python main.py                 # run everything, in order
+    python main.py --list          # show every stage, its status, and its paper section
+    python main.py --check-data    # verify data/ is populated correctly, then exit
+    python main.py --category verification   # run only one category
+    python main.py --stage compute_morans_i   # run one stage by id
+    python main.py --from train_lgbm_base     # resume from a given stage
+    python main.py --skip train_catboost train_xgboost   # skip specific stages
+    python main.py --stop-on-error            # abort on first failure (default: continue)
+
+Every stage is a pre-existing script in this repository; main.py does not
+duplicate their logic, it sequences them, times them, captures their output to
+results/logs/pipeline/<stage_id>.log, and writes a consolidated
+results/PIPELINE_RUN_REPORT.md at the end mapping every stage to the paper
+table/figure it feeds. See PAPER_TO_CODE_MAP.md for the full section-by-section
+correspondence between the manuscript and this codebase.
+"""
+
+import argparse
+import os
+import subprocess
+import sys
+import time
+import json
+from pathlib import Path
+from datetime import datetime
+
+ROOT = Path(__file__).resolve().parent
+PY = sys.executable
+
+# --------------------------------------------------------------------------
+# Stage registry
+# --------------------------------------------------------------------------
+# Each stage is one existing script, run as `python <script> <args>` with
+# cwd=ROOT (every script in this repo resolves its paths relative to the repo
+# root, exactly as documented in each subfolder). "paper_ref" is the section
+# of orbit_paper_CER.tex the stage's output feeds — see PAPER_TO_CODE_MAP.md.
+
+STAGES = [
+    # ---- 0. Pre-flight -----------------------------------------------
+    dict(id="sanity_check", category="preflight",
+         script="src/ops/pipeline_sanity_check.py", args=[],
+         desc="Confirms the canonical dataset exists and has the expected shape.",
+         paper_ref="N/A (pre-flight check)"),
+
+    # ---- 1. Data pipeline (raw -> canonical) --------------------------
+    dict(id="normalize_ed_results", category="data_pipeline",
+         script="src/data_pipeline/normalize_ed_results.py", args=[],
+         desc="Cleans raw NYC BOE election-district CSVs -> data/processed/ed_results_clean.parquet",
+         paper_ref="3.2 Ideology Construction"),
+    dict(id="build_district_crosswalk", category="data_pipeline",
+         script="src/data_pipeline/build_district_crosswalk.py", args=[],
+         desc="Validates the ED-to-Council-District crosswalk (range/key checks).",
+         paper_ref="3.2 Ideology Construction"),
+    dict(id="build_ideology_scores", category="data_pipeline",
+         script="src/data_pipeline/build_ideology_scores.py", args=[],
+         desc="Production dem_share pipeline -> data/processed/ideology_by_council.parquet",
+         paper_ref="3.2 Ideology Construction (dem_share, the ONLY ideology feature the models train on)"),
+    dict(id="rebuild_canonical", category="data_pipeline",
+         script="src/data_pipeline/rebuild_canonical.py", args=[],
+         desc="Merges sales + PLUTO + ideology -> data/canonical/modeling_dataset_canonical_v2.parquet (514,618 rows x 53 cols)",
+         paper_ref="3.1 Data Sources and Construction, 3.3 Canonical Dataset"),
+    dict(id="freeze_schema", category="data_pipeline",
+         script="src/data_pipeline/freeze_schema.py", args=[],
+         desc="Writes docs/modeling_schema.csv, a frozen record of the canonical schema.",
+         paper_ref="3.3 Canonical Dataset and Feature Construction"),
+    dict(id="split_temporal", category="data_pipeline",
+         script="src/data_pipeline/split_temporal.py", args=[],
+         desc="Writes data/splits/{all_years,year2017}_{train,test}.parquet",
+         paper_ref="3.4 Train/Test Split"),
+
+    # ---- 2. Model training ---------------------------------------------
+    dict(id="train_lgbm_base", category="training",
+         script="models/training/train_lgbm.py", args=["--variant", "all_years", "--mode", "base"],
+         desc="Champion LightGBM, 16-feature base spec (no dem_share).",
+         paper_ref="4.6 Machine Learning and Feature Importance, Table 2"),
+    dict(id="train_lgbm_political", category="training",
+         script="models/training/train_lgbm.py", args=["--variant", "all_years", "--mode", "political"],
+         desc="LightGBM, 17-feature political spec (adds dem_share).",
+         paper_ref="4.6 Machine Learning and Feature Importance, Table 2 & 3 (SHAP)"),
+    dict(id="train_random_forest", category="training", heavy=True,
+         script="models/training/train_random_forest.py",
+         args=["--variant", "all_years", "--mode", "political", "--n_estimators", "200"],
+         desc="Random Forest comparison model (n_estimators=200).",
+         paper_ref="4.6, Table 2 (comparison model family)"),
+    # NOTE: production Table 2 Ridge/ElasticNet numbers come from
+    # models/training/train_linear_baselines.py, NOT the standalone
+    # train_ridge.py / train_elasticnet.py scripts below (confirmed by
+    # matching experiments/results/ridge_all_years_political.json's exact
+    # filename and metrics — the standalone scripts write differently-named
+    # files with a different, blacklist-incomplete feature set; see
+    # ACTION_PLAN_FOR_SUBMISSION.md and the independent verification report
+    # for how this was caught). One stage trains both models.
+    dict(id="train_linear_baselines", category="training", heavy=True,
+         script="models/training/train_linear_baselines.py", args=["--variant", "all_years", "--mode", "political"],
+         desc="Ridge + ElasticNet comparison models (trained together; this is the script that actually produced the recorded Table 2 Ridge/ElasticNet rows).",
+         paper_ref="4.6, Table 2 (comparison model family)"),
+    dict(id="train_catboost", category="training", heavy=True,
+         script="models/training/train_catboost.py",
+         args=["--variant", "all_years", "--mode", "political", "--learning_rate", "0.05", "--depth", "6"],
+         desc="CatBoost comparison model (lr=0.05, depth=6).",
+         paper_ref="4.6, Table 2 (comparison model family)"),
+    dict(id="train_xgboost", category="training", heavy=True,
+         script="models/training/train_xgboost.py",
+         args=["--variant", "all_years", "--mode", "political", "--learning_rate", "0.05", "--max_depth", "6"],
+         desc="XGBoost comparison model (lr=0.05, max_depth=6).",
+         paper_ref="4.6, Table 2 (comparison model family)"),
+    # Champion selection is deliberately automated: every training script above
+    # appends its run to experiments/registry.json, and this stage then
+    # re-selects the champion (lowest MAE among untainted, post-2026-05-18
+    # runs) and rewrites experiments/champion.json. Running a training stage
+    # via --stage alone does NOT refresh the champion — either run the full
+    # pipeline or pass refresh_champion alongside.
+    dict(id="refresh_champion", category="training",
+         script="src/ops/experiment_runner.py", args=[],
+         desc="Re-selects the champion from experiments/registry.json and rewrites "
+              "experiments/champion.json (updates selected_utc on every run).",
+         paper_ref="Experiments governance (experiments/champion.json)"),
+
+    # ---- 3. Analysis / statistics --------------------------------------
+    dict(id="compute_morans_i", category="analysis",
+         script="src/analysis/compute_morans_i.py", args=[],
+         desc="Global Moran's I for price and dem_share (k=5 KNN weights, 999 permutations, seed=42).",
+         paper_ref="4.2 Spatial Autocorrelation (Moran's I)"),
+    dict(id="generate_regression_table", category="analysis",
+         script="src/analysis/generate_regression_table.py", args=[],
+         desc="Three nested OLS specifications + residual diagnostics.",
+         paper_ref="4.3 Regression Results, Table 1, Appendix A.2"),
+    dict(id="generate_robustness_checks", category="analysis",
+         script="src/analysis/generate_robustness_checks.py", args=[],
+         desc="District-clustered SE, district FE, year FE, winsorized + Cook's-D-trimmed re-estimates of Table 1.",
+         paper_ref="4.4 Robustness to Spatial Clustering and Alternative Specifications, Table 4"),
+    dict(id="generate_spatial_regression", category="analysis",
+         script="src/analysis/spatial_regression_model.py", args=[],
+         desc="District-level spatial lag and spatial error MLE models (N=51), "
+              "reusing the identical shapefile/weights construction as compute_morans_i.",
+         paper_ref="4.5 Formal Spatial Regression, Table 5"),
+    dict(id="political_scenarios", category="analysis",
+         script="src/analysis/political_scenarios.py", args=[],
+         desc="Runs the liberal/conservative/mixed-governance counterfactual simulations.",
+         paper_ref="4.7 Counterfactual Policy Simulation"),
+    dict(id="generate_shap_summary", category="analysis",
+         script="src/analysis/generate_shap_summary.py", args=[],
+         desc="Mean |SHAP| values for all 17 political-model features.",
+         paper_ref="4.6.2 SHAP Feature Importance, Table 3"),
+    dict(id="generate_pdp", category="analysis",
+         script="src/analysis/generate_pdp.py", args=[],
+         desc="Partial dependence plots for top champion-model features. NOT currently cited in the paper — see PAPER_TO_CODE_MAP.md. (regenerated 2026-09-06 against the current 16-feature champion + 17-feature political models; verified blacklist-clean vs config/feature_blacklist.yaml)",
+         paper_ref="(unused — candidate addition, see action plan)"),
+    dict(id="confidence_intervals", category="analysis",
+         script="src/analysis/confidence_intervals.py", args=[],
+         desc="Per-property prediction intervals for the champion model. NOT currently cited in the paper. (regenerated 2026-09-06 against the current champion + 17-feature political model, full 56,817-row test split; verified blacklist-clean)",
+         paper_ref="(unused — candidate addition, see action plan)"),
+    dict(id="sensitivity_analysis", category="analysis",
+         script="src/analysis/sensitivity_analysis.py", args=[],
+         desc="Feature-perturbation sensitivity for the champion model. NOT currently cited in the paper. (regenerated 2026-09-06 against the current 16-feature champion + 17-feature political models; verified blacklist-clean vs config/feature_blacklist.yaml)",
+         paper_ref="(unused — candidate addition, see action plan)"),
+    dict(id="champion_confidence_and_sensitivity", category="analysis",
+         script="src/analysis/champion_confidence_and_sensitivity.py", args=[],
+         desc="Combined confidence+sensitivity pass for the current champion model; also writes the political model's test_preds.parquet + intervals.csv at full 56,817-row coverage. (regenerated 2026-09-06 against the current 16/17-feature models; verified blacklist-clean)",
+         paper_ref="(unused — candidate addition, see action plan)"),
+    dict(id="compare_models", category="analysis",
+         script="src/analysis/compare_models.py", args=[],
+         desc="Tabulates every experiments/results/*.json entry side by side.",
+         paper_ref="4.6.1 Predictive Performance, Table 2 (cross-check)"),
+
+    # ---- 4. Figures & tables --------------------------------------------
+    dict(id="generate_figures", category="figures",
+         script="src/figures/generate_figures.py", args=[],
+         desc="SHAP / model-comparison / scenario-by-district figures -> docs/figures/ "
+              "(verified: writes model_comparison.png = Fig 3, shap_top15.png = Fig 4; "
+              "also writes unused scenario_impact_by_district.png and shap_top10/champion variants).",
+         paper_ref="Figures 3, 4 (Table 2/3 companion figures)"),
+    dict(id="generate_political_figures", category="figures",
+         script="src/figures/generate_political_figures.py", args=[],
+         desc="Ideology-vs-price scatter + temporal ideology shift figures.",
+         paper_ref="Figures 1, 2 (Section 4.1)"),
+    dict(id="generate_scenario_map", category="figures",
+         script="src/figures/generate_scenario_map.py", args=[],
+         desc="Choropleth of scenario impact by council district (writes scenario_impact_all_three_FIXED.png).",
+         paper_ref="(unused — this choropleth does not appear in the current manuscript; see PAPER_TO_CODE_MAP.md)"),
+    dict(id="generate_fig5_scenario_impact", category="figures",
+         script="src/figures/generate_fig5_scenario_impact.py", args=[],
+         desc="Three-panel mean-scenario-impact figure by council district; writes docs/figures/scenario_impact_all_three.png under the exact filename the manuscript includes for Figure 5 (added 2026-09-06 — previously no script produced Fig 5).",
+         paper_ref="Figure 5 (Section 4.7)"),
+    dict(id="generate_research_summary", category="figures",
+         script="src/figures/generate_research_summary.py", args=[],
+         desc="Writes docs/research_summary.md, a plain-language digest of all results.",
+         paper_ref="N/A (supporting documentation, not cited in the manuscript)"),
+
+    # ---- 5. Independent fact-check / verification harness ---------------
+    # These re-derive every numeric claim in the paper directly from the
+    # data/artifacts above, independent of any earlier run's output.
+    dict(id="verify_abstract_and_intro", category="verification",
+         script="src/verification/verify_abstract_and_intro.py", args=[],
+         desc="Re-derives every Abstract- and Introduction-level number.",
+         paper_ref="Abstract, Section 1 (Introduction)"),
+    dict(id="verify_ideology_construction", category="verification",
+         script="src/verification/verify_ideology_construction.py", args=[],
+         desc="Re-derives dem_share/district_ideology worked examples and coverage stats.",
+         paper_ref="3.2 Ideology Construction"),
+    dict(id="verify_cd1_dem_share", category="verification",
+         script="src/verification/verify_cd1_dem_share.py", args=[],
+         desc="Focused re-check of the CD1 2017 dem_share worked example (0.715908).",
+         paper_ref="3.2 Ideology Construction (footnote worked example)"),
+    dict(id="verify_canonical_dataset_and_split", category="verification",
+         script="src/verification/verify_canonical_dataset_and_split.py", args=[],
+         desc="Re-derives canonical dataset shape and the train/test split sizes.",
+         paper_ref="3.3 Canonical Dataset, 3.4 Train/Test Split"),
+    dict(id="verify_spatial_pattern", category="verification",
+         script="src/verification/verify_spatial_pattern.py", args=[],
+         desc="Re-derives the 51-district bivariate dem_share/price correlation (r=0.163).",
+         paper_ref="4.1 Spatial Pattern of Ideology and Price"),
+    dict(id="verify_regression_missingness", category="verification",
+         script="src/verification/verify_regression_missingness.py", args=[],
+         desc="Re-derives the 514,618 -> 470,535 row-drop decomposition.",
+         paper_ref="4.3 Regression Results (missingness paragraph)"),
+    dict(id="verify_numfloors_missingness", category="verification",
+         script="src/verification/verify_numfloors_missingness.py", args=[],
+         desc="Focused re-check of the numfloors missingness component.",
+         paper_ref="4.3 Regression Results (missingness paragraph)"),
+    dict(id="verify_regression_ols", category="verification",
+         script="src/verification/verify_regression_ols.py", args=[],
+         desc="Re-derives all 3 OLS specifications and residual diagnostics to 4 dp.",
+         paper_ref="4.3 Regression Results, Table 1, Appendix A.2"),
+    dict(id="verify_spatial_regression", category="verification",
+         script="src/verification/verify_spatial_regression.py", args=[],
+         desc="Independently re-fits the N=51 district spatial lag/error MLE models (fresh from canonical + shapefile, no import of the analysis script) and compares against Table 5 and the pipeline's own JSON.",
+         paper_ref="4.5 Formal Spatial Regression, Table 5"),
+    dict(id="verify_ml_performance", category="verification",
+         script="src/verification/verify_ml_performance.py", args=[],
+         desc="Re-derives base vs. political MAE/R^2 (Table 2).",
+         paper_ref="4.6.1 Predictive Performance"),
+    dict(id="verify_shap_importance", category="verification",
+         script="src/verification/verify_shap_importance.py", args=[],
+         desc="Re-derives SHAP ranks and the Community-Board base-vs-political comparison.",
+         paper_ref="4.6.2 SHAP Feature Importance, Table 3"),
+    dict(id="verify_scenario_mechanics", category="verification",
+         script="src/verification/verify_scenario_mechanics.py", args=[],
+         desc="Re-derives which columns each counterfactual scenario actually modifies, plus clip rates.",
+         paper_ref="4.7 Counterfactual Policy Simulation"),
+    dict(id="verify_appendix_a1_scenarios", category="verification",
+         script="src/verification/verify_appendix_a1_scenarios.py", args=[],
+         desc="Re-derives all 51x3 Appendix A.1 scenario percentages.",
+         paper_ref="Appendix A.1"),
+    dict(id="verify_borough_map_and_crosscutting", category="verification",
+         script="src/verification/verify_borough_map_and_crosscutting.py", args=[],
+         desc="Re-derives the borough<->council-district map and cross-cutting blacklist/figure checks.",
+         paper_ref="Appendix A.3; cross-cutting"),
+    dict(id="verify_blacklist_fully", category="verification",
+         script="src/verification/editorial_audit/verify_blacklist_fully.py", args=[],
+         desc="Confirms every blacklisted feature is absent from both trained models' feature lists.",
+         paper_ref="3.3 Canonical Dataset (feature blacklist paragraph)"),
+    dict(id="verify_followup_resolution", category="verification",
+         script="src/verification/verify_followup_resolution.py", args=[],
+         desc="Resolves the two known loose ends (53-row missingness gap, 19-row prediction-interval gap).",
+         paper_ref="results/FULL_PAPER_FACT_CHECK.md ('NEW findings' section)"),
+]
+
+STAGE_BY_ID = {s["id"]: s for s in STAGES}
+CATEGORIES = list(dict.fromkeys(s["category"] for s in STAGES))  # preserve order, dedupe
+
+DATA_CHECKS = [
+    ("data/raw/sales", "NYC Citywide Annualized Calendar Sales CSV"),
+    ("data/raw/pluto", "PLUTO CSV"),
+    ("data/raw/election_results", "Election Districts mayoral-race CSVs (2017/2021/2025)"),
+    ("data/raw/election_districts", "Election District + Council District shapefiles"),
+    ("data/processed", "Intermediate parquet files (ed_results_clean, ideology_by_council, ...)"),
+    ("data/canonical", "modeling_dataset_canonical_v2.parquet"),
+    ("data/splits", "Temporal train/test splits"),
+]
+
+
+# --------------------------------------------------------------------------
+# Runner
+# --------------------------------------------------------------------------
+
+def check_data(verbose=True):
+    ok = True
+    for rel, label in DATA_CHECKS:
+        p = ROOT / rel
+        exists = p.exists() and any(p.iterdir()) if p.is_dir() else p.exists()
+        status = "OK" if exists else "MISSING"
+        if not exists:
+            ok = False
+        if verbose:
+            print(f"  [{status:7s}] {rel:30s} {label}")
+    if not ok and verbose:
+        print(
+            "\nMissing data. Populate data/raw/, data/processed/, data/canonical/, and "
+            "data/splits/ per docs/DATA_LINEAGE.md and README.md before running the "
+            "data_pipeline/training/analysis stages. Verification stages that only read "
+            "already-built artifacts will still fail without data/canonical/."
+        )
+    return ok
+
+
+def run_stage(stage, log_dir):
+    script = ROOT / stage["script"]
+    if not script.exists():
+        return dict(status="MISSING_SCRIPT", duration=0.0, log=None,
+                     error=f"Script not found: {stage['script']}")
+
+    log_path = log_dir / f"{stage['id']}.log"
+    cmd = [PY, str(script)] + stage.get("args", [])
+    # Force UTF-8 in children: several scripts print non-ASCII characters
+    # (e.g. emoji in pipeline_sanity_check.py), which crash under the cp1252
+    # codec Windows assigns to a redirected stdout by default.
+    env = {**os.environ, "PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"}
+    t0 = time.time()
+    with open(log_path, "w", encoding="utf-8") as logf:
+        logf.write(f"$ {' '.join(cmd)}\n\n")
+        logf.flush()
+        proc = subprocess.run(cmd, cwd=ROOT, stdout=logf, stderr=subprocess.STDOUT, env=env)
+    duration = time.time() - t0
+    status = "PASS" if proc.returncode == 0 else "FAIL"
+    return dict(status=status, duration=duration, log=str(log_path.relative_to(ROOT)),
+                returncode=proc.returncode)
+
+
+def write_report(results, out_path):
+    lines = []
+    lines.append("# O.R.B.I.T. Pipeline Run Report")
+    lines.append("")
+    lines.append(f"Generated: {datetime.now().isoformat(timespec='seconds')}")
+    lines.append("")
+    n_pass = sum(1 for r in results if r["result"]["status"] == "PASS")
+    n_fail = sum(1 for r in results if r["result"]["status"] == "FAIL")
+    n_skip = sum(1 for r in results if r["result"]["status"] == "SKIPPED")
+    n_missing = sum(1 for r in results if r["result"]["status"] == "MISSING_SCRIPT")
+    lines.append(f"**{n_pass} passed, {n_fail} failed, {n_skip} skipped, {n_missing} missing script** "
+                 f"out of {len(results)} stages.")
+    lines.append("")
+    lines.append("| Stage | Category | Status | Time (s) | Paper section | Log |")
+    lines.append("|---|---|---|---|---|---|")
+    for r in results:
+        s, res = r["stage"], r["result"]
+        log = res.get("log") or "-"
+        lines.append(
+            f"| `{s['id']}` | {s['category']} | {res['status']} | "
+            f"{res.get('duration', 0):.1f} | {s['paper_ref']} | {log} |"
+        )
+    lines.append("")
+    if n_fail or n_missing:
+        lines.append("## Failures")
+        lines.append("")
+        for r in results:
+            if r["result"]["status"] in ("FAIL", "MISSING_SCRIPT"):
+                s, res = r["stage"], r["result"]
+                lines.append(f"### `{s['id']}` ({s['script']})")
+                lines.append(f"- Status: {res['status']}")
+                if res.get("log"):
+                    lines.append(f"- See `{res['log']}` for full output.")
+                if res.get("error"):
+                    lines.append(f"- {res['error']}")
+                lines.append("")
+    lines.append("---")
+    lines.append("Full paper-section <-> code correspondence: see `PAPER_TO_CODE_MAP.md`.")
+    out_path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="O.R.B.I.T. single-command pipeline orchestrator.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("--list", action="store_true", help="List all stages and exit.")
+    parser.add_argument("--check-data", action="store_true", help="Check data/ prerequisites and exit.")
+    parser.add_argument("--stage", nargs="+", metavar="ID", help="Run only these stage id(s).")
+    parser.add_argument("--category", nargs="+", metavar="CAT",
+                         help=f"Run only these categories: {', '.join(CATEGORIES)}")
+    parser.add_argument("--skip", nargs="+", metavar="ID", default=[], help="Skip these stage id(s).")
+    parser.add_argument("--from", dest="from_stage", metavar="ID",
+                         help="Resume the full pipeline starting at this stage id.")
+    parser.add_argument("--fast", action="store_true",
+                         help="Skip 'heavy' comparison-model training stages (random forest, ridge, "
+                              "elasticnet, catboost, xgboost) — keeps the two LightGBM models the "
+                              "paper's headline numbers depend on.")
+    parser.add_argument("--stop-on-error", action="store_true",
+                         help="Abort immediately on the first failing stage (default: keep going and "
+                              "report all failures at the end).")
+    args = parser.parse_args()
+
+    if args.list:
+        print(f"{'ID':38s} {'CATEGORY':12s} PAPER SECTION")
+        print("-" * 100)
+        for s in STAGES:
+            print(f"{s['id']:38s} {s['category']:12s} {s['paper_ref']}")
+        return
+
+    if args.check_data:
+        print("Checking data/ prerequisites...\n")
+        ok = check_data()
+        sys.exit(0 if ok else 1)
+
+    # Build the run list
+    run_list = list(STAGES)
+
+    if args.stage:
+        unknown = [i for i in args.stage if i not in STAGE_BY_ID]
+        if unknown:
+            print(f"Unknown stage id(s): {unknown}\nRun --list to see valid ids.")
+            sys.exit(2)
+        run_list = [STAGE_BY_ID[i] for i in args.stage]
+
+    elif args.category:
+        unknown = [c for c in args.category if c not in CATEGORIES]
+        if unknown:
+            print(f"Unknown categories: {unknown}\nValid categories: {CATEGORIES}")
+            sys.exit(2)
+        run_list = [s for s in STAGES if s["category"] in args.category]
+
+    elif args.from_stage:
+        if args.from_stage not in STAGE_BY_ID:
+            print(f"Unknown stage id: {args.from_stage}\nRun --list to see valid ids.")
+            sys.exit(2)
+        idx = [s["id"] for s in STAGES].index(args.from_stage)
+        run_list = STAGES[idx:]
+
+    if args.fast:
+        run_list = [s for s in run_list if not s.get("heavy")]
+
+    if args.skip:
+        run_list = [s for s in run_list if s["id"] not in args.skip]
+
+    # Pre-flight data check (informational only; stages will fail loudly on
+    # their own if a specific file is missing, but this gives a fast summary
+    # up front for a first-time clone).
+    print("=" * 100)
+    print("O.R.B.I.T. pipeline — data prerequisite check")
+    print("=" * 100)
+    data_ok = check_data()
+    print()
+    if not data_ok:
+        print("Continuing anyway — stages needing missing data will fail individually and be "
+              "reported at the end. Ctrl-C now if you'd rather populate data/ first.\n")
+
+    log_dir = ROOT / "results" / "logs" / "pipeline"
+    log_dir.mkdir(parents=True, exist_ok=True)
+
+    print("=" * 100)
+    print(f"Running {len(run_list)} stage(s)")
+    print("=" * 100)
+
+    results = []
+    t_start = time.time()
+    for i, stage in enumerate(run_list, 1):
+        print(f"\n[{i}/{len(run_list)}] {stage['id']}  —  {stage['desc']}")
+        res = run_stage(stage, log_dir)
+        results.append(dict(stage=stage, result=res))
+        symbol = {"PASS": "OK", "FAIL": "FAILED", "MISSING_SCRIPT": "MISSING"}.get(res["status"], res["status"])
+        print(f"    -> {symbol} ({res.get('duration', 0):.1f}s)"
+              + (f"  [log: {res['log']}]" if res.get("log") else ""))
+        if res["status"] != "PASS" and args.stop_on_error:
+            print("\n--stop-on-error set: aborting.")
+            break
+
+    total_time = time.time() - t_start
+
+    report_path = ROOT / "results" / "PIPELINE_RUN_REPORT.md"
+    write_report(results, report_path)
+
+    # Full-pipeline runs (no --stage/--category/--from/--skip/--fast filter)
+    # also write a dated, distinctly-named copy. The always-overwritten
+    # PIPELINE_RUN_REPORT.md gets clobbered by the next single-stage debug
+    # run, so this dated snapshot is the durable evidence that a genuine
+    # full pass happened (and when).
+    is_full_run = not (args.stage or args.category or args.from_stage
+                       or args.skip or args.fast)
+    dated_report = None
+    if is_full_run:
+        dated_report = ROOT / "results" / (
+            f"PIPELINE_RUN_REPORT_full_{datetime.now().strftime('%Y%m%d')}.md")
+        write_report(results, dated_report)
+
+    n_pass = sum(1 for r in results if r["result"]["status"] == "PASS")
+    n_fail = len(results) - n_pass
+    print("\n" + "=" * 100)
+    print(f"Done in {total_time/60:.1f} min. {n_pass}/{len(results)} stages passed.")
+    print(f"Full report: {report_path.relative_to(ROOT)}")
+    if dated_report is not None:
+        print(f"Full-run snapshot: {dated_report.relative_to(ROOT)}")
+    if n_fail:
+        print(f"{n_fail} stage(s) failed — see the report and results/logs/pipeline/*.log for details.")
+    print("=" * 100)
+
+    sys.exit(0 if n_fail == 0 else 1)
+
+
+if __name__ == "__main__":
+    main()
