@@ -21,7 +21,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Run smoke check
         run: |
-          python src/ci_smoke_check.py
+          python src/ops/ci_smoke_check.py
 
   sanity-and-smoke:
     runs-on: ubuntu-latest
@@ -50,11 +50,11 @@ jobs:
 
       - name: Run pipeline sanity check
         if: steps.check_data.outputs.exists == 'true'
-        run: python src/pipeline_sanity_check.py
+        run: python src/ops/pipeline_sanity_check.py
 
       - name: Generate splits
         if: steps.check_data.outputs.exists == 'true'
-        run: python src/split_temporal.py
+        run: python src/data_pipeline/split_temporal.py
 
       - name: Run smoke training
         if: steps.check_data.outputs.exists == 'true'

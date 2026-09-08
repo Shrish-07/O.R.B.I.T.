@@ -1,0 +1,78 @@
+{
+  "model": "lgbm_all_years_political",
+  "method": "shap",
+  "summary": [
+    {
+      "feature": "Community Board",
+      "mean_abs_shap": 0.27472310195018673
+    },
+    {
+      "feature": "landuse",
+      "mean_abs_shap": 0.11688048078548474
+    },
+    {
+      "feature": "yearbuilt",
+      "mean_abs_shap": 0.10599664771011037
+    },
+    {
+      "feature": "numfloors",
+      "mean_abs_shap": 0.09721568905462592
+    },
+    {
+      "feature": "TAX CLASS AT TIME OF SALE",
+      "mean_abs_shap": 0.08728320655500665
+    },
+    {
+      "feature": "BBL_pluto",
+      "mean_abs_shap": 0.07653668349348247
+    },
+    {
+      "feature": "YEAR BUILT",
+      "mean_abs_shap": 0.06551596005667455
+    },
+    {
+      "feature": "ZIP CODE",
+      "mean_abs_shap": 0.05822707191603916
+    },
+    {
+      "feature": "Council District",
+      "mean_abs_shap": 0.054185475277348065
+    },
+    {
+      "feature": "facilfar",
+      "mean_abs_shap": 0.047730860304526466
+    },
+    {
+      "feature": "Census Tract 2020",
+      "mean_abs_shap": 0.04500291522257181
+    },
+    {
+      "feature": "dem_share",
+      "mean_abs_shap": 0.03473107757361662
+    },
+    {
+      "feature": "residfar",
+      "mean_abs_shap": 0.026623143812885147
+    },
+    {
+      "feature": "commfar",
+      "mean_abs_shap": 0.019828444476695753
+    },
+    {
+      "feature": "BOROUGH",
+      "mean_abs_shap": 0.010986315844223465
+    },
+    {
+      "feature": "CounDist",
+      "mean_abs_shap": 0.004461298195896053
+    },
+    {
+      "feature": "EASE-MENT",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "election_year",
+      "mean_abs_shap": 0.0
+    }
+  ]
+}

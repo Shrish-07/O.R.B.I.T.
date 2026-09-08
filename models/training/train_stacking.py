@@ -151,8 +151,11 @@ exp = {
     'reasoning': 'Meta-learner (Ridge) on model predictions',
     'metrics': {'r2': float(stack_r2), 'mae': float(stack_mae)},
     'results': results,
-    'features_path': str(ARTIFACT_DIR / f"{name}_features.json"),
-    'model_path': str(model_path),
+    # .as_posix(): str(Path) on Windows emits backslashes, which silently
+    # breaks registry.json portability (this bug recurred twice — see
+    # VERIFICATION_REPORT.md Rounds 1-2). as_posix() is the structural fix.
+    'features_path': (ARTIFACT_DIR / f"{name}_features.json").as_posix(),
+    'model_path': model_path.as_posix(),
 }
 
 registry = json.loads(REGISTRY.read_text())

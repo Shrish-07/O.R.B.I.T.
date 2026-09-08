@@ -8,14 +8,56 @@
 name,mae,r2
 lgbm_all_years_base,0.428972,0.541772
 lgbm_all_years_political,0.429342,0.541345
+rf_all_years_political_n200,0.43681084878807985,0.5070221802321878
+rf_all_years_political_n200,0.43681084878807985,0.5070221802321878
+rf_all_years_political_n200,0.43681084878807985,0.5070221802321878
+rf_all_years_political_n200,0.43681084878807985,0.5070221802321878
+rf_all_years_political_n200,0.43681084878807985,0.5070221802321878
+rf_all_years_political_n200,0.43681084878807985,0.5070221802321878
+rf_all_years_political_n200,0.43681084878807985,0.5070221802321878
+rf_all_years_political_n200,0.43681084878807985,0.5070221802321878
 rf_all_years_political_n200,0.4370477634963115,0.5066343950498919
 xgb_all_years_political_lr0.05_md6,0.4392201484272884,0.5286943913095352
+xgb_all_years_political_lr0.05_md6,0.4392201484272884,0.5286943913095352
+xgb_all_years_political_lr0.05_md6,0.4392201484272884,0.5286943913095352
+xgb_all_years_political_lr0.05_md6,0.4392201484272884,0.5286943913095352
+xgb_all_years_political_lr0.05_md6,0.4392201484272884,0.5286943913095352
+xgb_all_years_political_lr0.05_md6,0.4392201484272884,0.5286943913095352
+xgb_all_years_political_lr0.05_md6,0.4392201484272884,0.5286943913095352
+xgb_all_years_political_lr0.05_md6,0.4392201484272884,0.5286943913095352
+cat_all_years_political_lr0.05_d6,0.4539147018162985,0.5057437362685357
+cat_all_years_political_lr0.05_d6,0.4539147018162985,0.5057437362685357
+cat_all_years_political_lr0.05_d6,0.4539147018162985,0.5057437362685357
+cat_all_years_political_lr0.05_d6,0.4539147018162985,0.5057437362685357
+cat_all_years_political_lr0.05_d6,0.4539147018162985,0.5057437362685357
+cat_all_years_political_lr0.05_d6,0.4539147018162985,0.5057437362685357
+cat_all_years_political_lr0.05_d6,0.4539147018162985,0.5057437362685357
 cat_all_years_political_lr0.05_d6,0.4539147018162985,0.5057437362685357
 ridge_all_years_political,0.6558020430385062,0.11137927403013992
+ridge_all_years_political,0.6558020430385062,0.11137927403013992
+ridge_all_years_political,0.6558020430385062,0.11137927403013992
+ridge_all_years_political,0.6558020430385062,0.11137927403013992
+ridge_all_years_political,0.6558020430385062,0.11137927403013992
+ridge_all_years_political,0.6558020430385062,0.11137927403013992
+ridge_all_years_political,0.6558020430385062,0.11137927403013992
+ridge_all_years_political,0.6558020430385062,0.11137927403013992
+ridge_all_years_political,0.6558020430385062,0.11137927403013992
+ridge_all_years_political,0.6558020430385062,0.11137927403013992
+ridge_all_years_political,0.6558020430385062,0.11137927403013992
+elasticnet_all_years_political,0.6903724545495283,-0.00964726048578668
+elasticnet_all_years_political,0.6903724545495283,-0.00964726048578668
+elasticnet_all_years_political,0.6903724545495283,-0.00964726048578668
+elasticnet_all_years_political,0.6903724545495283,-0.00964726048578668
+elasticnet_all_years_political,0.6903724545495283,-0.00964726048578668
+elasticnet_all_years_political,0.6903724545495283,-0.00964726048578668
+elasticnet_all_years_political,0.6903724545495283,-0.00964726048578668
+elasticnet_all_years_political,0.6903724545495283,-0.00964726048578668
+elasticnet_all_years_political,0.6903724545495283,-0.00964726048578668
+elasticnet_all_years_political,0.6903724545495283,-0.00964726048578668
 elasticnet_all_years_political,0.6903724545495283,-0.00964726048578668
 
 
-## SHAP top-10 — Political model (PAPER Table 3; model=lgbm_all_years_political)
+## SHAP top-10 â€” Political model (PAPER Table 3; model=lgbm_all_years_political)
 
 This table matches the paper's Table 3 / Figure 4. `dem_share` appears at rank 12.
 
@@ -39,7 +81,7 @@ TAX CLASS AT TIME OF SALE       0.087283     5
                 EASE-MENT       0.000000    17
             election_year       0.000000    18
 
-## SHAP top-10 — Current champion (secondary; model=lgbm_all_years_base)
+## SHAP top-10 â€” Current champion (secondary; model=lgbm_all_years_base)
 
 Secondary table for the experiment currently selected in `experiments/champion.json`. Shown separately so it never silently overwrites the paper's political-model result.
 

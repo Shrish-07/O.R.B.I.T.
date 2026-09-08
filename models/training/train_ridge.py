@@ -4,6 +4,12 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(PROJECT_ROOT))
 
+# Allow emoji/unicode prints (e.g. "🚫 Dropping leakage features") when this
+# script is run directly on a cp1252 Windows console. When launched via main.py
+# this is already handled (main.py sets PYTHONUTF8/PYTHONIOENCODING for stages).
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 import argparse
 import json
 
@@ -12,7 +18,7 @@ from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 
-from src.data_loader import load_orbit_split, prepare_features
+from src.data_pipeline.data_loader import load_orbit_split, prepare_features
 
 
 def main(mode, scope):

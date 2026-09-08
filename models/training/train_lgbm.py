@@ -6,11 +6,19 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(PROJECT_ROOT))
 
+# Allow emoji/unicode prints when this script is run directly on a cp1252
+# Windows console. When launched via main.py this is already handled
+# (main.py sets PYTHONUTF8/PYTHONIOENCODING for stages).
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 import argparse
 import pandas as pd
 import lightgbm as lgb
 import yaml
 import json
+import subprocess
+from datetime import datetime
 from sklearn.metrics import r2_score, mean_absolute_error
 
 # -----------------------------
@@ -45,6 +53,7 @@ BLACKLIST_PATH = Path("config/feature_blacklist.yaml")
 MODEL_DIR = Path("models")
 ARTIFACT_DIR = Path("models/artifacts")
 RESULTS_DIR = Path("experiments/results")
+REGISTRY = Path("experiments/registry.json")
 
 MODEL_DIR.mkdir(exist_ok=True)
 ARTIFACT_DIR.mkdir(exist_ok=True)
@@ -221,6 +230,48 @@ with open(FEATURES_PATH, "w") as f:
 
 with open(RESULTS_PATH, "w") as f:
     json.dump(results, f, indent=2)
+
+# -----------------------------
+# Register experiment (registry.json)
+# -----------------------------
+# Same pattern as train_catboost.py / train_random_forest.py: every retrain
+# (base and political) must leave a registry entry so champion selection
+# (src/ops/experiment_runner.py, run by main.py as the refresh_champion stage)
+# sees the current run with the current feature count.
+try:
+    git = subprocess.check_output(
+        ["git", "rev-parse", "--short", "HEAD"]).decode().strip()
+except Exception:
+    git = None
+
+exp = {
+    "id": f"exp-{datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')}",
+    "created_utc": datetime.utcnow().isoformat() + "Z",
+    "git_commit": git,
+    "script": "models/training/train_lgbm.py",
+    "name": f"lgbm_{VARIANT}_{MODE}",
+    "mode": MODE,
+    "scope": scope,
+    "hypothesis": "Champion LightGBM base spec" if MODE == "base" else
+                  "LightGBM ideology-augmented spec (adds dem_share/turnout features)",
+    "reasoning": "Production training run (the models the paper's Table 2/3 report)",
+    "metrics": {"r2": float(r2), "mae": float(mae)},
+    "results": results,
+    "features_used": int(len(features)),
+    # .as_posix(): str(Path) on Windows emits backslashes, which silently
+    # breaks registry.json portability (this bug recurred twice — see
+    # VERIFICATION_REPORT.md Rounds 1-2). as_posix() is the structural fix.
+    "features_path": FEATURES_PATH.as_posix(),
+    "model_path": MODEL_PATH.as_posix(),
+}
+
+if REGISTRY.exists():
+    registry = json.loads(REGISTRY.read_text())
+else:
+    registry = []
+registry.append(exp)
+REGISTRY.write_text(json.dumps(registry, indent=2))
+print("Registered experiment:", exp["id"])
 
 print("\n📦 Artifacts written:")
 print("Model:   ", MODEL_PATH)
