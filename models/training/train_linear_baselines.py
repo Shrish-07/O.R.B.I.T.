@@ -139,6 +139,15 @@ for cls, name in [(Ridge, 'ridge'), (ElasticNet, 'elasticnet')]:
         registry = json.loads(REGISTRY.read_text())
     else:
         registry = []
+    # Replace, don't duplicate: a re-run of this exact script+config produces
+    # the identical (script, name) identity, so drop the prior entry instead
+    # of accumulating stale duplicate rows in the registry.
+    registry = [e for e in registry
+                if not (e.get('script') == exp['script'] and e.get('name') == exp['name'])]
     registry.append(exp)
     REGISTRY.write_text(json.dumps(registry, indent=2))
     print('Registered experiment:', exp['id'])
+
+# Keep champion.json pointing at a live entry: replacing entries above could
+# otherwise orphan the previous champion id until the next full pipeline run.
+subprocess.run([sys.executable, str(Path('src/ops/experiment_runner.py'))], check=False)

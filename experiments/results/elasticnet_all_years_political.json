@@ -1,0 +1,11 @@
+{
+  "model": "Elasticnet",
+  "name": "elasticnet_all_years_political",
+  "variant": "all_years",
+  "mode": "political",
+  "n_train": 121622,
+  "n_test": 56817,
+  "n_features": 17,
+  "r2": -0.00964726048578668,
+  "mae": 0.6903724545495283
+}

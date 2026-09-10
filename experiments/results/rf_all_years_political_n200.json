@@ -1,0 +1,11 @@
+{
+  "model": "RandomForest",
+  "name": "rf_all_years_political_n200",
+  "variant": "all_years",
+  "mode": "political",
+  "n_train": 121622,
+  "n_test": 56817,
+  "n_features": 17,
+  "r2": 0.5070221802321878,
+  "mae": 0.43681084878807985
+}

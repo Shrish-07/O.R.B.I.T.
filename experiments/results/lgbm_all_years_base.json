@@ -1,0 +1,10 @@
+{
+  "model": "LightGBM",
+  "mode": "base",
+  "scope": "all",
+  "train_rows": 121622,
+  "test_rows": 56817,
+  "features_used": 16,
+  "r2": 0.5417722685178006,
+  "mae": 0.4289721461143662
+}
