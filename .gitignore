@@ -41,7 +41,9 @@ models/*.model
 
 # Experiment outputs
 experiments/predictions/
-results/
+# (git never descends into an ignored directory, so to keep a re-inclusion
+# working we ignore the directory's CONTENTS, then whitelist the snapshot)
+results/*
 # But keep the dated full-pipeline-run snapshots (durable evidence of a full pass)
 !results/PIPELINE_RUN_REPORT_full_*.md
 

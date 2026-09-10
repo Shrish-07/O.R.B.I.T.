@@ -1,0 +1,11 @@
+{
+  "model": "XGBoost",
+  "name": "xgb_all_years_political_lr0.05_md6",
+  "variant": "all_years",
+  "mode": "political",
+  "n_train": 121622,
+  "n_test": 56817,
+  "n_features": 17,
+  "r2": 0.5286943913095352,
+  "mae": 0.4392201484272884
+}

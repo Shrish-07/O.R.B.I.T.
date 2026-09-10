@@ -1,0 +1,2 @@
+model,scope,r2_base,r2_political,r2_delta,mae_base,mae_political,mae_delta,features_used_base,features_used_political,features_delta
+LightGBM,all,0.5417722685178006,0.5413451157542679,-0.00042715276353266773,0.4289721461143662,0.4293418141416493,0.0003696680272831099,16,17,1

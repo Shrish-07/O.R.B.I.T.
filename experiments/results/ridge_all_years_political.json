@@ -1,0 +1,11 @@
+{
+  "model": "Ridge",
+  "name": "ridge_all_years_political",
+  "variant": "all_years",
+  "mode": "political",
+  "n_train": 121622,
+  "n_test": 56817,
+  "n_features": 17,
+  "r2": 0.11137927403013992,
+  "mae": 0.6558020430385062
+}

@@ -1,0 +1,11 @@
+{
+  "model": "CatBoost",
+  "name": "cat_all_years_political_lr0.05_d6",
+  "variant": "all_years",
+  "mode": "political",
+  "n_train": 121622,
+  "n_test": 56817,
+  "n_features": 17,
+  "r2": 0.5057437362685357,
+  "mae": 0.4539147018162985
+}

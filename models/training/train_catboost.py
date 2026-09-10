@@ -141,12 +141,18 @@ if REGISTRY_PATH.exists():
     registry = json.loads(REGISTRY_PATH.read_text())
 else:
     registry = []
+# Replace, don't duplicate: a re-run of this exact script+config produces the
+# identical (script, name) identity, so drop the prior entry instead of
+# accumulating stale duplicate rows in the registry.
+registry = [e for e in registry
+            if not (e.get('script') == exp['script'] and e.get('name') == exp['name'])]
 registry.append(exp)
 REGISTRY_PATH.write_text(json.dumps(registry, indent=2))
 
 print('Registered experiment:', exp['id'])
 
-try:
-    subprocess.check_call([Path('src') / 'experiment_runner.py'])
-except Exception:
-    pass
+# Keep champion.json pointing at a live entry: replacing an entry above could
+# otherwise orphan the previous champion id until the next full pipeline run.
+# (The old call below pointed at the nonexistent src/experiment_runner.py and
+# silently no-opped inside try/except — never actually refreshing anything.)
+subprocess.run([sys.executable, str(Path('src/ops/experiment_runner.py'))], check=False)

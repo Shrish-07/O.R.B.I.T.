@@ -78,3 +78,13 @@ FINAL VERIFICATION COMPLETE: champion MAE=0.429 (clean pipeline), SHAP/PDPs/inte
 2026-06-09T09:40:36Z - 5-YEAR FORECAST + RISK INDICATORS: BOROUGH_APPRECIATION constants added, 5-year forecast panel added, 3 risk indicators (overvaluation, uncertainty, age), all bare Path() calls fixed to ROOT-anchored, XGB/CatBoost/RF/Ridge/ElasticNet marked pipeline_v2=True, research summary regenerated, smoke test PASS
 2026-06-11T11:57:46Z - PROJECT COMPLETE: README updated to reflect full system state, all commits pushed to remote, system at production-ready prototype state
 2026-09-08T19:46:36.089357Z - Champion selected: exp-20260518T000001Z (mae=0.428972)
+2026-09-08T22:10:32.547655Z - Champion selected: exp-20260518T000001Z (mae=0.428972)
+2026-09-09T15:05:49.274522Z - Champion selected: exp-20260908T220727Z (mae=0.4289721461143662)
+2026-09-09T15:06:47.137644Z - Champion selected: exp-20260909T150647Z (mae=0.4289721461143662)
+2026-09-09T17:13:22.708400Z - Champion selected: exp-20260909T171322Z (mae=0.4289721461143662)
+2026-09-09T17:13:33.446417Z - Champion selected: exp-20260909T171322Z (mae=0.4289721461143662)
+2026-09-09T17:13:47.712274Z - Champion selected: exp-20260909T171322Z (mae=0.4289721461143662)
+2026-09-09T17:13:50.633622Z - Champion selected: exp-20260909T171322Z (mae=0.4289721461143662)
+2026-09-09T17:14:00.059956Z - Champion selected: exp-20260909T171322Z (mae=0.4289721461143662)
+2026-09-09T17:14:05.273644Z - Champion selected: exp-20260909T171322Z (mae=0.4289721461143662)
+2026-09-09T17:14:05.931787Z - Champion selected: exp-20260909T171322Z (mae=0.4289721461143662)
