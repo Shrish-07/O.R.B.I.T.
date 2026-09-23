@@ -12,8 +12,9 @@ import pandas as pd
 import json
 import yaml
 import subprocess
+import numpy as np
 from datetime import datetime
-from sklearn.linear_model import Ridge, ElasticNet
+from sklearn.linear_model import RidgeCV, ElasticNetCV
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
@@ -72,16 +73,41 @@ preproc = Pipeline([
 X_train_p = preproc.fit_transform(X_train)
 X_test_p = preproc.transform(X_test)
 
-for cls, name in [(Ridge, 'ridge'), (ElasticNet, 'elasticnet')]:
-    model = cls()
+# NOTE (2026 refresh): default-alpha Ridge() / ElasticNet() collapsed on the
+# refreshed sales pull (Ridge R^2 -> -4.97) because the now-numeric unit-count
+# columns are near-perfectly collinear (TOTAL UNITS ~ RESIDENTIAL + COMMERCIAL)
+# and sklearn's default alpha=1.0 over-regularizes them. Both linear baselines
+# are now fit with cross-validated regularization so neither is an artifact of a
+# hand-picked alpha; the chosen alpha (and elasticnet's l1_ratio) are recorded in
+# results/_metrics/registry for transparency. Ridge handles collinearity for
+# PREDICTION once its penalty is sized correctly; ElasticNetCV additionally prunes
+# the redundant column via its L1 term.
+# Ridge's collinearity forces a very large optimal alpha; extend the grid top so
+# the CV optimum is interior rather than capped at the grid edge.
+ALPHAS = np.logspace(-4, 7, 40)
+ELASTICNET_L1_RATIOS = [0.1, 0.5, 0.7, 0.9, 0.95, 0.99, 1.0]
+
+for cls, name, fit_kwargs in [
+    (RidgeCV, 'ridge', {'alphas': ALPHAS, 'cv': 5}),
+    (ElasticNetCV, 'elasticnet', {'l1_ratio': ELASTICNET_L1_RATIOS,
+                                  'alphas': np.logspace(-4, 1, 20),
+                                  'cv': 5, 'max_iter': 100000, 'n_jobs': -1}),
+]:
+    model = cls(**fit_kwargs)
     model.fit(X_train_p, y_train)
     preds = model.predict(X_test_p)
     r2 = r2_score(y_test, preds)
     mae = mean_absolute_error(y_test, preds)
     fullname = f"{name}_{args.variant}_{args.mode}"
+    chosen_alpha = float(model.alpha_)
+    chosen_l1 = float(model.l1_ratio_) if getattr(model, 'l1_ratio_', None) is not None else None
+    hyper = {'alpha': chosen_alpha}
+    if chosen_l1 is not None:
+        hyper['l1_ratio'] = chosen_l1
     results = {
         'model': name.capitalize(),
         'name': fullname,
+        'model_class': cls.__name__,
         'variant': args.variant,
         'mode': args.mode,
         'n_train': int(len(train)),
@@ -89,6 +115,7 @@ for cls, name in [(Ridge, 'ridge'), (ElasticNet, 'elasticnet')]:
         'n_features': int(len(features)),
         'r2': float(r2),
         'mae': float(mae),
+        'hyperparameters': hyper,
     }
     with open(RESULTS_DIR / f"{fullname}.json", 'w') as f:
         json.dump(results, f, indent=2)
@@ -102,7 +129,7 @@ for cls, name in [(Ridge, 'ridge'), (ElasticNet, 'elasticnet')]:
     with open(ARTIFACT_DIR / f"{fullname}_features.json", 'w') as f:
         json.dump(features, f, indent=2)
     with open(ARTIFACT_DIR / f"{fullname}_metrics.json", 'w') as f:
-        json.dump({'r2': r2, 'mae': mae}, f, indent=2)
+        json.dump({'r2': float(r2), 'mae': float(mae), 'hyperparameters': hyper}, f, indent=2)
 
     print(f"{name.capitalize()} training complete:", results)
     print('\n📦 Artifacts written:')
@@ -126,7 +153,7 @@ for cls, name in [(Ridge, 'ridge'), (ElasticNet, 'elasticnet')]:
         'scope': '2017' if args.variant == 'year2017' else 'all',
         'hypothesis': f'{name.capitalize()} baseline',
         'reasoning': 'Baseline linear models for comparison',
-        'metrics': {'r2': float(r2), 'mae': float(mae)},
+        'metrics': {'r2': float(r2), 'mae': float(mae), **hyper},
         'results': results,
         # .as_posix(): str(Path) on Windows emits backslashes, which silently
         # breaks registry.json portability (this bug recurred twice — see

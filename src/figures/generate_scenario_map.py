@@ -26,7 +26,13 @@ for ax, scen, title, cmap in zip(axes, colors_map, titles, cmaps):
     ccol = next(c for c in df_s.columns if 'coun' in c.lower())
     sorted_df = df_s.sort_values(vcol)
     vals = sorted_df[vcol]
-    norm = mcolors.TwoSlopeNorm(vmin=vals.min(), vcenter=0, vmax=vals.max())
+    vmin, vmax = float(vals.min()), float(vals.max())
+    if vmin < 0 < vmax:
+        norm = mcolors.TwoSlopeNorm(vmin=vmin, vcenter=0, vmax=vmax)
+    else:
+        # One-sided data (all values share a sign): TwoSlopeNorm requires
+        # vmin < vcenter < vmax, so fall back to a plain linear norm.
+        norm = mcolors.Normalize(vmin=vmin, vmax=vmax)
     colors = plt.get_cmap(cmap)(norm(vals))
     ax.barh(sorted_df[ccol].astype(int).astype(str), sorted_df[vcol], color=colors, alpha=0.9)
     ax.axvline(0, color='white', linewidth=0.8, alpha=0.6)

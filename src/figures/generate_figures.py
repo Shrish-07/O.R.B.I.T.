@@ -9,7 +9,8 @@ FIGS = DOCS / 'figures'
 FIGS.mkdir(parents=True, exist_ok=True)
 
 # The paper's headline SHAP result (Section 4.6.2 / Table 3 / Figure 4) is the
-# POLITICAL model (lgbm_all_years_political, 17 trained features, dem_share at
+# POLITICAL model (lgbm_all_years_political, 19 trained features after the
+# Round 7 BBL_pluto blacklist, dem_share at
 # rank 12). Earlier versions of this script resolved whichever model
 # experiments/champion.json currently selected and wrote the figure to a generic
 # filename, silently swapping models when champion.json changed. We now

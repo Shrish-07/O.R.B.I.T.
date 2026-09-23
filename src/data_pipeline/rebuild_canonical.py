@@ -2,22 +2,59 @@
 
 Saves: data/canonical/modeling_dataset_canonical_v2.parquet
 
-Usage: python src/data_pipeline/rebuild_canonical.py
+Usage: python src/data_pipeline/rebuild_canonical.py [--output PATH]
+
+Raw-data location is glob-based and self-enforcing. This script discovers the
+single current sales CSV matching
+``data/raw/sales/NYC_Citywide_Annualized_Calendar_Sales_Update_*.csv`` and the
+single current PLUTO CSV matching
+``data/raw/pluto/Primary_Land_Use_Tax_Lot_Output_(PLUTO)_*.csv``. It refuses to
+run if either folder holds zero or more than one matching file, so a stale
+duplicate can never be silently preferred over the current one. Every run
+records exactly which raw files produced the build in data/DATA_MANIFEST.json.
 """
+import argparse
+import json
 import re
+from datetime import datetime, timezone
 from pathlib import Path
 import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
-SALES = ROOT / 'data' / 'raw' / 'sales' / 'NYC_Citywide_Annualized_Calendar_Sales_Update_20260105.csv'
-PLUTO = ROOT / 'data' / 'raw' / 'pluto' / 'Primary_Land_Use_Tax_Lot_Output_(PLUTO)_20260105.csv'
+SALES_DIR = ROOT / 'data' / 'raw' / 'sales'
+SALES_GLOB = 'NYC_Citywide_Annualized_Calendar_Sales_Update_*.csv'
+PLUTO_DIR = ROOT / 'data' / 'raw' / 'pluto'
+PLUTO_GLOB = 'Primary_Land_Use_Tax_Lot_Output_(PLUTO)_*.csv'
 IDEO = ROOT / 'data' / 'processed' / 'ideology_by_council.parquet'
 OUT_DIR = ROOT / 'data' / 'canonical'
 OUT_DIR.mkdir(parents=True, exist_ok=True)
-OUT = OUT_DIR / 'modeling_dataset_canonical_v2.parquet'
+DEFAULT_OUT = OUT_DIR / 'modeling_dataset_canonical_v2.parquet'
+MANIFEST = ROOT / 'data' / 'DATA_MANIFEST.json'
 
 BAN_COLUMNS = {'assesstot','exempttot','assessland','appbbl','taxmap','plutomapid'}
+
+
+def resolve_single_file(directory, pattern, label):
+    """Return the single file matching ``pattern`` in ``directory``, or exit with
+    a clear message if there are zero or multiple matches (never guess)."""
+    directory = Path(directory)
+    matches = sorted(directory.glob(pattern))
+    if len(matches) == 0:
+        raise SystemExit(
+            f"[build] ERROR: no {label} found. Looked for pattern "
+            f"'{pattern}' in '{directory}'. Place exactly one matching file "
+            f"there and re-run."
+        )
+    if len(matches) > 1:
+        listing = '\n    '.join(str(m.name) for m in matches)
+        raise SystemExit(
+            f"[build] ERROR: multiple {label} files found in '{directory}'. "
+            f"Refusing to guess which is current. Archive or remove all but "
+            f"one, then re-run.\n"
+            f"  Matched files:\n    {listing}"
+        )
+    return matches[0]
 
 def find_col(cols, keywords):
     keys = [k.lower() for k in keywords]
@@ -51,8 +88,26 @@ def map_election_year(y):
     return 2025
 
 def main():
-    print('Loading sales:', SALES)
-    sales = pd.read_csv(SALES, low_memory=False)
+    parser = argparse.ArgumentParser(
+        description="Rebuild the canonical modeling dataset v2 from glob-discovered raw files."
+    )
+    parser.add_argument(
+        "--output", default=str(DEFAULT_OUT),
+        help=f"Output parquet path (default: {DEFAULT_OUT}).",
+    )
+    args = parser.parse_args()
+    OUT = Path(args.output)
+
+    sales_file = resolve_single_file(SALES_DIR, SALES_GLOB, 'sales data file')
+    pluto_file = resolve_single_file(PLUTO_DIR, PLUTO_GLOB, 'PLUTO file')
+
+    # Prominent, plain-text log of exactly which raw file produced this build.
+    print(f'[build] SALES FILE = {sales_file.name}')
+    print(f'[build] PLUTO FILE = {pluto_file.name}')
+
+    print('Loading sales:', sales_file)
+    sales = pd.read_csv(sales_file, low_memory=False)
+    raw_sales_rows = int(len(sales))
     # identify columns
     sale_price_col = find_col(sales.columns, ['sale','price']) or 'SALE PRICE'
     sale_date_col = find_col(sales.columns, ['sale','date']) or 'SALE DATE'
@@ -71,8 +126,8 @@ def main():
 
     # read PLUTO and select fields
     pluto_keep = ['BBL','zonedist1','yearbuilt','numfloors','bldgarea','lotarea','unitsres','unitstotal','residfar','commfar','facilfar','landuse','bldgclass']
-    print('Loading PLUTO:', PLUTO)
-    pluto = pd.read_csv(PLUTO, usecols=lambda c: c in pluto_keep, low_memory=False)
+    print('Loading PLUTO:', pluto_file)
+    pluto = pd.read_csv(pluto_file, usecols=lambda c: c in pluto_keep, low_memory=False)
     # ensure BBL numeric
     if 'BBL' in pluto.columns:
         pluto['BBL_join'] = pd.to_numeric(pluto['BBL'], errors='coerce')
@@ -137,6 +192,21 @@ def main():
         print(out[sample_cols].head(5).to_string(index=False))
     else:
         print('No sample columns present')
+
+    # Write the auditable data manifest: exactly which raw files produced this
+    # build, so every future raw-data swap self-documents.
+    manifest = {
+        'run_utc': datetime.now(timezone.utc).isoformat(),
+        'sales_file': sales_file.name,
+        'sales_row_count': raw_sales_rows,
+        'sales_modified_utc': datetime.fromtimestamp(
+            sales_file.stat().st_mtime, timezone.utc).isoformat(),
+        'pluto_file': pluto_file.name,
+        'canonical_output_rows': int(nrows),
+        'canonical_output_path': str(OUT),
+    }
+    MANIFEST.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+    print(f'Wrote data manifest: {MANIFEST}')
 
 if __name__ == '__main__':
     main()

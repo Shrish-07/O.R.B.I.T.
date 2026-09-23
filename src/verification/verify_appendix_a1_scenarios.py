@@ -60,12 +60,31 @@ PAPER = """District,Borough,Liberal,Conservative,MixedGov
 50,StatenIsland,30.02,0.08,0.25
 51,StatenIsland,32.44,0.14,-0.01"""
 
-# Load actual scenario CSV
-actual = pd.read_csv(ROOT / 'results' / 'scenario_comparison_clean.csv')
-# Load paper
+# Load the actual scenario percentages from the LIVE producer output
+# (results/political_scenarios/*_by_council.csv), NOT the frozen, pre-existing
+# results/scenario_comparison_clean.csv (an 8/31 artifact that no script writes,
+# so a check against it could never disagree with the paper). Each live file
+# groups the scenario's mean_pct_change by council district; we merge the three
+# scenarios into the one 'Council District'/liberal_pct/conservative_pct/mixed_gov_pct
+# frame this check consumes.
 import io
+SCEN_DIR = ROOT / 'results' / 'political_scenarios'
+def _load_scenario(scen_file, value_col):
+    df_s = pd.read_csv(SCEN_DIR / scen_file)
+    ccol = next(c for c in df_s.columns if 'coun' in c.lower())
+    out = df_s[[ccol, 'mean_pct_change']].rename(
+        columns={ccol: 'Council District', 'mean_pct_change': value_col})
+    out['Council District'] = out['Council District'].astype(int)
+    return out
+liberal = _load_scenario('liberal_policy_by_council.csv', 'liberal_pct')
+conservative = _load_scenario('conservative_policy_by_council.csv', 'conservative_pct')
+mixed = _load_scenario('mixed_governance_by_council.csv', 'mixed_gov_pct')
+actual = liberal.merge(conservative, on='Council District', how='outer') \
+                .merge(mixed, on='Council District', how='outer') \
+                .sort_values('Council District').reset_index(drop=True)
+# Load paper
 paper_df = pd.read_csv(io.StringIO(PAPER))
-# Match by district id (actual CounDist is 1.0..51.0)
+# Match by district id (actual Council District is 1..51)
 actual = actual.copy()
 actual['District'] = actual['Council District'].astype(int)
 merged = paper_df.merge(actual, left_on='District', right_on='District', how='left')
@@ -99,7 +118,7 @@ boromap['match'] = boromap.apply(lambda r: str(r['paper']).lower().replace(' ', 
 K['borough_mapping_mismatches'] = boromap[~boromap['match']][['District', 'borough_name', 'paper']].to_dict('records')
 K['borough_mapping_all_match'] = bool(boromap['match'].all())
 
-# Summary stats derived from actual CSV (using actual scenario_comparison_clean.csv)
+# Summary stats derived from the live scenario outputs (results/political_scenarios/*_by_council.csv)
 K['summary_stats_from_actual_csv'] = {
     'liberal_mean_pct': round(float(actual['liberal_pct'].mean()), 4),
     'liberal_n_positive': int((actual['liberal_pct'] > 0).sum()),

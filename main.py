@@ -70,7 +70,7 @@ STAGES = [
          paper_ref="3.2 Ideology Construction (dem_share, the ONLY ideology feature the models train on)"),
     dict(id="rebuild_canonical", category="data_pipeline",
          script="src/data_pipeline/rebuild_canonical.py", args=[],
-         desc="Merges sales + PLUTO + ideology -> data/canonical/modeling_dataset_canonical_v2.parquet (514,618 rows x 53 cols)",
+         desc="Merges sales + PLUTO + ideology -> data/canonical/modeling_dataset_canonical_v2.parquet (567,997 rows x 53 cols after the 2026-09 sales/PLUTO refresh)",
          paper_ref="3.1 Data Sources and Construction, 3.3 Canonical Dataset"),
     dict(id="freeze_schema", category="data_pipeline",
          script="src/data_pipeline/freeze_schema.py", args=[],
@@ -84,11 +84,11 @@ STAGES = [
     # ---- 2. Model training ---------------------------------------------
     dict(id="train_lgbm_base", category="training",
          script="models/training/train_lgbm.py", args=["--variant", "all_years", "--mode", "base"],
-         desc="Champion LightGBM, 16-feature base spec (no dem_share).",
+         desc="Champion LightGBM, 18-feature base spec (no dem_share; unit-count columns are numeric under the refreshed sales pull; BBL_pluto blacklisted 2026-09, Round 7).",
          paper_ref="4.6 Machine Learning and Feature Importance, Table 2"),
     dict(id="train_lgbm_political", category="training",
          script="models/training/train_lgbm.py", args=["--variant", "all_years", "--mode", "political"],
-         desc="LightGBM, 17-feature political spec (adds dem_share).",
+         desc="LightGBM, 19-feature political spec (adds dem_share).",
          paper_ref="4.6 Machine Learning and Feature Importance, Table 2 & 3 (SHAP)"),
     dict(id="train_random_forest", category="training", heavy=True,
          script="models/training/train_random_forest.py",
@@ -153,28 +153,53 @@ STAGES = [
          paper_ref="4.7 Counterfactual Policy Simulation"),
     dict(id="generate_shap_summary", category="analysis",
          script="src/analysis/generate_shap_summary.py", args=[],
-         desc="Mean |SHAP| values for all 17 political-model features.",
+         desc="Mean |SHAP| values for all 19 political-model features (18-feature base champion pass included).",
          paper_ref="4.6.2 SHAP Feature Importance, Table 3"),
     dict(id="generate_pdp", category="analysis",
          script="src/analysis/generate_pdp.py", args=[],
-         desc="Partial dependence plots for top champion-model features. NOT currently cited in the paper — see PAPER_TO_CODE_MAP.md. (regenerated 2026-09-06 against the current 16-feature champion + 17-feature political models; verified blacklist-clean vs config/feature_blacklist.yaml)",
+         desc="Partial dependence plots for top champion-model features. NOT currently cited in the paper — see PAPER_TO_CODE_MAP.md. (regenerated 2026-09-06 against the current 18-feature champion + 19-feature political models [counts updated for the Round 7 BBL_pluto blacklist]; verified blacklist-clean vs config/feature_blacklist.yaml)",
          paper_ref="(unused — candidate addition, see action plan)"),
     dict(id="confidence_intervals", category="analysis",
          script="src/analysis/confidence_intervals.py", args=[],
-         desc="Per-property prediction intervals for the champion model. NOT currently cited in the paper. (regenerated 2026-09-06 against the current champion + 17-feature political model, full 56,817-row test split; verified blacklist-clean)",
+         desc="Per-property prediction intervals for the champion model. NOT currently cited in the paper. (regenerated 2026-09-06 against the current champion + 19-feature political model [counts updated for the Round 7 BBL_pluto blacklist], full 56,817-row test split; verified blacklist-clean)",
          paper_ref="(unused — candidate addition, see action plan)"),
     dict(id="sensitivity_analysis", category="analysis",
          script="src/analysis/sensitivity_analysis.py", args=[],
-         desc="Feature-perturbation sensitivity for the champion model. NOT currently cited in the paper. (regenerated 2026-09-06 against the current 16-feature champion + 17-feature political models; verified blacklist-clean vs config/feature_blacklist.yaml)",
+         desc="Feature-perturbation sensitivity for the champion model. NOT currently cited in the paper. (regenerated 2026-09-06 against the current 18-feature champion + 19-feature political models [counts updated for the Round 7 BBL_pluto blacklist]; verified blacklist-clean vs config/feature_blacklist.yaml)",
          paper_ref="(unused — candidate addition, see action plan)"),
     dict(id="champion_confidence_and_sensitivity", category="analysis",
          script="src/analysis/champion_confidence_and_sensitivity.py", args=[],
-         desc="Combined confidence+sensitivity pass for the current champion model; also writes the political model's test_preds.parquet + intervals.csv at full 56,817-row coverage. (regenerated 2026-09-06 against the current 16/17-feature models; verified blacklist-clean)",
+         desc="Combined confidence+sensitivity pass for the current champion model; also writes the political model's test_preds.parquet + intervals.csv at full 56,817-row coverage. (regenerated 2026-09-06 against the current 18/19-feature models [counts updated for the Round 7 BBL_pluto blacklist]; verified blacklist-clean)",
          paper_ref="(unused — candidate addition, see action plan)"),
     dict(id="compare_models", category="analysis",
          script="src/analysis/compare_models.py", args=[],
          desc="Tabulates every experiments/results/*.json entry side by side.",
          paper_ref="4.6.1 Predictive Performance, Table 2 (cross-check)"),
+    dict(id="build_close_election_instrument", category="analysis",
+         script="src/causal/build_close_election_instrument.py", args=[],
+         desc="Honest coverage diagnostic for the close-election instrument: counts close "
+              "council-race cells by bandwidth (5/10/15/20pp), cycle, and winner party, with a "
+              "plain-language thin-coverage warning. Writes results/causal/close_election_coverage.json.",
+         paper_ref="(candidate causal-identification design — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
+    dict(id="iv_district_fe_regression", category="analysis",
+         script="src/causal/iv_district_fe_regression.py", args=[],
+         desc="IV / instrumented district-FE 2SLS: prior-cycle close-council-race indicator "
+              "instruments dem_share; first-stage F + per-bandwidth verdicts vs the existing "
+              "non-instrumented Model 4 benchmark. Writes results/causal/iv_district_fe_results.json.",
+         paper_ref="(candidate causal-identification design — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
+    dict(id="iv_district_fe_rescue", category="analysis",
+         script="src/causal/iv_district_fe_rescue.py", args=[],
+         desc="Round-6 rescue spec search: (1a) borough-FE variant of the close-race IV; "
+              "(1b) wider bandwidths on the original district-FE IV. Every attempt recorded, "
+              "identified or not, each with a credibility note. Writes "
+              "results/causal/iv_district_fe_rescue_results.json.",
+         paper_ref="(candidate causal-identification design, Round 6 — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
+    dict(id="city_of_yes_did", category="analysis",
+         script="src/causal/city_of_yes_did.py", args=[],
+         desc="City of Yes Housing Opportunity DiD (ideology/preference-proxy framing): "
+              "district FE + sale-year FE, clustered by district; mandatory event-study "
+              "pre-trend check. Writes results/causal/city_of_yes_did_results.json.",
+         paper_ref="(candidate causal-identification design, Round 6 — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
 
     # ---- 4. Figures & tables --------------------------------------------
     dict(id="generate_figures", category="figures",
@@ -267,6 +292,23 @@ STAGES = [
          script="src/verification/verify_followup_resolution.py", args=[],
          desc="Resolves the two known loose ends (53-row missingness gap, 19-row prediction-interval gap).",
          paper_ref="results/FULL_PAPER_FACT_CHECK.md ('NEW findings' section)"),
+    dict(id="verify_iv_district_fe", category="verification",
+         script="src/verification/verify_iv_district_fe.py", args=[],
+         desc="Independently re-derives the close-election IV instrument, sample counts, and "
+              "identification verdicts (and, only where identified, re-fits the 2SLS) from the "
+              "canonical parquet + margins parquet against results/causal/iv_district_fe_results.json.",
+         paper_ref="(candidate causal-identification design — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
+    dict(id="verify_iv_district_fe_rescue", category="verification",
+         script="src/verification/verify_iv_district_fe_rescue.py", args=[],
+         desc="Independently re-derives both Round-6 IV rescue arms and compares every field to "
+              "results/causal/iv_district_fe_rescue_results.json to 4dp.",
+         paper_ref="(candidate causal-identification design, Round 6 — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
+    dict(id="verify_city_of_yes_did", category="verification",
+         script="src/verification/verify_city_of_yes_did.py", args=[],
+         desc="Independently re-fits the City of Yes DiD event study + main spec + sensitivity "
+              "from the canonical parquet + roll-call parquet and compares every field to "
+              "results/causal/city_of_yes_did_results.json to 4dp.",
+         paper_ref="(candidate causal-identification design, Round 6 — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
 ]
 
 STAGE_BY_ID = {s["id"]: s for s in STAGES}

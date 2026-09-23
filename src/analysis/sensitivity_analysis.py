@@ -105,7 +105,8 @@ def run_sensitivity(md_name, feature_list, top_feat_list, predict_fn):
 results = run_sensitivity(name, features, top_feats, predict_df)
 
 # ---------------------------------------------------------------------------
-# Paper's political model (17-feature spec): regenerate its sensitivity
+# Paper's political model (19-feature spec after the Round 7 BBL_pluto
+# blacklist): regenerate its sensitivity
 # analysis too. The previous lgbm_all_years_political_sensitivity_analysis.json
 # was computed against a PRE-BLACKLIST-CLEANUP model (it referenced assesstot,
 # exempttot, taxmap, 'Tax block', 'Tax lot', ... — nothing in the current

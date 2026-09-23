@@ -55,6 +55,13 @@ leakage_features:
   - record_id
   - sale_id
 
+  # Parcel-identifier artifact of the sales/PLUTO merge-suffix collision (both
+  # raw source files carry a column named BBL; pandas' default merge suffixing
+  # in rebuild_canonical.py preserves PLUTO's copy as BBL_pluto instead of
+  # discarding it). Not a genuine structural or locational feature;
+  # blacklisted 2026-09, see VERIFICATION_REPORT.md Round 7.
+  - BBL_pluto
+
   # ============================
   # Duplicate / raw geo fields
   # ============================

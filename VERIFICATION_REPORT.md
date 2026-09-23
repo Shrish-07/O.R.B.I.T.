@@ -699,3 +699,554 @@ altered to force agreement anywhere.
 (now pipeline-produced), `archive/_round3_registry_audit.py` (new),
 `VERIFICATION_REPORT.md` (this subsection). No numbers altered.
 
+
+---
+
+## Round 5 (2026-09-13) — data refresh reconciliation + causal-ID build
+
+### Scope
+
+Build the candidate causal-identification design (the ACTION_PLAN's prior task,
+closing the paper's stated #1 limitation) on top of the now-permanent
+**19-feature base / 20-feature political** spec (the 3 newly-admitted
+`RESIDENTIAL UNITS`, `COMMERCIAL UNITS`, `TOTAL UNITS` columns are final — no
+comparison or decision-support report for the old spec was built), while
+reconciling the remaining artifacts that lagged the 2026-09-10/11 data refresh.
+The manuscript (`orbit_paper_CER.tex`) and everything under `CER Papers 5/`
+were **not** touched — the rewrite to the refreshed numbers is a separate,
+later task. For the refresh's numeric record this round points to
+`DATA_REFRESH_IMPACT_REPORT.md` as the source of truth rather than
+re-tabulating it; only the new Round-5 numbers appear below.
+
+### Changes applied (each verified by re-running the affected stage, not just reading)
+
+1. **Party-label bug fixed in `build_council_election_margins.py` (script, not
+   the parquet by hand).** Raw `winner_party` mixed 2013 ALL-CAPS labels,
+   title-case Recap labels, and fusion compounds (`Democratic/Law & Order`);
+   `runnerup_party` additionally had ~25 minor/fusion lines. Fix: case-fold
+   every label, split fusion compounds on "/", map each candidate's full line
+   set to their major party — the literal `Democratic`/`Republican` line is
+   authoritative; a documented alias table (Working Families → Dem;
+   Conservative / Save Our City → Rep) is consulted only when no literal major
+   line is present. A loud (non-silent) assertion now fails the build if any
+   label outside `{Democratic, Republican, Other}` survives. Printed before/after
+   distinct counts each run: **winner_party 6 → 3, runnerup_party 36 → 3**;
+   parquet regenerated (still 204 rows, 51×4 cycles).
+2. **Two cross-endorsement winners flagged, not guessed.** Robert F. Holden
+   (D30, 2021) and Kalman Yeger (D44, 2021) each carry BOTH a Democratic and a
+   Republican line — a cross-endorsement the ballot-line data alone cannot
+   resolve. Per the task's "say so explicitly rather than guessing a fusion-line
+   mapping" rule they classify `Other` and are logged at build time — a genuine
+   finding. Both are uncontested (100.0% margin), so they can never enter a
+   close-race instrument anyway; no identification decision rides on the call.
+3. **Close-election coverage diagnostic**
+   (`src/causal/build_close_election_instrument.py` →
+   `results/causal/close_election_coverage.json`). Close races
+   (`margin_pct <= bandwidth`) of the 204 races: **±5pp: 4 (4 usable), ±10pp:
+   7 (6 usable), ±15pp: 12 (9 usable), ±20pp: 17 (13 usable)** (2025 races can't
+   feed a later canonical year). A thin-coverage warning is printed AND stored
+   in the JSON — the thin instrument is an observed property, not a surprise.
+4. **IV / instrumented district-FE 2SLS**
+   (`src/causal/iv_district_fe_regression.py` →
+   `results/causal/iv_district_fe_results.json`). `linearmodels.iv.IV2SLS` (new
+   dependency `linearmodels==7.0` pinned into `requirements.txt`), instrumenting
+   `dem_share` with a binary prior-cycle close-Democratic-win indicator (Z=1
+   close Dem win, 0 close Republican win, else excluded — sharp-RD exclusion),
+   controls = Model 4's set (yearbuilt, numfloors, landuse, commfar) plus the
+   two linearly-independent UNITS columns (TOTAL UNITS = RESIDENTIAL+COMMERCIAL
+   for 99.6% of rows, so it's dropped with a documented note), with CounDist +
+   sale_year FE. First-stage F-stat, both stages' coef/SE/p, a programmatic
+   verdict (F > 10 → "strong enough to interpret", else "weak — treat as
+   suggestive, not identified"), and a side-by-side vs the existing Model 4
+   district-FE benchmark (`robustness_checks.json`: dem_share coef
+   0.8032559316804574) are all written to the JSON.
+5. **Honest negative result, verified twice.** On the current data the
+   instrument is **not identified at ANY bandwidth**: after projecting out
+   district + sale_year FE, the close-race indicator Z lies exactly in the FE
+   column space (residual ~1e-11, exact zero) — it varies only at the
+   (district, prior-cycle) level while `election_year` is a deterministic
+   grouping of `sale_year` (2016-18→2017, 2019-23→2021, 2024-25→2025), so the
+   district+year FE span any instrument built from this few close cells
+   (4/6/9/13 at ±5/10/15/20pp). The independent verifier
+   (`src/verification/verify_iv_district_fe.py`, which re-derives fresh without
+   importing the analysis script) reports the same verdict and the same counts;
+   nothing was coded around — no FE was dropped, no cell count was padded to
+   reach an F-statistic. Per-bandwidth rank diagnostics (regressor block /
+   instrument block): 5pp 15·16, 10pp 19·21, 15pp 22·23, 20pp 25·25 / 24·25.
+6. **Three new `main.py` stages** (`build_close_election_instrument`,
+   `iv_district_fe_regression` [analysis], `verify_iv_district_fe`
+   [verification]) follow the existing `dict(id=..., category=..., script=...,
+   args=[], desc=..., paper_ref=...)` pattern, with
+   `paper_ref="(candidate causal-identification design — see
+   ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"`. All
+   three exit 0 even when the weak-instrument / not-identified verdict fires.
+   Verified: `python main.py --stage build_close_election_instrument
+   iv_district_fe_regression verify_iv_district_fe` → 3/3 OK;
+   `verify_iv_district_fe` reported `all_bandwidths_match: True`.
+7. **Stale political SHAP artifact refreshed.** The 18-feature-era
+   `lgbm_all_years_political_shap_summary.json` (per
+   `results/FULL_PAPER_FACT_CHECK.md` §7) was superseded: the
+   `generate_shap_summary` stage regenerated it against the now-permanent
+   20-feature model, and a dated copy of the refreshed file was archived per
+   convention at `archive/lgbm_all_years_political_shap_summary.20feat_20260912.json`.
+   The 3 UNITS columns' SHAP ranks in the current artifact: **RESIDENTIAL UNITS
+   #2, TOTAL UNITS #3, COMMERCIAL UNITS #8** (dem_share #12, election_year #20
+   at exactly 0). §7 now records the artifact as current; the manuscript's
+   Table 3 (old values) is deferred to the separate manuscript task.
+8. **Doc currency pass.** `PAPER_TO_CODE_MAP.md` and `README.md` (both last
+   edited 2026-09-08, before the refresh and before the new builders existed)
+   now carry entries for `build_council_election_margins.py` and
+   `build_city_of_yes_roll_calls.py`, the two new `src/causal/` scripts and
+   `verify_iv_district_fe.py`, a note that `src/causal/causal_analysis.py` (the
+   original X-learner / causalml script) is unfinished and superseded by the IV
+   design as the recommended path (kept only as historical scaffolding), and a
+   one-line confirmation that the 19/20-feature spec (UNITS columns included)
+   is the permanent, final feature set.
+
+### Verification block output
+
+**Omitted by design this round** — the full 35-minute `python main.py`
+end-to-end run is the author's to do once these changes land (per the task).
+What was actually run: the three new stages, individually and together, shown
+in change #6 (3/3 OK, verifier `all_bandwidths_match: True`); the author should
+confirm the whole 49-stage pass on their own run.
+
+### Still needs attention (found; NOT silently resolved)
+
+- **The close-election instrument is not identified at ANY bandwidth
+  (±5/±10/±15/±20 pp) with the current council-election data.** This is the
+  real, hard limitation: NYC council races are overwhelmingly landslides, so
+  only 4-13 of 204 district-year races are close, and at that cell count the
+  district + sale_year FE structure leaves no residual variation for a
+  cell-level instrument — the first-stage F-statistic is undefined (worse than
+  merely being below 10) because the design is exactly singular. Nothing was
+  fudged to force a match: the rank check is done against the assembled design
+  and never lowers the FE count to manufacture identification. Next options for
+  the author (all out of scope this round): relax the FE structure to a
+  design where the instrument is estimable, draw an instrument from a source
+  with many close races (e.g. a different office's margins), or record the
+  design as "attempted, not identified with current data — future work." Both
+  `results/causal/*.json` files carry the per-bandwidth `verdict:
+  "instrument is weak at this bandwidth — treat as suggestive, not identified"`;
+  the manuscript must not report an IV estimate computed from this data at any
+  of the four bandwidths.
+- The manuscript's Table 3 still cites the old 18-feature-era SHAP values; the
+  artifact is now current (20-feature). The manuscript rewrite is deferred —
+  see §7 of `results/FULL_PAPER_FACT_CHECK.md` and `DATA_REFRESH_IMPACT_REPORT.md`.
+- `data/processed/city_of_yes_roll_calls.parquet` covers only City of Yes for
+  Housing Opportunity (2024-12-05); the Carbon Neutrality (Dec 2023) and
+  Economic Opportunity (June 2024) member-level roll calls were not
+  programmatically retrievable (Legistar API 403 + JS-only public search) and
+  are still flagged in `build_city_of_yes_roll_calls.py` for manual retrieval —
+  unchanged from before.
+
+### Files changed this round
+
+- **Source (new):** `src/causal/build_close_election_instrument.py`,
+  `src/causal/iv_district_fe_regression.py`,
+  `src/verification/verify_iv_district_fe.py`.
+- **Source (edited):** `src/data_pipeline/build_council_election_margins.py`
+  (party consolidation + hard assertion + before/after log), `main.py`
+  (3 new stages + a `generate_shap_summary` desc fix 17→20 features),
+  `requirements.txt` (+ `linearmodels==7.0`).
+- **Docs (edited):** `PAPER_TO_CODE_MAP.md`, `README.md`,
+  `results/FULL_PAPER_FACT_CHECK.md` (§7), `VERIFICATION_REPORT.md` (this Round 5).
+- **Data (regenerated):** `data/processed/council_election_margins.parquet`
+  (party labels only — same 204 rows and vote totals).
+- **Result artifacts (new/regenerated):** `results/causal/close_election_coverage.json`,
+  `results/causal/iv_district_fe_results.json`,
+  `results/causal/iv_district_fe_verification.json`, `models/artifacts/lgbm_all_years_political_shap_summary.json`
+  (regenerated to the current 20-feature state), plus the three stages'
+  `results/logs/pipeline/*.log` and `results/PIPELINE_RUN_REPORT.md` (overwritten
+  by the single-stage runs this round — the dated refresh snapshots
+  `results/PIPELINE_RUN_REPORT_full_20260{910,911,912}.md` are untouched).
+- **Archived (not deleted):**
+  `archive/lgbm_all_years_political_shap_summary.20feat_20260912.json`.
+
+No manuscript file (`orbit_paper_CER.tex` or anything under `CER Papers 5/`) was
+touched, and no number was edited to force a match — the non-identification
+finding is reported as found, exactly as Rounds 1-4's "Still needs attention"
+sections have done.
+
+
+---
+
+## Round 6 (2026-09-14) — IV rescue attempts + City of Yes DiD
+
+> Headline (in one place, per brief): *of the six IV variants tried (four
+> borough-FE bandwidths, plus a 20/25/30/35/40pp sweep on the district-FE
+> design), four identify, and not one of them makes the instrument strong —
+> every first-stage F stays under 10 (best ≈ 7.40). The City of Yes DiD's
+> pre-trend check passes, but the DiD itself is not statistically
+> distinguishable from zero (p = 0.1283). Nothing identified credibly enough to
+> claim a causal effect; the full specification trail is below, not filtered.*
+
+### Scope
+
+Continue from Round 5's finding (district-FE close-election IV not identified at
+any of ±5/10/15/20pp) with a rule-bound specification search, no new data
+collection. Everything uses data already on disk:
+`data/canonical/modeling_dataset_canonical_v2.parquet`,
+`data/processed/council_election_margins.parquet`, and
+`data/processed/city_of_yes_roll_calls.parquet`.
+
+### Changes applied
+
+0. **Task 0 — what's on record about City of Yes geography (documentation audit,
+   no new data).** Read `src/data_pipeline/build_city_of_yes_roll_calls.py` in
+   full and grepped `ACTION_PLAN_FOR_SUBMISSION.md`,
+   `DATA_REFRESH_IMPACT_REPORT.md`, `VERIFICATION_REPORT.md` for "City of Yes".
+   **Finding (on record):** *no source in this repo distinguishes universal
+   (city-wide) Housing Opportunity provisions (e.g. ADUs, parking relief) from
+   geography-specific components* (transit-oriented zoning-map amendments, town
+   center opt-ins). The only geographically-targeted "City of Yes" action the
+   plan names is **Economic Opportunity (June 2024)** — and its member-level
+   roll call is explicitly unavailable here (Legistar not retrievable; see the
+   builder's docstring). Housing Opportunity is a project-wide zoning text
+   amendment adopted 2024-12-05. So exactly as the brief anticipates, the DiD
+   runs under the **ideology/preference-proxy framing** and every downstream
+   artifact carries that caveat.
+
+1. **`src/causal/iv_district_fe_rescue.py` — both rescue arms, every attempt
+   recorded** → `results/causal/iv_district_fe_rescue_results.json`:
+
+   **Rescue 1a (borough FE, same instrument, ±5/10/15/20pp):** at ±5pp and
+   ±10pp the rank check still fails exactly as in Round 5 (the instrument
+   block is one rank short of full). At ±15pp and ±20pp the design *does* reach
+   full rank and the 2SLS actually runs — but the first-stage F-stat is 1.04
+   (±15pp) and 0.59 (±20pp), far under the conventional 10 threshold, and it
+   shows why: the second-stage `dem_share` coefficient swings wildly and
+   senselessly — **−14.7 (SE 14.8, p 0.32) at ±15pp** and **+18.3 (SE 24.0,
+   p 0.45) at ±20pp**. Compare to the non-instrumented Model 4 counil-district
+   benchmark ≈ **0.803** (SE 0.016). Two orders of magnitude apart in both
+   sign and scale — the weak instrument is behaving exactly as econometric
+   textbook says it will (huge variance, unstable sign). Programmatic verdict
+   on both: **"instrument is weak at this bandwidth — treat as suggestive, not
+   identified."** Every record carries the credibility note that borough FE
+   controls only 5 region-level confounders, not the 51 district-level ones
+   Model 4 controls — a materially weaker design even where it identifies.
+
+   **Rescue 1b (wider bandwidths, original district FE, 20/25/30/35/40pp):** at
+   ±20pp it remains not identified (24 of 25 instrument-block rank — the
+   precise Round-5 result, reproduced unchanged). At ±25pp it reaches full rank
+   — first bandwidth that does — and continues to identify at ±30, ±35, ±40pp.
+   First-stage F at those bandwidths: **2.44 / 7.40 / 5.13 / 7.30** — all under
+   10. Second-stage `dem_share`: **3.73 (p 0.19) / 0.53 (p 0.73) / 0.61 (p
+   0.72) / −0.01 (p 0.99)** — small, insignificant, sign-unstable. Every flip
+   forward/backward across these makes clear what we have: *not* an instrument,
+    a noise generator. Every record carries the credibility note that widening
+   the bandwidth deepens compromises the "as-good-as-random" assumption, so
+   even a clean identification here is a lower-confidence robustness probe.
+
+2. **`src/verification/verify_iv_district_fe_rescue.py`** — independently
+   re-derives both arms from the same two parquets with fresh code (never
+   imports the analysis script), mirrors the rank checks, and re-fits the four
+   identified 2SLS specs. Result: **all nine records match (4dp), including the
+   four re-fitted F-stats and coefficients** →
+   `results/causal/iv_district_fe_rescue_verification.json`
+   (`all_arms_match: true`).
+
+3. **`src/causal/city_of_yes_did.py`** → `results/causal/city_of_yes_did_results.json`.
+   `treatment_framing` is set at the top of the file to the full
+   "ideology/preference-proxy DiD, NOT a policy-application DiD" caveat (per the
+   Task 0 finding) and appears in the JSON and in the run log so it cannot be
+   dropped downstream.
+   - **Pre-trend event study (mandatory, reported regardless of outcome),**
+     reference bin 2022-23, with Yes×bin terms for 2016-17, 2018-19, 2020-21
+     (the three pre-period bins tested jointly), 2024 (partial-treatment
+     transition year), and 2025 (full post). The three pre-period coefficients
+     are small and jointly not significant: **joint Wald F = 4.19, p = 0.2416
+     (n = 355,997)** → pre-trends are consistent with parallel trends. Verdict:
+     **PASS** (computed programmatically from the Wald p-value, not hand-set).
+   - **Main DiD** (post = 2025, transition year 2024 excluded from the sample):
+     **coef +0.0812 (SE 0.0534, p = 0.1283, n = 334,187)** — not statistically
+     distinguishable from zero at conventional levels.
+   - **Sensitivity** (post = 2024+2025, transition year included): **+0.0762
+     (SE 0.0507, p = 0.1331, n = 355,997)** — same qualitative verdict, a faint
+     positive that does not survive significance.
+   - In plain language: Yes-voting districts do not measurably change their
+     property-price path relative to No-voting districts around the Dec-2024
+     City of Yes vote, once district and year FE and the structural controls are
+     in place — and even if it had, this design measures a revealed
+     pro-/anti-development stance, not the policy's effect.
+
+4. **`src/verification/verify_city_of_yes_did.py`** — independently re-fits the
+   event study and both DiD variants from the two input parquets. **All 29
+   fields match the pipeline JSON to 4dp** →
+   `results/causal/city_of_yes_did_verification.json` (`all_match: true`).
+
+5. **`main.py` — four new stages** (analysis: `iv_district_fe_rescue`,
+   `city_of_yes_did`; verification: `verify_iv_district_fe_rescue`,
+   `verify_city_of_yes_did`), each following the stage-dict pattern with
+   `paper_ref="(candidate causal-identification design, Round 6 — see
+   ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"`.
+   All verified individually with
+   `python main.py --stage iv_district_fe_rescue city_of_yes_did verify_iv_district_fe_rescue verify_city_of_yes_did`
+   → **4/4 OK**, and every one exits 0 regardless of identification or
+   pre-trend outcome (a failed rescue is a finding, not a crash). Pipeline total
+   is now 53 stages.
+
+### Still needs attention (found; NOT silently resolved)
+
+- **IV remains not-credible at any configuration tried.** The original
+  district-FE design does not identify at ±5/10/15/20pp (rank deficiency) nor
+  at the wider ±25-40pp where it does run (all first-stage F < 10, second-stage
+  point estimates inconsistent in sign and implausible). The looser borough-FE
+  drop-in strengthens *identification* at ±15/20pp at the cost of confounding
+  control — and still leaves first-stage F ≈ 0.6-1.0 with second-stage point
+  estimates of −14.7 and +18.3 against a benchmark of +0.80. The honest read is
+  that no close-council-race instrument on this dataset can currently support a
+  causal claim; any paper-level statement must either present this as an
+  attempted-and-failed identification or find an instrument with genuinely many
+  close races (which NYC council districts do not provide).
+- **The City of Yes DiD passes its pre-trend check but shows no significant
+  effect** (+0.081, p = 0.128 main; +0.076, p = 0.133 sensitivity). Under the
+  ideology/preference-proxy framing (the only framing this repo's data
+  supports), this is a suggestive-null for revealed-stance price effects, not a
+  policy effect — the zoning amendment itself applies city-wide regardless of
+  the member's vote. It must not be cited as a policy-application estimate.
+- The Council-is-data-limited ceiling remains: 204 races over four cycles and
+  only 13 usable close-race cells at ±20pp set a hard floor on instrument
+  strength that no FE-relaxation rescues — demonstrated rather than asserted.
+
+### Verification block output
+
+**Omitted by design** (same convention as Round 5) — the full 35-minute
+`python main.py` is the author's to run after these land. What was run: all
+four new stages individually and together (4/4 OK); both verifiers passed
+(`all_arms_match: true`, `all_match: true`).
+
+### Files changed this round
+
+- **New source:** `src/causal/iv_district_fe_rescue.py`,
+  `src/causal/city_of_yes_did.py`,
+  `src/verification/verify_iv_district_fe_rescue.py`,
+  `src/verification/verify_city_of_yes_did.py`.
+- **Modified:** `main.py`, `VERIFICATION_REPORT.md` (this Round 6).
+- **New result JSONs:** `results/causal/iv_district_fe_rescue_results.json`,
+  `results/causal/iv_district_fe_rescue_verification.json`,
+  `results/causal/city_of_yes_did_results.json`,
+  `results/causal/city_of_yes_did_verification.json`.
+- **Logs:** `results/logs/pipeline/{iv_district_fe_rescue,city_of_yes_did,verify_iv_district_fe_rescue,verify_city_of_yes_did}.log`.
+- **Untouched:** `requirements.txt` (no new libraries); `orbit_paper_CER.tex`
+  and everything under `CER Papers 5/`; the Round-5 primary
+  `results/causal/iv_district_fe_results.json` (the most-credible-but-failed IV
+  result stays exactly as it was, NOT overwritten by the rescue).
+
+---
+
+## Round 7 (2026-09-22) — BBL_pluto blacklisted
+
+> Headline (in one place, per brief): *`BBL_pluto` was a parcel-identifier
+> artifact of the sales/PLUTO merge-suffix collision, not a genuine
+> structural or locational feature. It is now blacklisted, the permanent
+> modeling spec becomes **18 base / 19 political** features, and every model,
+> SHAP summary, PDP, sensitivity pass, scenario, figure, and fact-check
+> re-derives from that spec on the author's own `python main.py` run. No
+> retrained performance numbers are reported here — none exist until that
+> run happens. `verify_blacklist_fully.py` itself had two silent-skip gaps
+> that would have hidden exactly this class of bug; both are fixed.*
+
+### Scope
+
+Remove the `BBL_pluto` merge artifact from the modeling feature set via the
+single existing mechanism (`config/feature_blacklist.yaml`), audit every
+downstream stage for hard-coded or cached feature lists, harden the blacklist
+verifier so it actually catches this class of bug, and record the spec change
+(19/20 → 18/19) everywhere the repo hard-codes it — in place, without
+restructuring any script, without renaming or deleting anything, and without
+running the pipeline (the author runs the full pass themselves).
+
+### Changes applied
+
+0. **Task 0 — mechanism confirmed before touching anything.**
+   - `config/feature_blacklist.yaml` read in full: **`BBL_pluto` was not
+     present under any casing or alias.** The only BBL-family entries are
+     `- bbl` (post-sale identifiers) and `- appbbl` (assessment leakage); all
+     training scripts match case-insensitively (`c.lower() in blacklist`),
+     and `bbl` ≠ `bbl_pluto`, so nothing caught it.
+   - **Why it exists:** `src/data_pipeline/rebuild_canonical.py` keeps
+     PLUTO's `BBL` among its selected columns (line 128) and merges on
+     `BBL_join` with `suffixes=('','_pluto')` (line 138). Both raw source
+     files carry a `BBL` column that is *not* the join key, so pandas
+     preserves PLUTO's copy as `BBL_pluto` instead of discarding it. It is
+     the PLUTO copy of the parcel identifier — a row key, not a structural or
+     geographic attribute — whose existence was already disclosed in the
+     manuscript's Data Sources section (raw-file column overlap).
+   - **Single fix location in the wired pipeline:** all five training
+     scripts wired into `main.py` derive their feature lists dynamically
+     from the blacklist (`train_lgbm.py` lines 93–103; identical idiom in
+     `train_random_forest.py`, `train_linear_baselines.py`,
+     `train_catboost.py`, `train_xgboost.py`). No stage in `main.py` has its
+     own hard-coded feature list, so the blacklist edit alone reaches: all
+     seven Table 2 models, champion re-selection, SHAP/PDP/sensitivity/
+     intervals, scenarios, figures, and the comparison tables.
+     `rebuild_canonical.py`'s separate hard-coded `BAN_COLUMNS` set
+     (line 35) drops PLUTO assessment *columns from the canonical build* —
+     a different job; `BBL_pluto` correctly **remains a canonical column**
+     (no schema change); only model feature selection drops it.
+   - **The one exception, named explicitly per the brief:**
+     `models/training/train_smoke.py` (a smoke-test utility **not** wired
+     into `main.py`) selects numeric features *without* consulting the
+     blacklist (line 23), so it would still train on `BBL_pluto` if ever run
+     by hand. It produces no paper artifact and takes no further fix here;
+     see "Still needs attention."
+
+1. **Task 1 — blacklist entry added.** `config/feature_blacklist.yaml` gains
+   one `- BBL_pluto` entry at the end of the existing "Post-sale identifiers
+   / row keys" section, in the file's existing flat-list style (comment lines
+   above a plain `- name` item, same as the `EASE-MENT` entry), citing the
+   merge-suffix mechanism and this round. The file is a flat YAML list under
+   `leakage_features:`, so no mapping/block-scalar syntax was introduced.
+   Mechanical consequence on the author's next run: base spec **19 → 18**
+   features, political spec **20 → 19**.
+
+2. **Task 2 — cascade audited, not executed.** Every `main.py` stage the
+   brief named was read in full and confirmed to derive its feature list from
+   artifact files that are **regenerated on each pipeline run**, never from a
+   stale cache: the trainers rewrite `models/artifacts/*_features.json` and
+   append to `experiments/registry.json`; `refresh_champion` rewrites
+   `experiments/champion.json` from the registry (lowest test MAE among
+   untainted post-2026-05-18 runs — hand-preservation of a champion is
+   impossible by construction); `generate_shap_summary` / `generate_pdp` /
+   `confidence_intervals` / `sensitivity_analysis` /
+   `champion_confidence_and_sensitivity` / `political_scenarios` all resolve
+   the champion + `lgbm_all_years_political` registry entries and read their
+   freshly-written `features_path`; `compare_models` and
+   `generate_research_summary` re-tabulate `experiments/**/*.json` (the
+   latter regenerates `docs/model_comparison_table.csv`); the figure scripts
+   read the regenerated SHAP/scenario artifacts; `verify_ml_performance`
+   reads the regenerated comparison table; `verify_shap_importance` reads the
+   regenerated SHAP JSONs. **No stage caches an old feature list on disk
+   that survives the cascade**, so no artifact needed out-of-band
+   regeneration. Two files are *orphans with no pipeline writer* —
+   `docs/feature_manifest.json` and `models/artifacts/canonical_schema.json`
+   — but both describe **canonical columns** (which are unchanged;
+   `BBL_pluto` remains a column), so they stay accurate and are flagged
+   rather than regenerated. The current champion on disk is
+   `lgbm_all_years_base` (selected by `refresh_champion`); if the retrained
+   deltas reorder the registry, the champion will change and the pipeline
+   will say so plainly.
+
+3. **Task 3 — `verify_blacklist_fully.py` hardened; it previously could not
+   catch this bug.** Three gaps found, all fixed in place:
+   - **Political model was silently skipped forever.** The political-model
+     lookup required `exp.get("pipeline_v2")` in `experiments/registry.json`;
+     verified by direct grep — **zero registry entries carry that flag** (no
+     training script writes it), so `political_name` was always `None` and
+     both final-verdict blocks skipped the political model entirely. The
+     script now falls back to the same name-based registry lookup
+     (`lgbm_all_years_political`) that `generate_pdp.py` /
+     `sensitivity_analysis.py` / `generate_shap_summary.py` already use.
+   - **The final verdict could never see `BBL_pluto`.** The verdict loops
+     tested only `norm_label(f)` (underscores → spaces), which turns
+     `BBL_pluto` into `BBL pluto` — not the blacklist entry — while the
+     per-model scan already tested the original name too. Both verdict loops
+     now test original **and** normalized names, mirroring the per-model
+     loop, so every blacklist entry (including underscore-suffixed merge
+     artifacts like this one) is checked against both champion models'
+     actual trained feature lists, not just spot-checked names.
+   - **Enforcement failure was a print-only event.** The script exited 0 even
+     when a champion model contained blacklisted features (main.py would
+     have reported the stage PASS), and never wrote the
+     `results/editorial_audit/blacklist_audit.json` its own docstring
+     promises. It now writes that JSON on every run and exits 1 if either
+     champion model fails (legacy `.txt` scans above remain informational in
+     the log and do not gate the pipeline, matching their existing role).
+   - **The fix was validated against the live checkout this session:** with
+     the entry added and the on-disk models still trained *with* `BBL_pluto`
+     (pre-retrain), the hardened script identifies **both** champion base and
+     political models as BLACKLISTED (`BBL_pluto` in both feature lists),
+     writes the audit JSON with `enforcement_passed: false`, and exits 1 —
+     i.e. the verifier finally catches exactly this class of bug. It goes
+     green as soon as the author's pipeline run retrains under the
+     18/19-feature spec; until then its failure is the intended state, not a
+     regression.
+
+4. **In-place feature-count updates** (19→18 / 20→19; stray 16/17
+   descriptions → 18/19; no restructuring):
+   - `main.py` stage descriptions: `train_lgbm_base`, `train_lgbm_political`,
+     `generate_shap_summary`, `generate_pdp`, `confidence_intervals`,
+     `sensitivity_analysis`, `champion_confidence_and_sensitivity`.
+   - Script comments/docstrings: `src/analysis/generate_pdp.py`,
+     `src/analysis/sensitivity_analysis.py`, `src/figures/generate_figures.py`
+     (count only; the "dem_share at rank 12" phrase is unpacked below),
+     `src/causal/iv_district_fe_regression.py` (docstring + controls
+     comment), `src/causal/city_of_yes_did.py` (docstring).
+
+5. **Docs.** `PAPER_TO_CODE_MAP.md` and `README.md` each gained one line
+   noting that the permanent **18/19-feature spec** (post-`BBL_pluto`)
+   supersedes the prior 19/20-feature spec, with a pointer to this Round 7.
+
+### What does NOT change — stated explicitly so it need not be re-verified by hand
+
+None of the following ever included `BBL_pluto` in a control set, and none is
+affected by the blacklist edit (their numbers come from regressions over
+canonical columns, not from the model feature spec):
+- **Table 1 (OLS, `generate_regression_table.py`)**: controls are
+  `yearbuilt, numfloors, landuse, commfar` only.
+- **Table 4 (robustness battery, `generate_robustness_checks.py`)**: same
+  four-control set.
+- **Table 5 (spatial regression, `spatial_regression_model.py`)**:
+  district-level aggregate models; identical construction.
+- **Tables 6–7 (candidate causal-identification designs, `src/causal/`)**: the
+  IV `CONTROLS` lists (`yearbuilt, numfloors, landuse, commfar, RESIDENTIAL
+  UNITS, COMMERCIAL UNITS`) and the City of Yes DiD control set were read in
+  full — no `BBL_pluto` anywhere, and no re-run consequence.
+- The canonical dataset, splits, and schema are unaffected — the blacklist
+  gates *model features*, not canonical columns.
+
+### Still needs attention (found; NOT silently resolved)
+
+- **`models/training/train_smoke.py`** derives features without the blacklist
+  (line 23) and would train on `BBL_pluto` if run. It is not wired into
+  `main.py`, produces no paper artifact, and was left untouched per this
+  round's scope — but it is the one script in `models/training/` the
+  blacklist edit does not reach.
+- **Fact-check reference mismatches are expected on the author's run and
+  must not be "fixed" by editing the reference values.**
+  `verify_shap_importance.py` compares the regenerated SHAP summary against
+  the paper's Table 3 values, **including a `BBL_pluto` row (0.07654)**;
+  `verify_ml_performance.py` compares Table 2 MAE/R² against the recorded
+  paper values; `verify_canonical_dataset_and_split.py` and
+  `verify_borough_map_and_crosscutting.py` record the paper's 16/17 feature
+  counts as `paper:` baselines. After the retrain these scripts will report
+  mismatches — that is the fact-check harness doing its job, logging a
+  genuine manuscript-vs-current-state gap for the manuscript rewrite. Nothing
+  in those files was edited.
+- **Champion selection may change** after the retrain (the tree families'
+  recorded test MAEs sit within ~0.003 of one another). Whatever
+  `refresh_champion` selects on the author's run is the answer; nothing here
+  preserves the old champion by hand.
+- **`docs/FEATURE_DICTIONARY.md`** is hand-maintained and was already stale
+  (it describes the 16/17-feature era under a 19/20 spec); after Round 7 it
+  is doubly stale and lists `BBL_pluto` as "used in both". Left untouched
+  (outside this round's edit set); fix during the manuscript-rewrite pass.
+- **Narrative strings embedded in generated docs:** `generate_figures.py` and
+  `generate_research_summary.py` carry prose like "dem_share appears at rank
+  12"; the dem_share rank may move when the political model retrains without
+  `BBL_pluto`. Only feature-count literals were updated this round; these
+  claims should be checked against the regenerated artifacts after the run.
+
+### Files changed this round
+
+- **Modified — code/config:** `config/feature_blacklist.yaml` (+`BBL_pluto`
+  entry), `src/verification/editorial_audit/verify_blacklist_fully.py`
+  (Task-3 hardening: political-model lookup fallback, original-name matching
+  in the final verdict, JSON audit output, fail-loud exit code), `main.py`
+  (7 stage `desc` strings, feature counts only),
+  `src/analysis/generate_pdp.py`, `src/analysis/sensitivity_analysis.py`,
+  `src/figures/generate_figures.py`, `src/causal/iv_district_fe_regression.py`,
+  `src/causal/city_of_yes_did.py` (count comments/docstrings only).
+- **Modified — docs:** `PAPER_TO_CODE_MAP.md`, `README.md` (one line each),
+  `VERIFICATION_REPORT.md` (this Round 7).
+- **Runtime output refreshed for validation:** this round's validation run of
+  the hardened verifier rewrote `results/editorial_audit/blacklist_audit.json`
+  with the new schema (recording `enforcement_passed: false` — correctly
+  flagging both pre-retrain champion models as BLACKLISTED for `BBL_pluto`).
+- **Untouched:** `orbit_paper_CER.tex` and everything under `CER Papers */`;
+  every model binary, features JSON, SHAP/PDP/sensitivity artifact, registry
+  entry, and `champion.json` (they re-derive on the author's own pipeline
+  run); `archive/`, `legacy/`, `docs/FEATURE_DICTIONARY.md`,
+  `docs/feature_manifest.json`, `DATA_REFRESH_IMPACT_REPORT.md`, and all
+  earlier rounds of this report; no file was deleted or renamed.

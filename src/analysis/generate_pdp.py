@@ -86,7 +86,8 @@ def _generate_pdp(md_name, booster, feature_list):
 _generate_pdp(name, booster, features)
 
 # ---------------------------------------------------------------------------
-# Paper's political model (17-feature spec): regenerate its PDPs too. The
+# Paper's political model (19-feature spec after the Round 7 BBL_pluto
+# blacklist): regenerate its PDPs too. The
 # previous lgbm_all_years_political_* PDP/sensitivity artifacts on disk were
 # computed against a PRE-BLACKLIST-CLEANUP model (they referenced assesstot,
 # exempttot, appbbl, taxmap, schooldist, ...) — exactly the staleness the
