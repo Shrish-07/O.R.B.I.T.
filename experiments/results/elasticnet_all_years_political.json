@@ -1,11 +1,16 @@
 {
   "model": "Elasticnet",
   "name": "elasticnet_all_years_political",
+  "model_class": "ElasticNetCV",
   "variant": "all_years",
   "mode": "political",
   "n_train": 121622,
   "n_test": 56817,
-  "n_features": 17,
-  "r2": -0.00964726048578668,
-  "mae": 0.6903724545495283
+  "n_features": 19,
+  "r2": 0.12980985154024438,
+  "mae": 0.6535018444530415,
+  "hyperparameters": {
+    "alpha": 0.04281332398719392,
+    "l1_ratio": 0.7
+  }
 }

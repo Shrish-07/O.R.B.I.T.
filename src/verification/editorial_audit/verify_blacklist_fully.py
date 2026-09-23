@@ -37,6 +37,17 @@ if champ_path.exists() and reg_path.exists():
             champion_name = exp.get("name")
         if exp.get("mode") == "political" and exp.get("scope") == "all_years" and exp.get("pipeline_v2"):
             political_name = exp.get("name")
+    if political_name is None:
+        # Round 7 fix: NO registry entry has ever carried a "pipeline_v2" flag
+        # (models/training/train_lgbm.py does not write one), so the loop above
+        # always left political_name = None and BOTH final-verdict blocks below
+        # silently skipped the political model. Fall back to the same
+        # name-based registry lookup used by generate_pdp.py /
+        # sensitivity_analysis.py / generate_shap_summary.py.
+        for exp in registry:
+            if exp.get("name") == "lgbm_all_years_political":
+                political_name = exp.get("name")
+                break
     print(f"Champion (base): {champion_name}")
     print(f"Political: {political_name}")
 
@@ -127,14 +138,20 @@ pol_file = Path(f"models/{political_name}.txt") if political_name else None
 if base_file and base_file.exists():
     b = lgb.Booster(model_file=str(base_file))
     for f in b.feature_name():
-        if norm_label(f) in blacklisted:
+        # Round 7 fix: check the ORIGINAL stored name as well as the
+        # underscore-normalized one. Previously only norm_label(f) was tested,
+        # which turns "BBL_pluto" into "BBL pluto" — not the blacklist's
+        # "BBL_pluto" — so underscore-carrying entries silently slipped past
+        # the final verdict (the per-model loop above already checks both).
+        if f in blacklisted or norm_label(f) in blacklisted:
             base_ok = False
             print(f"  BASE model blacklisted feature: {f} ({norm_label(f)})")
             break
 if pol_file and pol_file.exists():
     p = lgb.Booster(model_file=str(pol_file))
     for f in p.feature_name():
-        if norm_label(f) in blacklisted:
+        # Same Round 7 fix as the base-model loop above.
+        if f in blacklisted or norm_label(f) in blacklisted:
             pol_ok = False
             print(f"  POLITICAL model blacklisted feature: {f} ({norm_label(f)})")
             break
@@ -151,3 +168,28 @@ else:
         print("  -> Base model contains blacklisted features. Paper needs correction.")
     if not pol_ok:
         print("  -> Political model contains. Paper needs correction.")
+
+# Persist the machine-readable audit this module's docstring promises (it was
+# previously never written by any script). The verdict fields follow ONLY the
+# two champion models; legacy .txt models above print their status but do not
+# gate the pipeline.
+audit = {
+    "blacklist_path": blacklist_path.as_posix(),
+    "blacklisted_feature_count": len(blacklisted),
+    "champion_base_model": champion_name,
+    "champion_base_blacklist_clean": base_ok,
+    "political_model": political_name,
+    "political_blacklist_clean": pol_ok,
+    "enforcement_passed": bool(base_ok and pol_ok),
+}
+AUDIT_PATH = RESULTS_DIR / "blacklist_audit.json"
+with open(AUDIT_PATH, "w", encoding="utf-8") as f:
+    json.dump(audit, f, indent=2)
+print(f"Wrote {AUDIT_PATH}")
+
+# Round 7 fix: fail loudly on enforcement failure. main.py's stage runner only
+# sees the exit code, so a print-only failure previously reported PASS — the
+# exact gap that would let a blacklisted feature (e.g. BBL_pluto, added to the
+# blacklist in Round 7) sit in the on-disk models unnoticed until retraining.
+if not (base_ok and pol_ok):
+    raise SystemExit(1)

@@ -6,7 +6,7 @@ Why this script exists (2026-09-06, Round-4 follow-up):
 previously NO script in this repo wrote that exact file (the manuscript's copy
 lived only in the paper's own figures/ folder; the repo's producers wrote
 scenario_impact_all_three_FIXED.png and scenario_impact_by_district.png).
-Panel styling mirrors generate_scenario_map.py (which is kept untouched);
+Panel styling mirrors generate_scenario_map.py (both scripts share the same zero-straddle-safe color norm);
 the data source is political_scenarios.py's per-district CSVs.
 
 Confirms at write time: 51 districts per scenario panel, three panels,
@@ -42,7 +42,13 @@ fig, axes = plt.subplots(1, 3, figsize=(18, 6))
 for ax, scen, title, cmap in zip(axes, SCENARIOS, TITLES, CMAPS):
     df_s = frames[scen].sort_values('mean_pct_change')
     vals = df_s['mean_pct_change']
-    norm = mcolors.TwoSlopeNorm(vmin=vals.min(), vcenter=0, vmax=vals.max())
+    vmin, vmax = float(vals.min()), float(vals.max())
+    if vmin < 0 < vmax:
+        norm = mcolors.TwoSlopeNorm(vmin=vmin, vcenter=0, vmax=vmax)
+    else:
+        # One-sided data (all values share a sign): TwoSlopeNorm requires
+        # vmin < vcenter < vmax, so fall back to a plain linear norm.
+        norm = mcolors.Normalize(vmin=vmin, vmax=vmax)
     colors = plt.get_cmap(cmap)(norm(vals))
     ax.barh(df_s['CounDist'].astype(int).astype(str), vals, color=colors, alpha=0.9)
     ax.axvline(0, color='white', linewidth=0.8, alpha=0.6)

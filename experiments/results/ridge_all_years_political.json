@@ -1,11 +1,15 @@
 {
   "model": "Ridge",
   "name": "ridge_all_years_political",
+  "model_class": "RidgeCV",
   "variant": "all_years",
   "mode": "political",
   "n_train": 121622,
   "n_test": 56817,
-  "n_features": 17,
-  "r2": 0.11137927403013992,
-  "mae": 0.6558020430385062
+  "n_features": 19,
+  "r2": 0.13021880106466954,
+  "mae": 0.6516142609044911,
+  "hyperparameters": {
+    "alpha": 55410.20330009481
+  }
 }

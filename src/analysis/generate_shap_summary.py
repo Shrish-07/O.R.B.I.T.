@@ -43,54 +43,69 @@ test = pd.read_parquet(SPLIT_DIR / 'all_years_test.parquet')
 booster = lgb.Booster(model_file=str(model_path))
 
 ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
-out_path = ARTIFACT_DIR / f"{name}_shap_summary.json"
+def write_shap_summary(model_name, mdl_booster, model_features, test_df):
+    """Compute mean|SHAP| on a sampled test slice and write
+    models/artifacts/{model_name}_shap_summary.json. Falls back to LightGBM
+    gain importance if shap is unavailable or yields no usable sample."""
+    out_path = ARTIFACT_DIR / f"{model_name}_shap_summary.json"
+    try:
+        import shap
+        # Use first 10 features with <100 NA for sample selection
+        na_counts = test_df[model_features].isna().sum()
+        good_feats = [f for f in model_features if na_counts[f] < 100]
+        if not good_feats:
+            raise ValueError("No features with <100 NA for SHAP sample.")
+        top_feats = good_feats[:10]
+        sample = test_df.dropna(subset=top_feats)
+        if len(sample) == 0:
+            raise ValueError("No rows left after dropna on good features. Check data for missing values.")
+        sample = sample[model_features].sample(n=min(2000, len(sample)), random_state=42)
+        expl = shap.TreeExplainer(mdl_booster)
+        shap_vals = expl.shap_values(sample)
+        # shap_values for regression returns array (n_samples, n_features)
+        mean_abs = np.mean(np.abs(shap_vals), axis=0)
+        summary = []
+        for fname, v in zip(model_features, mean_abs):
+            summary.append({'feature': fname, 'mean_abs_shap': float(v)})
+        summary = sorted(summary, key=lambda x: x['mean_abs_shap'], reverse=True)
+        payload = {'model': model_name, 'method': 'shap', 'sample_n': int(len(sample)), 'summary': summary}
+        with open(out_path, 'w') as f:
+            json.dump(payload, f, indent=2)
+        print('Saved SHAP summary to', out_path)
+    except Exception:
+        # fallback: use feature importance from model
+        names = mdl_booster.feature_name()
+        imps = mdl_booster.feature_importance(importance_type='gain')
+        summary = []
+        for n, v in zip(names, imps):
+            if n in model_features:
+                summary.append({'feature': n, 'gain': int(v)})
+        summary = sorted(summary, key=lambda x: x.get('gain', 0), reverse=True)
+        payload = {'model': model_name, 'method': 'feature_importance_fallback', 'summary': summary}
+        with open(out_path, 'w') as f:
+            json.dump(payload, f, indent=2)
+        print('Saved fallback SHAP summary (feature importance) to', out_path)
 
-try:
-    import shap
-    # Use first 10 features with <100 NA for sample selection
-    na_counts = test[features].isna().sum()
-    good_feats = [f for f in features if na_counts[f] < 100]
-    if not good_feats:
-        raise ValueError("No features with <100 NA for SHAP sample.")
-    top_feats = good_feats[:10]
-    sample = test.dropna(subset=top_feats)
-    if len(sample) == 0:
-        raise ValueError("No rows left after dropna on good features. Check data for missing values.")
-    sample = sample[features].sample(n=min(2000, len(sample)), random_state=42)
-    expl = shap.TreeExplainer(booster)
-    shap_vals = expl.shap_values(sample)
-    # shap_values for regression returns array (n_samples, n_features)
-    mean_abs = np.mean(np.abs(shap_vals), axis=0)
-    summary = []
-    for f, v in zip(features, mean_abs):
-        summary.append({'feature': f, 'mean_abs_shap': float(v)})
-    summary = sorted(summary, key=lambda x: x['mean_abs_shap'], reverse=True)
-    payload = {'model': name, 'method': 'shap', 'sample_n': int(len(sample)), 'summary': summary}
-    with open(out_path, 'w') as f:
-        json.dump(payload, f, indent=2)
-    print('Saved SHAP summary to', out_path)
-except Exception:
-    # fallback: use feature importance from model
-    names = booster.feature_name()
-    imps = booster.feature_importance(importance_type='gain')
-    summary = []
-    for n, v in zip(names, imps):
-        if n in features:
-            summary.append({'feature': n, 'gain': int(v)})
-    summary = sorted(summary, key=lambda x: x.get('gain', 0), reverse=True)
-    payload = {'model': name, 'method': 'feature_importance_fallback', 'summary': summary}
-    with open(out_path, 'w') as f:
-        json.dump(payload, f, indent=2)
-    print('Saved fallback SHAP summary (feature importance) to', out_path)
 
-# NOTE (2026-09-06, Round-4 repair pass): the paper-cited artifact
-# models/artifacts/lgbm_all_years_political_shap_summary.json (Table 3) was
-# produced when the political model was still the 18-feature, pre-blacklist
-# build (it carries an all-zero EASE-MENT row). A fresh recompute against the
-# current 17-feature model is seed-stable but systematically different
-# (e.g. facilfar 0.04773 -> ~0.03774; Community Board 0.27472 -> ~0.28069).
-# Because that artifact is cited by the manuscript's Table 3, this script
-# deliberately does NOT overwrite it when the champion is the base model —
-# see VERIFICATION_REPORT.md Round 3 for the full before/after numbers. The
-# reproducible recompute is archived at
-# archive/_round3_shap_seedcheck.py (+ its saved output JSON).
+# Champion model (current champion.json selection).
+write_shap_summary(name, booster, features, test)
+
+# ---------------------------------------------------------------------------
+# Explicitly regenerate the political model's SHAP summary too. The paper's
+# Table 3 / Figure 4 cite lgbm_all_years_political (the dem_share-augmented
+# spec), and the champion is usually the base model, so without this second
+# pass the political file would never be refreshed and verify_shap_importance.py
+# would only ever compare the paper against a frozen, stale artifact. Uses the
+# same registry-lookup idiom as the political blocks in generate_pdp.py and
+# sensitivity_analysis.py.
+# ---------------------------------------------------------------------------
+POL_NAME = 'lgbm_all_years_political'
+pol = next((e for e in registry if e.get('name') == POL_NAME), None)
+if pol is None:
+    print(f'NOTE: {POL_NAME} not in registry; political SHAP summary not regenerated')
+elif pol.get('id') == champ.get('selected_experiment'):
+    print(f'NOTE: {POL_NAME} IS the champion; SHAP summary already written above')
+else:
+    pol_features = json.loads(Path(pol.get('features_path')).read_text())
+    pol_booster = lgb.Booster(model_file=str(pol.get('model_path')))
+    write_shap_summary(POL_NAME, pol_booster, pol_features, test)

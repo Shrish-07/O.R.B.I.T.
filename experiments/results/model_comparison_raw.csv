@@ -1,8 +1,8 @@
-model,name,variant,mode,n_train,n_test,n_features,r2,mae,scope,features_used,train_rows,test_rows
-CatBoost,cat_all_years_political_lr0.05_d6,all_years,political,121622.0,56817.0,17.0,0.5057437362685357,0.4539147018162985,all,17,,
-Elasticnet,elasticnet_all_years_political,all_years,political,121622.0,56817.0,17.0,-0.00964726048578668,0.6903724545495283,all,17,,
-LightGBM,,,base,,,,0.5417722685178006,0.4289721461143662,all,16,121622.0,56817.0
-LightGBM,,,political,,,,0.5413451157542679,0.4293418141416493,all,17,121622.0,56817.0
-RandomForest,rf_all_years_political_n200,all_years,political,121622.0,56817.0,17.0,0.5070221802321878,0.43681084878807985,all,17,,
-Ridge,ridge_all_years_political,all_years,political,121622.0,56817.0,17.0,0.11137927403013992,0.6558020430385062,all,17,,
-XGBoost,xgb_all_years_political_lr0.05_md6,all_years,political,121622.0,56817.0,17.0,0.5286943913095352,0.4392201484272884,all,17,,
+model,name,variant,mode,n_train,n_test,n_features,r2,mae,scope,features_used,model_class,hyperparameters,train_rows,test_rows
+CatBoost,cat_all_years_political_lr0.05_d6,all_years,political,121622.0,56817.0,19.0,0.5468754109513326,0.42752815890453694,all,19,,,,
+Elasticnet,elasticnet_all_years_political,all_years,political,121622.0,56817.0,19.0,0.12980985154024438,0.6535018444530415,all,19,ElasticNetCV,"{'alpha': 0.04281332398719392, 'l1_ratio': 0.7}",,
+LightGBM,,,base,,,,0.565476709183065,0.4121843889444273,all,18,,,121622.0,56817.0
+LightGBM,,,political,,,,0.5649699897075158,0.4119535913641316,all,19,,,121622.0,56817.0
+RandomForest,rf_all_years_political_n200,all_years,political,121622.0,56817.0,19.0,0.4869638995464056,0.42623686132633337,all,19,,,,
+Ridge,ridge_all_years_political,all_years,political,121622.0,56817.0,19.0,0.13021880106466954,0.6516142609044911,all,19,RidgeCV,{'alpha': 55410.20330009481},,
+XGBoost,xgb_all_years_political_lr0.05_md6,all_years,political,121622.0,56817.0,19.0,0.5647777233002675,0.41413507725020726,all,19,,,,

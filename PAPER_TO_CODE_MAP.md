@@ -25,6 +25,8 @@ for the consolidated, already-reviewed report).
 | Clean raw BOE election-district results | `src/data_pipeline/normalize_ed_results.py` | `data/processed/ed_results_clean.parquet` |
 | Validate ED&rarr;Council-District crosswalk | `src/data_pipeline/build_district_crosswalk.py` | (assertion-only; no file output) |
 | Merge sales + PLUTO + ideology into one table | `src/data_pipeline/rebuild_canonical.py` | `data/canonical/modeling_dataset_canonical_v2.parquet` (514,618 rows &times; 53 cols) |
+| Build council general-election margins (winner/runner-up per district, 2013/2017/2021/2025; party labels consolidated to Democratic/Republican/Other — Round 5 fix) | `src/data_pipeline/build_council_election_margins.py` | `data/processed/council_election_margins.parquet` |
+| Build City of Yes roll-call votes (Housing Opportunity 2024-12-05 only; Carbon Neutrality / Economic Opportunity pending manual retrieval — see script docstring) | `src/data_pipeline/build_city_of_yes_roll_calls.py` | `data/processed/city_of_yes_roll_calls.parquet` |
 | Freeze the modeling schema | `src/data_pipeline/freeze_schema.py` | `docs/modeling_schema.csv` |
 
 Full raw&rarr;processed&rarr;canonical provenance, including every abandoned
@@ -150,6 +152,43 @@ See Section 4.3 row above (same scripts).
 | Claim | Builds | Verifies |
 |---|---|---|
 | Borough&harr;district mapping table | (documented in-paper) | `src/verification/verify_borough_map_and_crosscutting.py` |
+
+## Causal identification — Round 5 build (not yet in the manuscript)
+
+Added 2026-09-13 as the candidate causal-identification design (the paper's #1
+stated gap per `ACTION_PLAN_FOR_SUBMISSION.md`). **None of these appears in the
+manuscript** — `paper_ref` in `main.py` is tagged accordingly.
+
+| Step | Script | Output |
+|---|---|---|
+| Close-election instrument coverage diagnostic (how many of the 204 council district-year races fall within +/-5/10/15/20pp, by cycle and winner party, with a plain-language thin-coverage warning) | `src/causal/build_close_election_instrument.py` | `results/causal/close_election_coverage.json` |
+| IV / instrumented district-FE 2SLS (prior-cycle close-race indicator instruments `dem_share`; first-stage F-stat + per-bandwidth programmatic verdict, side-by-side with the non-instrumented Model 4 district-FE result from `results/robustness_checks.json`) | `src/causal/iv_district_fe_regression.py` | `results/causal/iv_district_fe_results.json` |
+| Independent re-derivation of the above (fresh from the canonical parquet + margins parquet; matches to 4 dp; never imports the analysis script) | `src/verification/verify_iv_district_fe.py` | `results/causal/iv_district_fe_verification.json` |
+
+Both causal stages print and persist the weak-instrument finding rather than
+failing the pipeline (`main.py` stages exit 0 by design — a thin instrument is
+a reported finding, not a crash). With the current margins data the instrument
+is **not identified at any bandwidth** (too few close NYC council races for the
+district-FE design to have residual instrument variation) — see
+`VERIFICATION_REPORT.md` Round 5 for the full readout.
+
+**Superseded:** `src/causal/causal_analysis.py` — the original X-learner
+(`causalml`) script — remains unfinished and is superseded by the IV design
+above as the recommended path. It is kept in place only as historical
+scaffolding unless the author decides otherwise; it is not wired into `main.py`.
+
+**Feature-spec note (permanent, final):** the modeling feature set is fixed at
+the 19-feature base / 20-feature political spec — i.e. the 17 original
+political features (16 base + `dem_share`) **plus the 3 UNITS columns**
+(`RESIDENTIAL UNITS`, `COMMERCIAL UNITS`, `TOTAL UNITS`), admitted in the
+2026-09-10/11 data refresh and now accepted as the final, non-negotiable spec
+going forward.
+
+**Round 7 (2026-09-22) supersession:** the permanent spec is now **18-feature
+base / 19-feature political** — `BBL_pluto` is blacklisted in
+`config/feature_blacklist.yaml` as a sales/PLUTO merge-suffix artifact (a
+parcel identifier, not a genuine feature), superseding the 19/20-feature spec
+above. See `VERIFICATION_REPORT.md` Round 7.
 
 ## Cross-cutting fact-check output
 
