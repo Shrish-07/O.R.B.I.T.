@@ -4,6 +4,15 @@ import numpy as np
 import pandas as pd
 import lightgbm as lgb
 
+# The champion may be any model family (2026-09-24 fix: a RandomForest
+# .joblib champion crashed this script at lgb.Booster). Family-agnostic
+# loading / importance / prediction via src/ops/model_io.py.
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.ops.model_io import (
+    load_model, gain_importance, predict_frame as _shared_predict,
+)
+
 REG = Path('experiments/registry.json')
 CHAMP = Path('experiments/champion.json')
 SPLIT_DIR = Path('data/splits')
@@ -31,8 +40,13 @@ test = pd.read_parquet(SPLIT_DIR / 'all_years_test.parquet')
 
 
 def predict_frame(booster, feats, df):
-    """Predict with LightGBM's native NaN handling over ALL rows (no dropna)."""
-    return booster.predict(df[feats])
+    """Predict over ALL rows (no dropna) with family-correct NaN handling.
+
+    LightGBM: native NaN (as trained). sklearn (e.g. the current RF
+    champion): fillna(0), matching train_random_forest.py's fit inputs so
+    predictions stay consistent with the recorded registry metrics.
+    """
+    return _shared_predict(booster, df[feats])
 
 
 def write_test_preds(exp_name, preds, df):
@@ -68,12 +82,12 @@ def write_intervals(exp_name, preds, resid_q, n_test):
 
 TARGET = 'target_log_price'
 
-# load model (assume lightgbm champion)
-booster = lgb.Booster(model_file=str(model_path))
+# load model — any family (.txt/.joblib/.cbm/.model)
+booster = load_model(model_path)
 
 # base predictions
-preds_test = booster.predict(test[features])
-preds_train = booster.predict(train[features])
+preds_test = predict_frame(booster, features, test)
+preds_train = predict_frame(booster, features, train)
 
 # residual quantiles on training set
 residuals = train[TARGET] - preds_train
@@ -83,9 +97,7 @@ write_test_preds(name, preds_test, test)
 intervals_path = write_intervals(name, preds_test, (lower_q, upper_q), len(test))
 
 # sensitivity analysis for top features (use earlier PDP summary or feature importance)
-fi = booster.feature_importance(importance_type='gain')
-names = booster.feature_name()
-feat_imp = sorted(zip(names, fi), key=lambda x: x[1], reverse=True)
+feat_imp = gain_importance(booster, features)
 top_features = [f for f,_ in feat_imp if f in features][:5]
 
 summaries = []
@@ -97,7 +109,7 @@ for feat in top_features:
             X_mod = test[features].copy()
             if feat in X_mod.columns:
                 X_mod[feat] = X_mod[feat] * factor
-            preds_mod = booster.predict(X_mod)
+            preds_mod = predict_frame(booster, feats=features, df=X_mod)
             delta = preds_mod - preds_test
             summaries.append({
                 'feature': feat,
@@ -119,18 +131,23 @@ print('Saved sensitivity summary to', ARTIFACT_DIR / f"{name}_sensitivity.json")
 # results/round5_followup_resolution.json; the files were previously produced
 # by a secondary export script that is no longer in this repo).
 # ---------------------------------------------------------------------------
-POL_NAME = 'lgbm_all_years_political'
-pol = next((e for e in registry if e.get('name') == POL_NAME), None)
-if pol is None:
-    print(f'NOTE: {POL_NAME} not in registry; political test-preds/intervals not regenerated')
-elif pol.get('id') == champ_id:
-    print(f'NOTE: {POL_NAME} IS the champion; artifacts already written above')
-else:
-    pol_features = json.loads(Path(pol.get('features_path')).read_text())
-    pol_booster = lgb.Booster(model_file=str(pol.get('model_path')))
-    pol_preds_test = predict_frame(pol_booster, pol_features, test)
-    write_test_preds(POL_NAME, pol_preds_test, test)
-    pol_resid = train[TARGET] - predict_frame(pol_booster, pol_features, train)
-    write_intervals(POL_NAME, pol_preds_test, tuple(np.percentile(pol_resid, [2.5, 97.5])), len(test))
-    print(f'Regenerated {POL_NAME} artifacts at full {len(test)}-row test coverage '
-          f'(closes the 19-row gap)')
+# ---------------------------------------------------------------------------
+# FIX B1 (structural): regenerate THIS artifact family for BOTH paper models
+# on every run. The previous political-only / skip-if-champion logic let the
+# non-champion model's artifacts go silently stale (a 9/14-era, pre-Round-7
+# 19-feature summary survived while the base model was retrained).
+# ---------------------------------------------------------------------------
+for _mname in ('lgbm_all_years_political', 'lgbm_all_years_base'):
+    _e = next((e for e in registry if e.get('name') == _mname), None)
+    if _e is None:
+        print(f'NOTE: {_mname} not in registry; not regenerated')
+        continue
+    if _e.get('id') == champ_id:
+        continue  # the champion pass above already wrote this model's artifacts
+    _feats = json.loads(Path(_e.get('features_path')).read_text())
+    _bst = lgb.Booster(model_file=str(_e.get('model_path')))
+    _preds_test = predict_frame(_bst, _feats, test)
+    write_test_preds(_mname, _preds_test, test)
+    _resid = train[TARGET] - predict_frame(_bst, _feats, train)
+    write_intervals(_mname, _preds_test, tuple(np.percentile(_resid, [2.5, 97.5])), len(test))
+    print(f'Regenerated {_mname} artifacts at full {len(test)}-row test coverage')

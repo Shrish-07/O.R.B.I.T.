@@ -1,6 +1,8 @@
 {
-  "selected_experiment": "exp-20260923T165845Z",
-  "metric": 0.4119535913641316,
-  "selected_utc": "2026-09-23T16:59:24.388278Z",
-  "git_commit": "d0cdd12"
+  "selected_experiment": "exp-20260925T041001Z",
+  "metric": 0.4167477032408586,
+  "selection_note": "NEAR-TIE: 3 experiments within 0.001 MAE; selected best MAE rf_all_years_political_n200 (mae=0.416748).",
+  "selection_rule": "lowest test MAE among untainted, non-stale, post-2026-05-18 runs; near-ties (<0.001 MAE) resolve to the base-mode spec",
+  "selected_utc": "2026-09-25T04:10:34.819263Z",
+  "git_commit": "1a1412f"
 }

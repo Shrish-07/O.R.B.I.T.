@@ -4,13 +4,13 @@
   "model_class": "ElasticNetCV",
   "variant": "all_years",
   "mode": "political",
-  "n_train": 121622,
-  "n_test": 56817,
-  "n_features": 19,
-  "r2": 0.12980985154024438,
-  "mae": 0.6535018444530415,
+  "n_train": 121052,
+  "n_test": 56723,
+  "n_features": 25,
+  "r2": 0.1770844213769116,
+  "mae": 0.6312658045356286,
   "hyperparameters": {
-    "alpha": 0.04281332398719392,
-    "l1_ratio": 0.7
+    "alpha": 0.023357214690901212,
+    "l1_ratio": 1.0
   }
 }

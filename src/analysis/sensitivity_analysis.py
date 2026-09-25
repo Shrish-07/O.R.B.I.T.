@@ -41,10 +41,9 @@ train = pd.read_parquet(SPLIT_DIR / 'all_years_train.parquet')
 test = pd.read_parquet(SPLIT_DIR / 'all_years_test.parquet')
 TARGET = 'target_log_price'
 
-# load preproc if exists
-preproc_path = ARTIFACT_DIR / f"{name}_preproc.joblib"
-use_preproc = preproc_path.exists()
-preproc = load(preproc_path) if use_preproc else None
+# FIX C12: the stale *_preproc.joblib bypass was removed. Those artifacts were
+# remnants of an abandoned linear-model stage; the booster is always evaluated on
+# raw features with native NaN handling, consistent with how it was trained.
 
 booster = None
 if model_path.suffix == '.txt':
@@ -57,18 +56,7 @@ else:
         booster = lgb.Booster(model_file=str(model_path))
 
 def predict_df(X_df):
-    Xf = X_df[features].fillna(0)
-    if use_preproc:
-        try:
-            Xp = preproc.transform(Xf)
-        except Exception:
-            Xp = Xf.values
-    else:
-        Xp = Xf.values
-    if isinstance(booster, lgb.Booster):
-        return booster.predict(Xp)
-    else:
-        return booster.predict(Xp)
+    return booster.predict(X_df[features])
 
 def run_sensitivity(md_name, feature_list, top_feat_list, predict_fn):
     """Perturb each of top_feat_list by pm10/pm25% and record mean/median
@@ -114,20 +102,26 @@ results = run_sensitivity(name, features, top_feats, predict_df)
 # Appendix A.4. Top features come from the political model's own SHAP summary
 # (the Table 3 artifact), falling back to its first 10 features.
 # ---------------------------------------------------------------------------
-POL_NAME = 'lgbm_all_years_political'
-pol = next((e for e in registry if e.get('name') == POL_NAME), None)
-if pol is None:
-    print(f'NOTE: {POL_NAME} not in registry; political sensitivity analysis not regenerated')
-elif pol.get('id') == champ.get('selected_experiment'):
-    print(f'NOTE: {POL_NAME} IS the champion; sensitivity analysis already written above')
-else:
-    pol_features = json.loads(Path(pol.get('features_path')).read_text())
-    pol_booster = lgb.Booster(model_file=str(pol.get('model_path')))
-    pol_shap_path = ARTIFACT_DIR / f"{POL_NAME}_shap_summary.json"
-    if pol_shap_path.exists():
-        pol_shap = json.loads(pol_shap_path.read_text())
-        pol_top = [s.get('feature') for s in pol_shap.get('summary', [])][:10]
+# ---------------------------------------------------------------------------
+# FIX B1 (structural): regenerate THIS artifact family for BOTH paper models
+# on every run. The previous political-only / skip-if-champion logic let the
+# non-champion model's artifacts go silently stale (a 9/14-era, pre-Round-7
+# 19-feature summary survived while the base model was retrained).
+# ---------------------------------------------------------------------------
+for _mname in ('lgbm_all_years_political', 'lgbm_all_years_base'):
+    _e = next((e for e in registry if e.get('name') == _mname), None)
+    if _e is None:
+        print(f'NOTE: {_mname} not in registry; not regenerated')
+        continue
+    if _e.get('id') == champ.get('selected_experiment'):
+        continue  # the champion pass above already wrote this model's analysis
+    _feats = json.loads(Path(_e.get('features_path')).read_text())
+    _bst = lgb.Booster(model_file=str(_e.get('model_path')))
+    _shap_path = ARTIFACT_DIR / f"{_mname}_shap_summary.json"
+    if _shap_path.exists():
+        _shap = json.loads(_shap_path.read_text())
+        _top = [s.get('feature') for s in _shap.get('summary', [])][:10]
     else:
-        pol_top = pol_features[:10]
-    run_sensitivity(POL_NAME, pol_features, pol_top,
-                    lambda X_df: pol_booster.predict(X_df[pol_features].fillna(0)))
+        _top = _feats[:10]
+    run_sensitivity(_mname, _feats, _top,
+                    lambda X_df, _b=_bst, _f=_feats: _b.predict(X_df[_f]))

@@ -3,9 +3,9 @@
   "name": "rf_all_years_political_n200",
   "variant": "all_years",
   "mode": "political",
-  "n_train": 121622,
-  "n_test": 56817,
-  "n_features": 19,
-  "r2": 0.4869638995464056,
-  "mae": 0.42623686132633337
+  "n_train": 121052,
+  "n_test": 56723,
+  "n_features": 25,
+  "r2": 0.530168999422612,
+  "mae": 0.4167477032408586
 }

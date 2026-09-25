@@ -20,6 +20,14 @@ import pandas as pd
 import numpy as np
 import lightgbm as lgb
 
+# The champion may be ANY model family in the registry (LightGBM .txt,
+# sklearn .joblib, CatBoost .cbm, XGBoost .model) — refresh_champion picks
+# on test MAE, not format. Load it family-agnostically (2026-09-24 fix:
+# a RandomForest champion crashed this script at lgb.Booster on .joblib).
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.ops.model_io import load_model, predict_frame
+
 CHAMP = Path('experiments/champion.json')
 REG = Path('experiments/registry.json')
 CANON = Path('data/canonical/modeling_dataset_canonical_v2.parquet')
@@ -57,7 +65,7 @@ else:
 council_candidates = [c for c in df.columns if 'council' in c.lower()]
 council_col = council_candidates[0] if council_candidates else None
 
-booster = lgb.Booster(model_file=str(model_path))
+booster = load_model(model_path)
 
 def clamp01(x):
     return np.minimum(np.maximum(x, 0.0), 1.0)
@@ -108,8 +116,12 @@ for scen_name, scen_df in scenarios.items():
     if scen_name == 'mixed_governance' and 'dem_share' in scen_df.columns:
         pass
 
-    base_preds = use_booster.predict(df[use_features].fillna(0))
-    scen_preds = use_booster.predict(scen_df[use_features].fillna(0))
+    # FIX C16: these are LightGBM boosters, trained on raw splits with native
+    # NaN handling - do NOT fillna. (The old fillna(0) pushed missing dem_share
+    # to 0.0, below the observed minimum 0.155, making missing ideology rows look
+    # maximally Republican in the counterfactuals.)
+    base_preds = predict_frame(use_booster, df[use_features])
+    scen_preds = predict_frame(use_booster, scen_df[use_features])
     delta = scen_preds - base_preds
     pct_change = (np.exp(scen_preds) - np.exp(base_preds)) / np.exp(base_preds) * 100.0
     out = scen_df[[council_col]] if council_col else pd.DataFrame({'idx': scen_df.index})
@@ -134,5 +146,42 @@ for scen_name, scen_df in scenarios.items():
         agg.to_csv(OUT_DIR / f"{scen_name}_by_council.csv")
     out.to_parquet(OUT_DIR / f"{scen_name}_all_properties.parquet")
     print('Saved scenario', scen_name)
+
+    # FIX A4 (disclosure only - the shock mechanics are unchanged): quantify how
+    # much of the mixed-governance +0.15 dem_share shock runs outside the
+    # political model's training support. LightGBM cannot extrapolate trends
+    # past its largest training value; deltas for those rows are artifacts, not
+    # identified responses. Written to results/political_scenarios/ and
+    # re-derived independently by verify_scenario_mechanics.py.
+    if scen_name == 'mixed_governance':
+        _split = Path('data/splits/all_years_train.parquet')
+        if _split.exists():
+            _tr_max = float(pd.read_parquet(_split, columns=['dem_share'])['dem_share'].max())
+        else:
+            _tr_max = float(df['dem_share'].max())
+        _base_ds = df['dem_share']
+        _n_ds = int(_base_ds.notna().sum())
+        _shocked = _base_ds + 0.15
+        _n_clip = int((_shocked > 1.0).sum())
+        _n_beyond = int((_shocked > _tr_max).sum())
+        _diag = {
+            "note": ("The mixed_governance shock (dem_share + 0.15 clipped to [0,1]) is a "
+                     "model-level counterfactual. Rows counted below receive shocked dem_share "
+                     "values at the [0,1] ceiling or beyond the political model's training "
+                     "support; their deltas are extrapolation artifacts, not identified effects."),
+            "n_rows_with_dem_share": _n_ds,
+            "n_shock_clipped_at_1p0": _n_clip,
+            "pct_shock_clipped_at_1p0": round(100.0 * _n_clip / _n_ds, 2),
+            "train_dem_share_max_all_years_split": _tr_max,
+            "n_shocked_beyond_train_support": _n_beyond,
+            "pct_beyond_train_support": round(100.0 * _n_beyond / _n_ds, 2),
+        }
+        _diag_path = OUT_DIR / "mixed_governance_support_diag.json"
+        _diag_path.write_text(json.dumps(_diag, indent=2))
+        print("Mixed-governance support diagnostic:", json.dumps(_diag, indent=2))
+        if _diag["pct_beyond_train_support"] > 0:
+            print(("WARNING: {:.1f}% of rows receive a dem_share shock beyond the political "
+                   "model's training support; treat mixed_governance magnitudes as "
+                   "extrapolation.").format(_diag["pct_beyond_train_support"]))
 
 print('Political scenarios completed and saved to', OUT_DIR)

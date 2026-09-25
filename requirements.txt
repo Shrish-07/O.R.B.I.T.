@@ -115,7 +115,7 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.2.2
 python-multipart==0.0.28
 pytz==2025.2
-pywin32==311
+# pywin32 omitted: Windows-only package; pinning it breaks Linux/Docker installs. (Windows users: pip install pywin32)
 PyYAML==6.0.3
 pyzmq==27.1.0
 referencing==0.37.0

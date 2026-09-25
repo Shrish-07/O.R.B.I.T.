@@ -2,9 +2,22 @@ import json
 from pathlib import Path
 import numpy as np
 import pandas as pd
+# Headless backend BEFORE pyplot (matches src/figures/* convention). TkAgg
+# teardown can abort the interpreter at exit ("Tcl_AsyncDelete: async
+# handler deleted by the wrong thread") after the script otherwise
+# completed, producing a spurious FAIL — observed 2026-09-24.
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 import lightgbm as lgb
+
+# The champion may be any model family (2026-09-24 fix: a RandomForest
+# .joblib champion crashed this script at lgb.Booster). Family-agnostic
+# loading / importance / prediction via src/ops/model_io.py.
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.ops.model_io import load_model, gain_importance, predict_frame
 
 CHAMP = Path('experiments/champion.json')
 REG = Path('experiments/registry.json')
@@ -39,15 +52,13 @@ features = json.loads(features_path.read_text())
 # load test split
 test = pd.read_parquet(SPLIT_DIR / 'all_years_test.parquet')
 
-# load model (assume LightGBM champion)
-booster = lgb.Booster(model_file=str(model_path))
+# load model (any family — .txt/.joblib/.cbm/.model)
+booster = load_model(model_path)
 
 def _generate_pdp(md_name, booster, feature_list):
     """One PDP panel per top-gain feature (top 5), writing
     models/artifacts/pdp_{name}_{feature}.png + {name}_pdp_summary.json."""
-    names = booster.feature_name()
-    imps = booster.feature_importance(importance_type='gain')
-    fi = sorted(zip(names, imps), key=lambda x: x[1], reverse=True)
+    fi = gain_importance(booster, feature_list)
     top_features = [f for f, _ in fi if f in feature_list][:5]
 
     out_summary = []
@@ -63,7 +74,7 @@ def _generate_pdp(md_name, booster, feature_list):
         for v in grid:
             sample_mod = sample.copy()
             sample_mod[col] = v
-            preds = booster.predict(sample_mod[feature_list])
+            preds = predict_frame(booster, sample_mod[feature_list])
             means.append(preds.mean())
         plt.figure(figsize=(6,4))
         plt.plot(grid, means, marker='o')
@@ -94,13 +105,17 @@ _generate_pdp(name, booster, features)
 # paper's Appendix A.4 documents. This block makes the fresh, blacklist-clean
 # political artifacts the only ones on disk.
 # ---------------------------------------------------------------------------
-POL_NAME = 'lgbm_all_years_political'
-pol = next((e for e in registry if e.get('name') == POL_NAME), None)
-if pol is None:
-    print(f'NOTE: {POL_NAME} not in registry; political PDPs not regenerated')
-elif pol.get('id') == champ_id:
-    print(f'NOTE: {POL_NAME} IS the champion; PDPs already written above')
-else:
-    pol_features = json.loads(Path(pol.get('features_path')).read_text())
-    pol_booster = lgb.Booster(model_file=str(pol.get('model_path')))
-    _generate_pdp(POL_NAME, pol_booster, pol_features)
+# FIX B1 (structural): ALWAYS regenerate the two paper models' artifacts on
+# every run. The previous 'X IS the champion -> skip the other pass' shortcut
+# let the non-champion model's artifacts go silently stale while verify
+# scripts and the paper read them as if current.
+for _mname in ('lgbm_all_years_political', 'lgbm_all_years_base'):
+    _e = next((e for e in registry if e.get('name') == _mname), None)
+    if _e is None:
+        print(f'NOTE: {_mname} not in registry; artifacts not regenerated')
+        continue
+    if _e.get('id') == champ_id:
+        continue  # the champion pass above already wrote this model's artifacts
+    _feats = json.loads(Path(_e.get('features_path')).read_text())
+    _bst = lgb.Booster(model_file=str(_e.get('model_path')))
+    _generate_pdp(_mname, _bst, _feats)

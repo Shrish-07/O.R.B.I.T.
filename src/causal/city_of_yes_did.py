@@ -4,8 +4,10 @@
 TREATMENT FRAMING (declared per Round 6 rules)
   Nothing on record in this repo distinguishes the City of Yes provisions into
   universal (city-wide) vs geography-specific components. Searched:
-  src/data_pipeline/build_city_of_yes_roll_calls.py, ACTION_PLAN_FOR_SUBMISSION.md,
-  DATA_REFRESH_IMPACT_REPORT.md, VERIFICATION_REPORT.md. The only reference to a
+  src/data_pipeline/build_city_of_yes_roll_calls.py, README.md ("Where the
+  paper stands" — condensed from the merged ACTION_PLAN_FOR_SUBMISSION.md),
+  and VERIFICATION_REPORT.md (incl. its Appendix A, the merged data-refresh
+  report). The only reference to a
   geographically-targeted City of Yes action on file is Economic Opportunity (June
   2024), named in ACTION_PLAN_FOR_SUBMISSION.md as an example of spatially
   targeted policy; its member-level roll call is NOT available in this repo
@@ -73,10 +75,11 @@ REQUIRED = ["target_log_price", "CounDist", "sale_year"] + CONTROLS
 TASK0_FINDING = (
     "No record in this repo distinguishes City of Yes provisions into universal "
     "(city-wide) vs geography-specific components. Searched: "
-    "build_city_of_yes_roll_calls.py, ACTION_PLAN_FOR_SUBMISSION.md, "
-    "DATA_REFRESH_IMPACT_REPORT.md, VERIFICATION_REPORT.md. The only "
+    "build_city_of_yes_roll_calls.py, README.md ('Where the paper stands' — the "
+    "merged ACTION_PLAN_FOR_SUBMISSION.md), and VERIFICATION_REPORT.md (incl. its "
+    "Appendix A, the merged DATA_REFRESH_IMPACT_REPORT.md). The only "
     "geographically-targeted City of Yes action on record is Economic Opportunity "
-    "(June 2024), cited in ACTION_PLAN_FOR_SUBMISSION.md as an example of "
+    "(June 2024), cited in the merged action plan as an example of "
     "spatially-targeted policy; its roll call is not in this repo (Legistar not "
     "retrievable — see build_city_of_yes_roll_calls.py). Housing Opportunity "
     "(Dec 2024) is documented as a city-wide text amendment. Proceeding under the "

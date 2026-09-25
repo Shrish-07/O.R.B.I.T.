@@ -49,14 +49,11 @@ def _load_model_artifacts():
     features_path = Path(exp.get('features_path'))
     features = json.loads(features_path.read_text())
     model = _load_model(exp)
-    # try to load a serialized preprocessor located in models/artifacts/{model_stem}_preproc.joblib
+    # FIX C12: preprocessor loading removed. The LGBM pipeline trains on raw
+    # features and never fits a scaler; the only *_preproc.joblib files on disk
+    # were stale remnants of an abandoned stage, and silently falling back on
+    # them was a latent prediction-corruption trap.
     preproc = None
-    preproc_path = Path('models') / 'artifacts' / f"{Path(exp.get('model_path')).stem}_preproc.joblib"
-    if preproc_path.exists():
-        try:
-            preproc = load(str(preproc_path))
-        except Exception:
-            preproc = None
     return exp, model, features, preproc
 
 def run_counterfactual(row, mutations: dict, model=None, features=None, preproc=None):
@@ -84,13 +81,7 @@ def run_counterfactual(row, mutations: dict, model=None, features=None, preproc=
 
     X_orig = s[features].astype(float).fillna(0).to_frame().T
     # apply preprocessor if available
-    if preproc is not None:
-        try:
-            Xp_orig = preproc.transform(X_orig)
-        except Exception:
-            Xp_orig = X_orig.values
-    else:
-        Xp_orig = X_orig.values
+    Xp_orig = X_orig.values
 
     # predict original
     if isinstance(model, lgb.Booster):
@@ -107,13 +98,7 @@ def run_counterfactual(row, mutations: dict, model=None, features=None, preproc=
             s2[k] = v
 
     X_new = s2[features].astype(float).fillna(0).to_frame().T
-    if preproc is not None:
-        try:
-            Xp_new = preproc.transform(X_new)
-        except Exception:
-            Xp_new = X_new.values
-    else:
-        Xp_new = X_new.values
+    Xp_new = X_new.values
 
     if isinstance(model, lgb.Booster):
         new = float(model.predict(Xp_new)[0])
@@ -157,16 +142,8 @@ def run_counterfactual_batch(df_rows, mutations: dict, model=None, features=None
             X_new.loc[:, k] = v
 
     # apply preproc
-    if preproc is not None:
-        try:
-            Xp_orig = preproc.transform(X_orig)
-            Xp_new = preproc.transform(X_new)
-        except Exception:
-            Xp_orig = X_orig.values
-            Xp_new = X_new.values
-    else:
-        Xp_orig = X_orig.values
-        Xp_new = X_new.values
+    Xp_orig = X_orig.values
+    Xp_new = X_new.values
 
     # predict
     if isinstance(model, lgb.Booster):

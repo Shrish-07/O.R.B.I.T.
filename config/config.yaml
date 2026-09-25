@@ -6,7 +6,7 @@ paths:
   raw_data: data/raw
   intermediate_data: data/intermediate
   processed_data: data/processed
-  figures: figures
+  figures: docs/figures
 
 keys:
   borough_map_sales:
@@ -23,11 +23,6 @@ keys:
     QN: "4"
     SI: "5"
 
-time:
-  # DEPRECATED — legacy fields only for the abandoned year-2017-only pipeline.
-  # The production dem_share construction uses 2017, 2021, 2025 election data.
-  # ideology_year_range in production is determined by the pipeline, not these keys.
-  ideology_min_year: 2013    # DEPRECATED (abandoned year2017 pipeline)
-  ideology_max_year: 2021    # DEPRECATED (abandoned year2017 pipeline)
-  controlled_train_year: 2017  # DEPRECATED (abandoned year2017 pipeline)
-  controlled_test_year: 2018   # DEPRECATED (abandoned year2017 pipeline)
+# (The deprecated time: block for the abandoned year-2017-only ideology
+# pipeline was removed; the year2017 temporal split is configured inside
+# src/data_pipeline/split_temporal.py.)

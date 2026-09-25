@@ -6,7 +6,6 @@ import os
 sys.path.insert(0, os.getcwd())
 
 FILES = [
-    'src/data_pipeline/data_loader.py',
     'models/training/train_lgbm.py',
     'app/auth.py',
     'app/app.py'

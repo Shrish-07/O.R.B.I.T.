@@ -34,10 +34,8 @@ train = pd.read_parquet(SPLIT_DIR / 'all_years_train.parquet')
 test = pd.read_parquet(SPLIT_DIR / 'all_years_test.parquet')
 TARGET = 'target_log_price'
 
-# load model and preproc if present
-preproc_path = ARTIFACT_DIR / f"{name}_preproc.joblib"
-use_preproc = preproc_path.exists()
-preproc = load(preproc_path) if use_preproc else None
+# FIX C12: the stale *_preproc.joblib bypass was removed (see
+# sensitivity_analysis.py). Boosters predict on raw features with native NaN.
 
 booster = None
 if model_path.suffix == '.txt':
@@ -53,18 +51,7 @@ else:
         booster = jl(str(model_path))
 
 def predict(X_df):
-    Xf = X_df[features].fillna(0)
-    if use_preproc:
-        try:
-            Xp = preproc.transform(Xf)
-        except Exception:
-            Xp = Xf.values
-    else:
-        Xp = Xf.values
-    if isinstance(booster, lgb.Booster):
-        return booster.predict(Xp)
-    else:
-        return booster.predict(Xp)
+    return booster.predict(X_df[features])
 
 # base preds
 preds_train = predict(train)
@@ -96,27 +83,35 @@ print('Saved intervals to', out_path)
 # 2026-09-05 by regenerating from the full test split with fillna(0), exactly
 # like the champion block above).
 # ---------------------------------------------------------------------------
-POL_NAME = 'lgbm_all_years_political'
-pol = next((e for e in registry if e.get('name') == POL_NAME), None)
-if pol is None:
-    print(f'NOTE: {POL_NAME} not in registry; political prediction intervals not regenerated')
-else:
-    pol_features = json.loads(Path(pol.get('features_path')).read_text())
-    pol_booster = lgb.Booster(model_file=str(Path(pol.get('model_path'))))
-    pol_preds_test = pol_booster.predict(test[pol_features].fillna(0))
-    pol_preds_train = pol_booster.predict(train[pol_features].fillna(0))
-    pol_resid = train[TARGET] - pol_preds_train
-    simulated = np.zeros((n_boot, len(test)))
+# ---------------------------------------------------------------------------
+# FIX B1 (structural): regenerate THIS artifact family for BOTH paper models
+# on every run. The previous political-only / skip-if-champion logic let the
+# non-champion model's artifacts go silently stale (a 9/14-era, pre-Round-7
+# 19-feature summary survived while the base model was retrained).
+# ---------------------------------------------------------------------------
+for _mname in ('lgbm_all_years_political', 'lgbm_all_years_base'):
+    _e = next((e for e in registry if e.get('name') == _mname), None)
+    if _e is None:
+        print(f'NOTE: {_mname} not in registry; not regenerated')
+        continue
+    if _e.get('id') == champ.get('selected_experiment'):
+        continue  # the champion block above already wrote this model's intervals
+    _feats = json.loads(Path(_e.get('features_path')).read_text())
+    _bst = lgb.Booster(model_file=str(Path(_e.get('model_path'))))
+    _preds_test = _bst.predict(test[_feats])
+    _preds_train = _bst.predict(train[_feats])
+    _resid = train[TARGET] - _preds_train
+    _simulated = np.zeros((n_boot, len(test)))
     for i in range(n_boot):
-        res_sample = pol_resid.sample(frac=0.8, replace=True, random_state=42+i).values
-        drawn = np.random.choice(res_sample, size=len(test), replace=True)
-        simulated[i, :] = pol_preds_test + drawn
-    lower = np.percentile(simulated, 10, axis=0)
-    upper = np.percentile(simulated, 90, axis=0)
-    pol_out = pd.DataFrame({'pred': pol_preds_test, 'lower': lower, 'upper': upper},
-                           index=test.index)
-    assert len(pol_out) == len(test), f'{POL_NAME}: {len(pol_out)} rows vs {len(test)} test rows'
-    pol_out_path = PRED_DIR / f"{POL_NAME}_prediction_intervals.parquet"
-    pol_out.to_parquet(pol_out_path)
-    print(f'Saved {len(pol_out)}-row political prediction intervals to', pol_out_path)
+        _res_sample = _resid.sample(frac=0.8, replace=True, random_state=42 + i).values
+        _drawn = np.random.choice(_res_sample, size=len(test), replace=True)
+        _simulated[i, :] = _preds_test + _drawn
+    _lower = np.percentile(_simulated, 10, axis=0)
+    _upper = np.percentile(_simulated, 90, axis=0)
+    _out = pd.DataFrame({'pred': _preds_test, 'lower': _lower, 'upper': _upper},
+                        index=test.index)
+    assert len(_out) == len(test), f'{_mname}: {len(_out)} rows vs {len(test)} test rows'
+    _out_path = PRED_DIR / f"{_mname}_prediction_intervals.parquet"
+    _out.to_parquet(_out_path)
+    print(f'Saved {len(_out)}-row prediction intervals to', _out_path)
 

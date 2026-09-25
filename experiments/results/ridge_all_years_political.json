@@ -4,12 +4,12 @@
   "model_class": "RidgeCV",
   "variant": "all_years",
   "mode": "political",
-  "n_train": 121622,
-  "n_test": 56817,
-  "n_features": 19,
-  "r2": 0.13021880106466954,
-  "mae": 0.6516142609044911,
+  "n_train": 121052,
+  "n_test": 56723,
+  "n_features": 25,
+  "r2": 0.1791541147004576,
+  "mae": 0.629341791343628,
   "hyperparameters": {
-    "alpha": 55410.20330009481
+    "alpha": 28942.661247167518
   }
 }
