@@ -156,8 +156,24 @@ params = {
     "verbosity": -1,
 }
 
-lgb_train = lgb.Dataset(X_train, y_train)
-lgb_test = lgb.Dataset(X_test, y_test, reference=lgb_train)
+# FIX A1: carve a TIME-ORDERED validation slice from the training years for
+# early stopping. Previously the held-out 2018 test set was itself the
+# early-stopping monitor (valid_sets=[lgb_test]) - the boosting round count was
+# tuned on test labels, so reported test metrics were mildly optimistic. The
+# test set is now scored exactly once, below, after stopping is decided.
+if 'sale_date' in train.columns:
+    _sorted_idx = train.sort_values('sale_date').index
+else:
+    _sorted_idx = train.index
+_n_val = max(1, int(0.15 * len(train)))
+_fit_idx, _val_idx = _sorted_idx[:-_n_val], _sorted_idx[-_n_val:]
+X_fit, y_fit = X_train.loc[_fit_idx], y_train.loc[_fit_idx]
+X_val, y_val = X_train.loc[_val_idx], y_train.loc[_val_idx]
+print(f'Early stopping on time-ordered train slice: fit={len(X_fit):,} rows (earlier sales), '
+      f'val={len(X_val):,} rows (most recent in-support sales); test untouched until scoring')
+
+lgb_train = lgb.Dataset(X_fit, y_fit)
+lgb_val = lgb.Dataset(X_val, y_val, reference=lgb_train)
 
 # -----------------------------
 # Train
@@ -166,7 +182,7 @@ model = lgb.train(
     params,
     lgb_train,
     num_boost_round=1500,
-    valid_sets=[lgb_test],
+    valid_sets=[lgb_val],
     callbacks=[
         lgb.early_stopping(stopping_rounds=75),
         lgb.log_evaluation(period=100),
@@ -212,6 +228,7 @@ model.save_model(MODEL_PATH)
 with open(METRICS_PATH, "w") as f:
     json.dump(
         {
+            "validation_protocol": "time_ordered_train_slice_15pct (test set never used for early stopping)",
             "variant": VARIANT,
             "mode": MODE,
             "train_rows": int(len(train)),

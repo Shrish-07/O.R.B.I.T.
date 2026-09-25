@@ -2,9 +2,9 @@
   "model": "LightGBM",
   "mode": "base",
   "scope": "all",
-  "train_rows": 121622,
-  "test_rows": 56817,
-  "features_used": 18,
-  "r2": 0.565476709183065,
-  "mae": 0.4121843889444273
+  "train_rows": 121052,
+  "test_rows": 56723,
+  "features_used": 24,
+  "r2": 0.5350382066966075,
+  "mae": 0.44182670516761613
 }

@@ -18,9 +18,20 @@ if not TRAIN_PATH.exists() or not TEST_PATH.exists():
 train = pd.read_parquet(TRAIN_PATH)
 test = pd.read_parquet(TEST_PATH)
 
-# select numeric features
+# FIX C4: select numeric features minus the project blacklist, exactly like
+# the production trainers - previously this smoke test trained on SALE PRICE /
+# sale_price / BBL / BIN, which leaks the target and validates nothing.
+import yaml as _yaml
+_bb_path = Path('config/feature_blacklist.yaml')
+if _bb_path.exists():
+    with open(_bb_path) as _f:
+        _blacklist = {c.lower() for c in _yaml.safe_load(_f).get('leakage_features', [])}
+else:
+    _blacklist = set()
 TARGET = 'target_log_price'
-features = [c for c in train.select_dtypes(include='number').columns if c != TARGET]
+features = [c for c in train.select_dtypes(include='number').columns
+            if c != TARGET and c.lower() not in _blacklist]
+print(f'Feature count after blacklist filter: {len(features)}')
 
 # sample small subset for quick run
 train_small = train.sample(n=min(2000, len(train)), random_state=42)

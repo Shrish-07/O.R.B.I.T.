@@ -1,11 +1,12 @@
 {
+  "validation": "time_ordered_train_slice_15pct (test set never used for early stopping)",
   "model": "XGBoost",
   "name": "xgb_all_years_political_lr0.05_md6",
   "variant": "all_years",
   "mode": "political",
-  "n_train": 121622,
-  "n_test": 56817,
-  "n_features": 19,
-  "r2": 0.5647777233002675,
-  "mae": 0.41413507725020726
+  "n_train": 121052,
+  "n_test": 56723,
+  "n_features": 25,
+  "r2": 0.5702048188828388,
+  "mae": 0.41769515091835496
 }

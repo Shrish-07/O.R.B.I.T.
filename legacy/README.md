@@ -4,8 +4,8 @@ A Streamlit app for NYC property price prediction using a stacked ensemble of XG
 
 ## Files
 - `orbit.py`: main Streamlit app
-- `orbit_model.pkl`: trained model
 - `requirements.txt`: Python dependencies
+- (`orbit_model.pkl` — the trained model — is not shipped in this snapshot; the legacy pipeline must be re-run to produce it)
 
 ## Features
 - Upload & clean NYC housing data

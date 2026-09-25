@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 main.py — O.R.B.I.T. single-command pipeline orchestrator.
 
@@ -70,7 +70,7 @@ STAGES = [
          paper_ref="3.2 Ideology Construction (dem_share, the ONLY ideology feature the models train on)"),
     dict(id="rebuild_canonical", category="data_pipeline",
          script="src/data_pipeline/rebuild_canonical.py", args=[],
-         desc="Merges sales + PLUTO + ideology -> data/canonical/modeling_dataset_canonical_v2.parquet (567,997 rows x 53 cols after the 2026-09 sales/PLUTO refresh)",
+         desc="Merges sales + PLUTO + ideology -> data/canonical/modeling_dataset_canonical_v2.parquet. Coerces PLUTO structural numerics (bldgarea/lotarea/unitsres/unitstotal) and the sales LAND/GROSS SQUARE FEET columns to numeric (they shipped as strings and were silently excluded from every model), and drops exact duplicate rows. Exact counts and provenance are recorded in data/DATA_MANIFEST.json.",
          paper_ref="3.1 Data Sources and Construction, 3.3 Canonical Dataset"),
     dict(id="freeze_schema", category="data_pipeline",
          script="src/data_pipeline/freeze_schema.py", args=[],
@@ -84,11 +84,11 @@ STAGES = [
     # ---- 2. Model training ---------------------------------------------
     dict(id="train_lgbm_base", category="training",
          script="models/training/train_lgbm.py", args=["--variant", "all_years", "--mode", "base"],
-         desc="Champion LightGBM, 18-feature base spec (no dem_share; unit-count columns are numeric under the refreshed sales pull; BBL_pluto blacklisted 2026-09, Round 7).",
+         desc="LightGBM base spec (no dem_share; features = numeric canonical columns minus config/feature_blacklist.yaml). Early stopping monitors a time-ordered validation slice of the training years; the held-out 2018 test set is scored exactly once, never tuned on.",
          paper_ref="4.6 Machine Learning and Feature Importance, Table 2"),
     dict(id="train_lgbm_political", category="training",
          script="models/training/train_lgbm.py", args=["--variant", "all_years", "--mode", "political"],
-         desc="LightGBM, 19-feature political spec (adds dem_share).",
+         desc="LightGBM political spec (base features + dem_share). Same test-untouched early-stopping protocol as train_lgbm_base.",
          paper_ref="4.6 Machine Learning and Feature Importance, Table 2 & 3 (SHAP)"),
     dict(id="train_random_forest", category="training", heavy=True,
          script="models/training/train_random_forest.py",
@@ -101,7 +101,7 @@ STAGES = [
     # matching experiments/results/ridge_all_years_political.json's exact
     # filename and metrics — the standalone scripts write differently-named
     # files with a different, blacklist-incomplete feature set; see
-    # ACTION_PLAN_FOR_SUBMISSION.md and the independent verification report
+    # README.md ("Where the paper stands") and the independent verification report
     # for how this was caught). One stage trains both models.
     dict(id="train_linear_baselines", category="training", heavy=True,
          script="models/training/train_linear_baselines.py", args=["--variant", "all_years", "--mode", "political"],
@@ -125,8 +125,7 @@ STAGES = [
     # pipeline or pass refresh_champion alongside.
     dict(id="refresh_champion", category="training",
          script="src/ops/experiment_runner.py", args=[],
-         desc="Re-selects the champion from experiments/registry.json and rewrites "
-              "experiments/champion.json (updates selected_utc on every run).",
+         desc="Re-selects the champion from experiments/registry.json and rewrites experiments/champion.json: lowest test MAE among untainted, non-stale, post-2026-05-18 runs; near-ties within 0.001 MAE resolve to the base-mode spec; selection rationale is recorded in champion.json selection_note; updates selected_utc on every run.",
          paper_ref="Experiments governance (experiments/champion.json)"),
 
     # ---- 3. Analysis / statistics --------------------------------------
@@ -153,23 +152,23 @@ STAGES = [
          paper_ref="4.7 Counterfactual Policy Simulation"),
     dict(id="generate_shap_summary", category="analysis",
          script="src/analysis/generate_shap_summary.py", args=[],
-         desc="Mean |SHAP| values for all 19 political-model features (18-feature base champion pass included).",
+         desc='Mean |SHAP| values for the champion plus BOTH paper models (political and base); every pass regenerates on each run so no model SHAP artifact can go stale.',
          paper_ref="4.6.2 SHAP Feature Importance, Table 3"),
     dict(id="generate_pdp", category="analysis",
          script="src/analysis/generate_pdp.py", args=[],
-         desc="Partial dependence plots for top champion-model features. NOT currently cited in the paper — see PAPER_TO_CODE_MAP.md. (regenerated 2026-09-06 against the current 18-feature champion + 19-feature political models [counts updated for the Round 7 BBL_pluto blacklist]; verified blacklist-clean vs config/feature_blacklist.yaml)",
+         desc='Partial dependence plots for top features of the champion and both paper models. NOT currently cited in the paper - see PAPER_TO_CODE_MAP.md. Regenerated on every full run.',
          paper_ref="(unused — candidate addition, see action plan)"),
     dict(id="confidence_intervals", category="analysis",
          script="src/analysis/confidence_intervals.py", args=[],
-         desc="Per-property prediction intervals for the champion model. NOT currently cited in the paper. (regenerated 2026-09-06 against the current champion + 19-feature political model [counts updated for the Round 7 BBL_pluto blacklist], full 56,817-row test split; verified blacklist-clean)",
+         desc='Per-property prediction intervals (residual bootstrap) for the champion and both paper models on the full test split. NOT currently cited in the paper - see PAPER_TO_CODE_MAP.md.',
          paper_ref="(unused — candidate addition, see action plan)"),
     dict(id="sensitivity_analysis", category="analysis",
          script="src/analysis/sensitivity_analysis.py", args=[],
-         desc="Feature-perturbation sensitivity for the champion model. NOT currently cited in the paper. (regenerated 2026-09-06 against the current 18-feature champion + 19-feature political models [counts updated for the Round 7 BBL_pluto blacklist]; verified blacklist-clean vs config/feature_blacklist.yaml)",
+         desc='Feature-perturbation sensitivity for the champion and both paper models. NOT currently cited in the paper - see PAPER_TO_CODE_MAP.md.',
          paper_ref="(unused — candidate addition, see action plan)"),
     dict(id="champion_confidence_and_sensitivity", category="analysis",
          script="src/analysis/champion_confidence_and_sensitivity.py", args=[],
-         desc="Combined confidence+sensitivity pass for the current champion model; also writes the political model's test_preds.parquet + intervals.csv at full 56,817-row coverage. (regenerated 2026-09-06 against the current 18/19-feature models [counts updated for the Round 7 BBL_pluto blacklist]; verified blacklist-clean)",
+         desc='Combined confidence+sensitivity pass for the current champion; also writes BOTH paper models (political plus base) test_preds.parquet and intervals.csv at full test-split coverage.',
          paper_ref="(unused — candidate addition, see action plan)"),
     dict(id="compare_models", category="analysis",
          script="src/analysis/compare_models.py", args=[],
@@ -180,26 +179,26 @@ STAGES = [
          desc="Honest coverage diagnostic for the close-election instrument: counts close "
               "council-race cells by bandwidth (5/10/15/20pp), cycle, and winner party, with a "
               "plain-language thin-coverage warning. Writes results/causal/close_election_coverage.json.",
-         paper_ref="(candidate causal-identification design — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
+         paper_ref="(candidate causal-identification design — see README.md §Causal identification and VERIFICATION_REPORT.md Round 5; not yet adopted into the manuscript)"),
     dict(id="iv_district_fe_regression", category="analysis",
          script="src/causal/iv_district_fe_regression.py", args=[],
          desc="IV / instrumented district-FE 2SLS: prior-cycle close-council-race indicator "
               "instruments dem_share; first-stage F + per-bandwidth verdicts vs the existing "
               "non-instrumented Model 4 benchmark. Writes results/causal/iv_district_fe_results.json.",
-         paper_ref="(candidate causal-identification design — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
+         paper_ref="(candidate causal-identification design — see README.md §Causal identification and VERIFICATION_REPORT.md Round 5; not yet adopted into the manuscript)"),
     dict(id="iv_district_fe_rescue", category="analysis",
          script="src/causal/iv_district_fe_rescue.py", args=[],
          desc="Round-6 rescue spec search: (1a) borough-FE variant of the close-race IV; "
               "(1b) wider bandwidths on the original district-FE IV. Every attempt recorded, "
               "identified or not, each with a credibility note. Writes "
               "results/causal/iv_district_fe_rescue_results.json.",
-         paper_ref="(candidate causal-identification design, Round 6 — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
+         paper_ref="(candidate causal-identification design, Round 6 — see README.md §Causal identification and VERIFICATION_REPORT.md Round 6; not yet adopted into the manuscript)"),
     dict(id="city_of_yes_did", category="analysis",
          script="src/causal/city_of_yes_did.py", args=[],
          desc="City of Yes Housing Opportunity DiD (ideology/preference-proxy framing): "
               "district FE + sale-year FE, clustered by district; mandatory event-study "
               "pre-trend check. Writes results/causal/city_of_yes_did_results.json.",
-         paper_ref="(candidate causal-identification design, Round 6 — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
+         paper_ref="(candidate causal-identification design, Round 6 — see README.md §Causal identification and VERIFICATION_REPORT.md Round 6; not yet adopted into the manuscript)"),
 
     # ---- 4. Figures & tables --------------------------------------------
     dict(id="generate_figures", category="figures",
@@ -250,7 +249,7 @@ STAGES = [
          paper_ref="4.1 Spatial Pattern of Ideology and Price"),
     dict(id="verify_regression_missingness", category="verification",
          script="src/verification/verify_regression_missingness.py", args=[],
-         desc="Re-derives the 514,618 -> 470,535 row-drop decomposition.",
+         desc='Re-derives the regression dropna row-count decomposition (current counts land in results/round5_part_H_missingness.json).',
          paper_ref="4.3 Regression Results (missingness paragraph)"),
     dict(id="verify_numfloors_missingness", category="verification",
          script="src/verification/verify_numfloors_missingness.py", args=[],
@@ -297,18 +296,18 @@ STAGES = [
          desc="Independently re-derives the close-election IV instrument, sample counts, and "
               "identification verdicts (and, only where identified, re-fits the 2SLS) from the "
               "canonical parquet + margins parquet against results/causal/iv_district_fe_results.json.",
-         paper_ref="(candidate causal-identification design — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
+         paper_ref="(candidate causal-identification design — see README.md §Causal identification and VERIFICATION_REPORT.md Round 5; not yet adopted into the manuscript)"),
     dict(id="verify_iv_district_fe_rescue", category="verification",
          script="src/verification/verify_iv_district_fe_rescue.py", args=[],
          desc="Independently re-derives both Round-6 IV rescue arms and compares every field to "
               "results/causal/iv_district_fe_rescue_results.json to 4dp.",
-         paper_ref="(candidate causal-identification design, Round 6 — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
+         paper_ref="(candidate causal-identification design, Round 6 — see README.md §Causal identification and VERIFICATION_REPORT.md Round 6; not yet adopted into the manuscript)"),
     dict(id="verify_city_of_yes_did", category="verification",
          script="src/verification/verify_city_of_yes_did.py", args=[],
          desc="Independently re-fits the City of Yes DiD event study + main spec + sensitivity "
               "from the canonical parquet + roll-call parquet and compares every field to "
               "results/causal/city_of_yes_did_results.json to 4dp.",
-         paper_ref="(candidate causal-identification design, Round 6 — see ACTION_PLAN_FOR_SUBMISSION.md; not yet adopted into the manuscript)"),
+         paper_ref="(candidate causal-identification design, Round 6 — see README.md §Causal identification and VERIFICATION_REPORT.md Round 6; not yet adopted into the manuscript)"),
 ]
 
 STAGE_BY_ID = {s["id"]: s for s in STAGES}
@@ -342,7 +341,7 @@ def check_data(verbose=True):
     if not ok and verbose:
         print(
             "\nMissing data. Populate data/raw/, data/processed/, data/canonical/, and "
-            "data/splits/ per docs/DATA_LINEAGE.md and README.md before running the "
+            "data/splits/ per README.md 'Data sources & provenance' before running the "
             "data_pipeline/training/analysis stages. Verification stages that only read "
             "already-built artifacts will still fail without data/canonical/."
         )

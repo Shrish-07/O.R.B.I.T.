@@ -103,8 +103,11 @@ try:
     if entry:
         mp = entry.get('model_path')
         fp = entry.get('features_path')
-        # prefer pipeline_v2 experiments if flagged; otherwise use champion entry
-        if entry.get('pipeline_v2') and mp:
+        # FIX C6: use the champion registry entry UNCONDITIONALLY. The old gate
+        # required a 'pipeline_v2' flag that no registry entry has ever carried,
+        # so the app silently ignored champion.json and always used the
+        # hardcoded political model path above.
+        if mp:
             mpath = Path(mp)
             fpath = Path(fp) if fp else None
             # resolve relative paths against project root
@@ -166,7 +169,7 @@ def home_page():
     except Exception:
         st.write('No champion found')
 
-    # Median price trend by borough (2003–Present)
+    # Median price trend by borough (canonical sale-year range)
     try:
         canon_path = ROOT / 'data' / 'canonical' / 'modeling_dataset_canonical_v2.parquet'
         if canon_path.exists():
@@ -175,12 +178,19 @@ def home_page():
             price_col = next((c for c in canon.columns if 'log' in c.lower() and 'price' in c.lower()), None)
             if price_col is None:
                 price_col = next((c for c in canon.columns if 'price' in c.lower()), None)
-            year_col = next((c for c in canon.columns if 'year' in c.lower()), None)
+            # FIX C7: use the explicit split year column. The old 'first column
+            # containing year' catch matched YEAR BUILT (schema order) - the
+            # Median Price Trend chart was actually plotting price against the
+            # year buildings were built, and 2003 predates the data (canonical
+            # starts in 2016).
+            year_col = 'sale_year' if 'sale_year' in canon.columns else None
             if price_col and year_col and 'BOROUGH' in canon.columns:
                 canon['sale_year'] = canon[year_col].astype(int)
                 med = canon.groupby(['sale_year', 'BOROUGH'])[price_col].median().reset_index()
                 import plotly.express as px
-                fig = px.line(med, x='sale_year', y=price_col, color='BOROUGH', title='Median Price Trend by Borough (2003–Present)')
+                fig = px.line(med, x='sale_year', y=price_col, color='BOROUGH',
+                              title='Median Price Trend by Borough ({:d}–{:d})'.format(
+                                  int(med['sale_year'].min()), int(med['sale_year'].max())))
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write('Canonical dataset missing year/price/borough columns for dashboard chart')
@@ -378,7 +388,7 @@ def property_page():
     # Age risk: older buildings have higher maintenance/obsolescence risk
     try:
         _yearbuilt_val = int(row.get('yearbuilt', row.get('YEAR BUILT', 0)))
-        _age = 2024 - _yearbuilt_val if _yearbuilt_val > 1800 else 0
+        _age = datetime.now().year - _yearbuilt_val if _yearbuilt_val > 1800 else 0
         _age_risk = 'High' if _age > 80 else ('Medium' if _age > 40 else 'Low')
         _risk_cols[2].metric('Age Risk', _age_risk, delta=f'{_age} years old' if _age > 0 else 'Unknown')
     except Exception:
@@ -433,6 +443,14 @@ def property_page():
                         except Exception:
                             pass
                 muts.update(ideo_vals)
+                # FIX C9: keep only mutations that are actual model features.
+                # Zoning/FAR-style mutations land on non-feature columns and
+                # previously produced an IDENTICAL prediction printed as if the
+                # mutation had been applied.
+                ignored = sorted({k for k in muts if k not in features})
+                muts = {k: v for k, v in muts.items() if k in features}
+                if ignored:
+                    st.warning('Not model features - ignored (no effect on prediction): ' + ', '.join(ignored))
                 res = run_counterfactual(row, muts)
                 st.metric('Original log-price', round(res['original_log_price'], 4))
                 st.metric('Mutated log-price', round(res['mutated_log_price'], 4))
@@ -511,6 +529,11 @@ def property_page():
                     muts[gross_field] = float(gross_new)
                 if floor_field:
                     muts[floor_field] = float(floors_new)
+                # FIX C9: keep only mutations that are actual model features.
+                ignored = sorted({k for k in muts if k not in features})
+                muts = {k: v for k, v in muts.items() if k in features}
+                if ignored:
+                    st.warning('Not model features - ignored (no effect on prediction): ' + ', '.join(ignored))
                 res2 = run_counterfactual(row, muts)
                 st.metric('Original log-price', round(res2['original_log_price'], 4))
                 st.metric('Mutated log-price', round(res2['mutated_log_price'], 4))
@@ -554,6 +577,11 @@ def property_page():
                                 muts[gross_field] = float(gross_new)
                             if floor_field:
                                 muts[floor_field] = float(floors_new)
+                            # FIX C9: keep only mutations that are actual model features.
+                            ignored = sorted({k for k in muts if k not in features})
+                            muts = {k: v for k, v in muts.items() if k in features}
+                            if ignored:
+                                st.warning('Not model features - ignored (no effect on prediction): ' + ', '.join(ignored))
                             try:
                                 from src.analysis.counterfactual import run_counterfactual_batch
                                 res_df = run_counterfactual_batch(df_port, muts)
@@ -892,7 +920,8 @@ def model_explorer_page():
 
     try:
         dfn = pd.read_parquet(ROOT / 'data' / 'canonical' / 'modeling_dataset_canonical_v2.parquet')
-        year_col = next((c for c in dfn.columns if 'year' in c.lower()), None)
+        # FIX C7: explicit split year column (see home_page note).
+        year_col = 'sale_year' if 'sale_year' in dfn.columns else None
         if year_col and 'BOROUGH' in dfn.columns and booster is not None and feats is not None:
             dfn['pred'] = booster.predict(dfn[feats])
             dfn['pred_price'] = np.exp(dfn['pred'])
@@ -917,13 +946,15 @@ def research_page():
     if figs_dir.exists():
         for f in sorted(figs_dir.glob('*.png')):
             st.image(str(f), caption=f.stem.replace('_', ' ').title(), use_column_width=True)
-    paper_path = ROOT / 'paper' / 'orbit_paper.tex'
-    if paper_path.exists():
-        st.download_button('Download Research Paper (LaTeX)', paper_path.read_bytes(), file_name='orbit_paper.tex')
-    st.subheader('Clean Model Comparison (Pipeline v2)')
+    # FIX C8: removed the dead 'Download Research Paper' button - the paper/
+    # folder is not part of this repository (the manuscript lives outside it),
+    # so the button could never render.
+    st.subheader('Model Comparison (live experiments - untainted and non-stale)')
     try:
         reg2 = json.loads((ROOT / 'experiments' / 'registry.json').read_text())
-        clean = [e for e in reg2 if not e.get('tainted') and not e.get('stale') and e.get('pipeline_v2')]
+        # FIX C6: the old filter also required a 'pipeline_v2' flag that no
+        # registry entry has ever carried, so this table always rendered EMPTY.
+        clean = [e for e in reg2 if not e.get('tainted') and not e.get('stale')]
         rows = []
         for e in clean:
             mae = (e.get('metrics') or {}).get('mae') or (e.get('metrics') or {}).get('mae_log_price') or (e.get('results') or {}).get('mae')

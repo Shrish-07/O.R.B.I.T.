@@ -112,11 +112,18 @@ with open(DOCS / 'research_summary.md', 'w') as f:
     f.write('\n\n')
     # Primary SHAP table = political model (matches paper Table 3)
     if shap_paper_list:
-        f.write('## SHAP top-10 — Political model (PAPER Table 3; model=%s)\n\n' % PAPER_SHAP_MODEL)
-        f.write('This table matches the paper\'s Table 3 / Figure 4. `dem_share` appears at rank 12.\n\n')
-        df_paper = pd.DataFrame(json.loads(
+        _full_shap_rows = json.loads(
             (Path('models/artifacts') / f"{PAPER_SHAP_MODEL}_shap_summary.json").read_text()
-        ).get('summary', []))
+        ).get('summary', [])
+        _nz = [e for e in _full_shap_rows if e['mean_abs_shap'] > 0]
+        _dem_rank = next((i + 1 for i, e in enumerate(_nz) if e['feature'] == 'dem_share'), None)
+        f.write('## SHAP top-10 — Political model (PAPER Table 3; model=%s)\n\n' % PAPER_SHAP_MODEL)
+        # FIX: the dem_share rank is now computed live (it was hardcoded 'rank 12'
+        # and had silently drifted to rank 11 in the current artifact).
+        f.write('This table matches the paper\'s Table 3 / Figure 4. `dem_share` currently appears '
+                'at rank %s of %d non-zero features (computed live from the artifact).\n\n'
+                % (str(_dem_rank), len(_nz)))
+        df_paper = pd.DataFrame(_full_shap_rows)
         df_paper['rank'] = range(1, len(df_paper) + 1)
         f.write(df_paper.to_string(index=False))
         f.write('\n\n')

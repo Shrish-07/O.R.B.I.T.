@@ -98,7 +98,7 @@ def main():
         value ended up unlabeled and dem_share was mislabeled with the
         constant). Caught by cross-checking against spreg's own printed
         .summary text before trusting any of this for the paper -- see
-        ACTION_PLAN_FOR_SUBMISSION.md / VERIFICATION_REPORT.md for the
+        README.md ("Where the paper stands") / VERIFICATION_REPORT.md for the
         general pattern of catching this class of bug throughout the
         project.
         """

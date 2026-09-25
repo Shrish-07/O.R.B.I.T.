@@ -4,6 +4,13 @@ import numpy as np
 import pandas as pd
 import lightgbm as lgb
 
+# The champion may be any model family (2026-09-24 fix: a RandomForest
+# .joblib champion crashed this script at lgb.Booster). Family-agnostic
+# loading / importance via src/ops/model_io.py.
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.ops.model_io import load_model, model_family, gain_importance
+
 CHAMP = Path('experiments/champion.json')
 REG = Path('experiments/registry.json')
 SPLIT_DIR = Path('data/splits')
@@ -39,8 +46,8 @@ features = json.loads(features_path.read_text())
 # load test split
 test = pd.read_parquet(SPLIT_DIR / 'all_years_test.parquet')
 
-# load model
-booster = lgb.Booster(model_file=str(model_path))
+# load model (any family — .txt/.joblib/.cbm/.model)
+booster = load_model(model_path)
 
 ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
 def write_shap_summary(model_name, mdl_booster, model_features, test_df):
@@ -49,6 +56,15 @@ def write_shap_summary(model_name, mdl_booster, model_features, test_df):
     gain importance if shap is unavailable or yields no usable sample."""
     out_path = ARTIFACT_DIR / f"{model_name}_shap_summary.json"
     try:
+        if model_family(mdl_booster) == 'sklearn':
+            # sklearn forests in this repo are grown unpruned (max_depth=None,
+            # min_samples_leaf=1 -> ~10^5 leaves per tree), which explodes
+            # shap's per-tree complexity even at small samples (observed:
+            # >40 CPU-min at n=2000; still unfinished at n=300 after >30
+            # CPU-min). Skip straight to the documented importance fallback.
+            # LightGBM (the paper-cited Table 3 models) keeps the real SHAP
+            # path below unchanged.
+            raise RuntimeError('TreeSHAP intractable for unpruned sklearn forest')
         import shap
         # Use first 10 features with <100 NA for sample selection
         na_counts = test_df[model_features].isna().sum()
@@ -73,13 +89,21 @@ def write_shap_summary(model_name, mdl_booster, model_features, test_df):
             json.dump(payload, f, indent=2)
         print('Saved SHAP summary to', out_path)
     except Exception:
-        # fallback: use feature importance from model
-        names = mdl_booster.feature_name()
-        imps = mdl_booster.feature_importance(importance_type='gain')
+        # fallback: use model feature importance, family-agnostic
+        # (sklearn/CatBoost/XGBoost models have no LightGBM-style
+        # feature_name()/feature_importance('gain') API).
         summary = []
-        for n, v in zip(names, imps):
+        for n, v in gain_importance(mdl_booster, model_features):
             if n in model_features:
-                summary.append({'feature': n, 'gain': int(v)})
+                # Emit both keys: downstream consumers (generate_figures.py,
+                # generate_research_summary.py) plot the 'mean_abs_shap'
+                # column unconditionally, so a 'gain'-only fallback entry
+                # breaks them with KeyError (latent until a non-LightGBM
+                # champion first used this fallback, 2026-09-24). The payload
+                # 'method' field keeps the provenance label honest: these
+                # values are importance scores, not SHAP values.
+                summary.append({'feature': n, 'gain': float(v),
+                                'mean_abs_shap': float(v)})
         summary = sorted(summary, key=lambda x: x.get('gain', 0), reverse=True)
         payload = {'model': model_name, 'method': 'feature_importance_fallback', 'summary': summary}
         with open(out_path, 'w') as f:
@@ -99,13 +123,17 @@ write_shap_summary(name, booster, features, test)
 # same registry-lookup idiom as the political blocks in generate_pdp.py and
 # sensitivity_analysis.py.
 # ---------------------------------------------------------------------------
-POL_NAME = 'lgbm_all_years_political'
-pol = next((e for e in registry if e.get('name') == POL_NAME), None)
-if pol is None:
-    print(f'NOTE: {POL_NAME} not in registry; political SHAP summary not regenerated')
-elif pol.get('id') == champ.get('selected_experiment'):
-    print(f'NOTE: {POL_NAME} IS the champion; SHAP summary already written above')
-else:
-    pol_features = json.loads(Path(pol.get('features_path')).read_text())
-    pol_booster = lgb.Booster(model_file=str(pol.get('model_path')))
-    write_shap_summary(POL_NAME, pol_booster, pol_features, test)
+# FIX B1 (structural): ALWAYS regenerate the two paper models' artifacts on
+# every run. The previous 'X IS the champion -> skip the other pass' shortcut
+# let the non-champion model's artifacts go silently stale while verify
+# scripts and the paper read them as if current.
+for _mname in ('lgbm_all_years_political', 'lgbm_all_years_base'):
+    _e = next((e for e in registry if e.get('name') == _mname), None)
+    if _e is None:
+        print(f'NOTE: {_mname} not in registry; artifacts not regenerated')
+        continue
+    if _e.get('id') == champ.get('selected_experiment'):
+        continue  # the champion pass above already wrote this model's artifacts
+    _feats = json.loads(Path(_e.get('features_path')).read_text())
+    _bst = lgb.Booster(model_file=str(_e.get('model_path')))
+    write_shap_summary(_mname, _bst, _feats, test)

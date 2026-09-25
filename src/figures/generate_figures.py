@@ -75,30 +75,36 @@ paper_top10 = _plot_shap_topN(
 
 # Secondary (champion) figures: kept under distinct, clearly-labeled names so
 # they never overwrite the paper figures and never silently swap models.
+# FIX B1: ALWAYS emit the champion-named figures, even when the champion IS
+# the paper model - otherwise the *_champion.png pair silently stays stale.
 if champ_name != PAPER_SHAP_MODEL:
     print('  (champion differs from paper model -> also emitting champion figures)')
-    _plot_shap_topN(
-        Path('models/artifacts') / f"{champ_name}_shap_summary.json",
-        15,
-        FIGS / 'shap_top15_champion.png',
-        f'Champion ({champ_name})',
-    )
-    _plot_shap_topN(
-        Path('models/artifacts') / f"{champ_name}_shap_summary.json",
-        10,
-        FIGS / 'shap_top10_champion.png',
-        f'Champion ({champ_name})',
-    )
 else:
-    print('  (champion == paper model; no separate champion figure needed)')
+    print('  (champion == paper model; refreshing champion-named copies from the same summary)')
+_plot_shap_topN(
+    Path('models/artifacts') / f"{champ_name}_shap_summary.json",
+    15,
+    FIGS / 'shap_top15_champion.png',
+    f'Champion ({champ_name})',
+)
+_plot_shap_topN(
+    Path('models/artifacts') / f"{champ_name}_shap_summary.json",
+    10,
+    FIGS / 'shap_top10_champion.png',
+    f'Champion ({champ_name})',
+)
 
 # 2) Model comparison (non-tainted experiments)
 reg_path = Path('experiments/registry.json')
 if reg_path.exists():
     reg = json.loads(reg_path.read_text())
+    # FIX B3: exclude STALE registry entries too (superseded May experiments
+    # with MAE ~0.84-0.93 were appearing in the paper's Fig 3 alongside live
+    # models; the CSV sibling in generate_research_summary.py already filters
+    # them). Only live entries reach the figure.
     rows = []
     for e in reg:
-        if e.get('tainted'):
+        if e.get('tainted') or e.get('stale'):
             continue
         m = e.get('metrics', {}) or {}
         mae = m.get('mae') or m.get('mae_log_price') or None

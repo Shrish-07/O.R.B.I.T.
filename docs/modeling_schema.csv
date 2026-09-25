@@ -13,8 +13,8 @@ ZIP CODE,float64
 RESIDENTIAL UNITS,float64
 COMMERCIAL UNITS,float64
 TOTAL UNITS,float64
-LAND SQUARE FEET,object
-GROSS SQUARE FEET,object
+LAND SQUARE FEET,float64
+GROSS SQUARE FEET,float64
 YEAR BUILT,float64
 TAX CLASS AT TIME OF SALE,int64
 BUILDING CLASS AT TIME OF SALE,object
@@ -34,11 +34,11 @@ target_log_price,float64
 zonedist1,object
 bldgclass,object
 landuse,float64
-lotarea,object
-bldgarea,object
+lotarea,float64
+bldgarea,float64
 numfloors,float64
-unitsres,object
-unitstotal,object
+unitsres,float64
+unitstotal,float64
 yearbuilt,float64
 residfar,float64
 commfar,float64

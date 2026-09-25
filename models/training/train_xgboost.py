@@ -67,7 +67,21 @@ y_train = train[TARGET]
 X_test = test[features].fillna(0)
 y_test = test[TARGET]
 
-dtrain = xgb.DMatrix(X_train, label=y_train)
+# FIX A1: early stopping must not monitor the test set. Carve a time-ordered
+# validation slice from the training years (last 15% by sale_date); the held-out
+# 2018 test set is scored exactly once, below.
+if 'sale_date' in train.columns:
+    _sorted_idx = train.sort_values('sale_date').index
+else:
+    _sorted_idx = train.index
+_n_val = max(1, int(0.15 * len(train)))
+_fit_idx, _val_idx = _sorted_idx[:-_n_val], _sorted_idx[-_n_val:]
+X_fit, y_fit = X_train.loc[_fit_idx], y_train.loc[_fit_idx]
+X_val, y_val = X_train.loc[_val_idx], y_train.loc[_val_idx]
+print(f'Early stopping on time-ordered train slice: fit={len(X_fit):,} rows, val={len(X_val):,} rows; test untouched until scoring')
+
+dtrain = xgb.DMatrix(X_fit, label=y_fit)
+dval = xgb.DMatrix(X_val, label=y_val)
 dtest = xgb.DMatrix(X_test, label=y_test)
 
 params_xgb = {
@@ -82,7 +96,7 @@ bst = xgb.train(
     params_xgb,
     dtrain,
     num_boost_round=num_boost_round,
-    evals=[(dtest, 'eval')],
+    evals=[(dval, 'val')],
     early_stopping_rounds=50,
     verbose_eval=100,
 )
@@ -93,6 +107,7 @@ mae = mean_absolute_error(y_test, preds)
 
 name = f"xgb_{args.variant}_{args.mode}_lr{args.learning_rate}_md{args.max_depth}"
 results = {
+    'validation': 'time_ordered_train_slice_15pct (test set never used for early stopping)',
     'model': 'XGBoost',
     'name': name,
     'variant': args.variant,

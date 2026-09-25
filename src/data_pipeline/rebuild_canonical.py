@@ -120,6 +120,11 @@ def main():
     sales = sales[sales['sale_price'].notna()].copy()
     sales = sales[sales['sale_price'] > 10000].copy()
     sales['target_log_price'] = np.log(sales['sale_price'])
+    # FIX A2 (sales side): LAND/GROSS SQUARE FEET also ship as strings; coerce
+    # so they are numeric features instead of being silently excluded.
+    for _sc in ['LAND SQUARE FEET', 'GROSS SQUARE FEET']:
+        if _sc in sales.columns:
+            sales[_sc] = pd.to_numeric(sales[_sc], errors='coerce')
 
     # normalize BBL for join
     sales['BBL_join'] = pd.to_numeric(sales[bbl_col], errors='coerce')
@@ -128,6 +133,13 @@ def main():
     pluto_keep = ['BBL','zonedist1','yearbuilt','numfloors','bldgarea','lotarea','unitsres','unitstotal','residfar','commfar','facilfar','landuse','bldgclass']
     print('Loading PLUTO:', pluto_file)
     pluto = pd.read_csv(pluto_file, usecols=lambda c: c in pluto_keep, low_memory=False)
+    # FIX A2 (dtype bug): PLUTO ships these structural numerics as STRINGS in
+    # the CSV; without coercion they land in the canonical parquet as object
+    # dtype and every trainer's select_dtypes(include='number') silently
+    # excludes them from the feature set.
+    for _pc in ['bldgarea','lotarea','unitsres','unitstotal']:
+        if _pc in pluto.columns:
+            pluto[_pc] = pd.to_numeric(pluto[_pc], errors='coerce')
     # ensure BBL numeric
     if 'BBL' in pluto.columns:
         pluto['BBL_join'] = pd.to_numeric(pluto['BBL'], errors='coerce')
@@ -179,6 +191,14 @@ def main():
     final_cols = [c for c in merged.columns if c not in ['BBL_join','BBL_join_pluto']]
     out = merged[final_cols]
 
+    # FIX C13: drop exact duplicate rows. The canonical build carried ~1,041
+    # duplicated transactions (529 unique, 2-3 copies each); they double-weight
+    # those sales in every model and regression. Duplicates share a sale date,
+    # so they can never straddle the 2018 temporal split boundary (verified).
+    _n_before_dedup = len(out)
+    out = out.drop_duplicates()
+    print(f'Dedup: dropped {_n_before_dedup - len(out)} exact duplicate rows ({_n_before_dedup} -> {len(out)})')
+
     out.to_parquet(OUT, index=False)
 
     # Reporting
@@ -186,6 +206,11 @@ def main():
     dem_cov = out['dem_share'].notna().mean() if 'dem_share' in out.columns else 0.0
     print(f'Wrote canonical v2: {OUT} rows={nrows} cols={ncols}')
     print(f'dem_share coverage: {dem_cov:.4f}')
+    _numcheck = [c for c in ['bldgarea','lotarea','unitsres','unitstotal','LAND SQUARE FEET','GROSS SQUARE FEET'] if c in out.columns]
+    _bad = {c: str(out[c].dtype) for c in _numcheck if not pd.api.types.is_numeric_dtype(out[c])}
+    print('Numeric-eligibility dtypes:', {c: str(out[c].dtype) for c in _numcheck})
+    if _bad:
+        print('WARNING: still object dtype (trainers will silently skip these):', _bad)
     sample_cols = [c for c in ['dem_share','zonedist1_cat','target_log_price'] if c in out.columns]
     print('Sample rows:')
     if sample_cols:

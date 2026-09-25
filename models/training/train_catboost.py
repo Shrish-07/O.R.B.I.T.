@@ -74,7 +74,20 @@ model = CatBoostRegressor(
     random_seed=42,
 )
 
-model.fit(X_train, y_train, eval_set=(X_test, y_test), use_best_model=True)
+# FIX A1: early stopping must not monitor the test set. Carve a time-ordered
+# validation slice from the training years (last 15% by sale_date); the held-out
+# 2018 test set is scored exactly once, below.
+if 'sale_date' in train.columns:
+    _sorted_idx = train.sort_values('sale_date').index
+else:
+    _sorted_idx = train.index
+_n_val = max(1, int(0.15 * len(train)))
+_fit_idx, _val_idx = _sorted_idx[:-_n_val], _sorted_idx[-_n_val:]
+X_fit, y_fit = X_train.loc[_fit_idx], y_train.loc[_fit_idx]
+X_val, y_val = X_train.loc[_val_idx], y_train.loc[_val_idx]
+print(f'Early stopping on time-ordered train slice: fit={len(X_fit):,} rows, val={len(X_val):,} rows; test untouched until scoring')
+
+model.fit(X_fit, y_fit, eval_set=(X_val, y_val), use_best_model=True)
 
 preds = model.predict(X_test)
 r2 = r2_score(y_test, preds)
@@ -82,6 +95,7 @@ mae = mean_absolute_error(y_test, preds)
 
 name = f"cat_{args.variant}_{args.mode}_lr{args.learning_rate}_d{args.depth}"
 results = {
+    'validation': 'time_ordered_train_slice_15pct (test set never used for early stopping)',
     'model': 'CatBoost',
     'name': name,
     'variant': args.variant,

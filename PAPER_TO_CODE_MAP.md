@@ -24,13 +24,13 @@ for the consolidated, already-reviewed report).
 |---|---|---|
 | Clean raw BOE election-district results | `src/data_pipeline/normalize_ed_results.py` | `data/processed/ed_results_clean.parquet` |
 | Validate ED&rarr;Council-District crosswalk | `src/data_pipeline/build_district_crosswalk.py` | (assertion-only; no file output) |
-| Merge sales + PLUTO + ideology into one table | `src/data_pipeline/rebuild_canonical.py` | `data/canonical/modeling_dataset_canonical_v2.parquet` (514,618 rows &times; 53 cols) |
+| Merge sales + PLUTO + ideology into one table | `src/data_pipeline/rebuild_canonical.py` | `data/canonical/modeling_dataset_canonical_v2.parquet` (row/column counts regenerate with each raw refresh; the frozen record is `docs/modeling_schema.csv`) |
 | Build council general-election margins (winner/runner-up per district, 2013/2017/2021/2025; party labels consolidated to Democratic/Republican/Other — Round 5 fix) | `src/data_pipeline/build_council_election_margins.py` | `data/processed/council_election_margins.parquet` |
 | Build City of Yes roll-call votes (Housing Opportunity 2024-12-05 only; Carbon Neutrality / Economic Opportunity pending manual retrieval — see script docstring) | `src/data_pipeline/build_city_of_yes_roll_calls.py` | `data/processed/city_of_yes_roll_calls.parquet` |
 | Freeze the modeling schema | `src/data_pipeline/freeze_schema.py` | `docs/modeling_schema.csv` |
 
 Full raw&rarr;processed&rarr;canonical provenance, including every abandoned
-intermediate table, is in `docs/DATA_LINEAGE.md`.
+intermediate table, is in `README.md` (Data sources & provenance).
 
 ## Section 3.2 — Ideology Construction (`dem_share`)
 
@@ -121,7 +121,7 @@ finding (now Section 4.4 of the manuscript), not a bug.
 
 | Claim | Builds | Verifies |
 |---|---|---|
-| Liberal / conservative / mixed-governance scenarios | `src/analysis/political_scenarios.py` | `src/verification/verify_scenario_mechanics.py` (re-derives which columns each scenario touches and re-runs the LightGBM inference — this stage alone takes several minutes; see the note in the Action Plan) |
+| Liberal / conservative / mixed-governance scenarios | `src/analysis/political_scenarios.py` | `src/verification/verify_scenario_mechanics.py` (re-derives which columns each scenario touches and re-runs the LightGBM inference — this stage alone takes several minutes; see the note in `README.md` (Where the paper stands)) |
 | Figure 5 (`scenario_impact_all_three.png`) | `src/figures/generate_fig5_scenario_impact.py` (added 2026-09-06, Round-4 follow-up: until then, **no script in this repo produced that file**, and the manuscript's copy lived only in the paper's own `figures/` folder) — three 51-district panels straight from `results/political_scenarios/*_by_council.csv` | — |
 | Scenario-impact figure variants | `src/figures/generate_scenario_map.py` (choropleth-style, `scenario_impact_all_three_FIXED.png`), `src/figures/generate_figures.py` (grouped-bar, `scenario_impact_by_district.png`) | — |
 
@@ -156,7 +156,7 @@ See Section 4.3 row above (same scripts).
 ## Causal identification — Round 5 build (not yet in the manuscript)
 
 Added 2026-09-13 as the candidate causal-identification design (the paper's #1
-stated gap per `ACTION_PLAN_FOR_SUBMISSION.md`). **None of these appears in the
+stated gap; see `README.md` "Where the paper stands"). **None of these appears in the
 manuscript** — `paper_ref` in `main.py` is tagged accordingly.
 
 | Step | Script | Output |
@@ -201,20 +201,20 @@ exists on disk, so it has been archived as dead code rather than fixed. If
 you want an automated end-to-end regeneration of `FULL_PAPER_FACT_CHECK.md`
 itself (not just its underlying JSON audits), that assembler needs to be
 rewritten to read directly from the `results/*.json` files each `verify_*.py`
-script above already writes — see the Action Plan for a scoped description
+script above already writes — see `README.md` (Where the paper stands) for a scoped description
 of that task.
 
 ## Not currently cited in the manuscript (existing, computed, unused assets)
 
 These already run and already produce real output in this repository, but
-nothing in `orbit_paper_CER.tex` references them yet. See the Action Plan for
+nothing in `orbit_paper_CER.tex` references them yet. See `README.md` (Where the paper stands) for
 what to do with each.
 
 | Asset | Script | Output |
 |---|---|---|
-| Partial dependence plots, top-5 features (champion base + political models) | `src/analysis/generate_pdp.py` | `models/artifacts/pdp_lgbm_all_years_{base,political}_*.png` + `*_pdp_summary.json` (regenerated 2026-09-06 against the current 16/17-feature models; verified blacklist-clean) |
+| Partial dependence plots, top-5 features (champion base + political models) | `src/analysis/generate_pdp.py` | `models/artifacts/pdp_lgbm_all_years_{base,political}_*.png` + `*_pdp_summary.json` (regenerated on every full run; blacklist gate = verify_blacklist_fully) |
 | Per-property prediction intervals (both LightGBM models, full 56,817-row test split) | `src/analysis/confidence_intervals.py` (bootstrap `{name}_prediction_intervals.parquet`), `src/analysis/champion_confidence_and_sensitivity.py` (residual-quantile `{name}_intervals.csv` + `{name}_test_preds.parquet`) | `experiments/predictions/*` |
-| Feature-perturbation sensitivity analysis | `src/analysis/sensitivity_analysis.py` | `models/artifacts/lgbm_all_years_{base,political}_sensitivity_analysis.json` (regenerated 2026-09-06; verified blacklist-clean) |
+| Feature-perturbation sensitivity analysis | `src/analysis/sensitivity_analysis.py` | `models/artifacts/lgbm_all_years_{base,political}_sensitivity_analysis.json` (regenerated on every full run; blacklist gate = verify_blacklist_fully) |
 | Combined confidence + sensitivity pass | `src/analysis/champion_confidence_and_sensitivity.py` | `experiments/predictions/*_intervals.csv` + `*_test_preds.parquet`, `models/artifacts/*_sensitivity.json` |
 
 ## Robustness checks — origin note
@@ -227,9 +227,9 @@ district-level spatial lag/error models as **Section 4.5**), so the mapping
 entries above are the canonical home for both — see **## Section 4.4 —
 Robustness to Spatial Clustering and Alternative Specifications** and
 **## Section 4.5 — Formal Spatial Regression** above. The three-way
-specification tension (clustered SE p = 0.318; district-FE coefficient larger
+specification tension (clustered SE p ≈ 0.32 in the pre-refresh run - the current value is in results/robustness_checks.json; district-FE coefficient larger
 and significant; year-FE coefficient small and insignificant once clustered)
-is a genuine substantive finding, not a bug — see the Action Plan for how to
+is a genuine substantive finding, not a bug — see `README.md` (Where the paper stands) for how to
 think about it.
 
 ## Not part of the reproducible pipeline (historical / superseded)
@@ -243,4 +243,4 @@ not wired into `main.py`:
 | `archive/final_verification.py`, `archive/verify_paper_numbers.py` | Earlier, superseded rounds of manual fact-checking. Print to stdout only, produce no persisted artifact, and are not cited anywhere in `results/FULL_PAPER_FACT_CHECK.md`. |
 | `archive/assemble_full_factcheck_report.py` | Reads from a chunk directory (`results/_fpc_chunks/`) that no longer exists on disk; would raise on first run. |
 | `archive/create_model_performance_table.py` | Reads `experiments/results/model_comparison_raw.csv` and writes to a top-level `figures/` directory — neither exists; superseded by `src/analysis/compare_models.py` and `docs/model_comparison_table.csv`. |
-| `archive/feature_engineering.py` | Reads `data/processed/modeling_dataset_with_target.parquet`, an intermediate table from the pre-canonical-v2 pipeline that `docs/DATA_LINEAGE.md` already lists as superseded and no longer produced by any script. |
+| `archive/feature_engineering.py` | Reads `data/processed/modeling_dataset_with_target.parquet`, an intermediate table from the pre-canonical-v2 pipeline that the README's data-provenance table already lists as superseded and no longer produced by any script. |

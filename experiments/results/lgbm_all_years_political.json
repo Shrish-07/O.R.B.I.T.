@@ -2,9 +2,9 @@
   "model": "LightGBM",
   "mode": "political",
   "scope": "all",
-  "train_rows": 121622,
-  "test_rows": 56817,
-  "features_used": 19,
-  "r2": 0.5649699897075158,
-  "mae": 0.4119535913641316
+  "train_rows": 121052,
+  "test_rows": 56723,
+  "features_used": 25,
+  "r2": 0.5433591928764994,
+  "mae": 0.43994123422895204
 }
