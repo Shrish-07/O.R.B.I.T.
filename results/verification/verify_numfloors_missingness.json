@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_numfloors_missingness",
+  "generated_utc": "2026-10-16T17:14:49.641231Z",
+  "n_checks": 5,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "numfloors-only group and the dropna-union reconciliation vs manuscript targets (Round 10 refreshed)."
+}

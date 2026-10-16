@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import pandas as pd
 import _shared as p1a
-from _shared import ROOT, write_json
+from _shared import ROOT, write_json, record_status, check_val
 
 df, cname = p1a.load_canonical()
 ideology = pd.read_parquet(ROOT / 'data' / 'processed' / 'ideology_by_council.parquet')
@@ -21,9 +21,9 @@ C['cd1_district_ideology'] = {'paper': 0.711309, 'recomputed': float(cd1_di['dis
                              'value_column_used': 'district_ideology'}
 n_missing = int(df['dem_share'].isna().sum())
 n_total = int(len(df))
-C['dem_share_missing'] = {'paper': 12558, 'recomputed': n_missing}
-C['dem_share_coverage_pct'] = {'paper': 97.56, 'recomputed': round(100.0 * (1 - n_missing / n_total), 4)}
-C['dem_share_missing_pct'] = {'paper': 2.44, 'recomputed': round(100.0 * n_missing / n_total, 4)}
+C['dem_share_missing'] = {'paper': 13371, 'recomputed': n_missing}
+C['dem_share_coverage_pct'] = {'paper': 97.64, 'recomputed': round(100.0 * (1 - n_missing / n_total), 4)}
+C['dem_share_missing_pct'] = {'paper': 2.36, 'recomputed': round(100.0 * n_missing / n_total, 4)}
 C['canonical_total'] = n_total
 C['crosswalk_columns'] = list(crosswalk.columns)
 C['crosswalk_n_rows'] = {'paper': 5783, 'recomputed': int(len(crosswalk))}
@@ -48,3 +48,22 @@ write_json(ROOT / 'results' / 'round5_part1_C.json', {'section_C_ideology': C})
 print('WROTE results/round5_part1_C.json')
 for k, v in C.items():
     print(k, v)
+
+# Round 11: machine-countable status
+_checks = [
+    check_val('cd1_2017_dem_share', 0.715908, C['cd1_2017_dem_share']['recomputed'], tol=5e-7),
+    check_val('cd1_district_ideology', 0.711309, C['cd1_district_ideology']['recomputed'], tol=5e-7),
+    check_val('dem_share_missing', 13371, C['dem_share_missing']['recomputed']),
+    check_val('dem_share_coverage_pct_2dp', 97.64, C['dem_share_coverage_pct']['recomputed'], tol=0.005),
+    check_val('crosswalk_n_rows', 5783, C['crosswalk_n_rows']['recomputed']),
+    check_val('crosswalk_n_distinct_ed', 4264, C['crosswalk_n_distinct_ed']['recomputed']),
+    check_val('crosswalk_ed_in_gt1_row', 1383, C['crosswalk_ed_in_gt1_row']['recomputed']),
+    check_val('crosswalk_ed_multi_pct_1dp', 32.4, C['crosswalk_ed_multi_pct']['recomputed'], tol=0.05),
+    {'check': 'crosswalk_max_minority_share', 'expected': '<= 0.11',
+     'actual': C['crosswalk_max_minority_share']['recomputed_fraction'],
+     'tolerance': 0.0,
+     'match': C['crosswalk_max_minority_share']['recomputed_fraction'] <= 0.11},
+]
+record_status('verify_ideology_construction', _checks,
+              note='CD1 worked example values, dem_share coverage, and the '
+                   'ED->council crosswalk structure vs manuscript targets.')

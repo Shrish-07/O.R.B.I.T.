@@ -1,0 +1,68 @@
+{
+  "section_H_missingness": {
+    "total_rows": {
+      "paper": 566956,
+      "recomputed": 566956
+    },
+    "n_after_dropna": {
+      "paper": 520365,
+      "recomputed": 520365
+    },
+    "rows_dropped": {
+      "paper": 46591,
+      "recomputed": 46591
+    },
+    "farf_group_size": {
+      "paper": 32823,
+      "recomputed": 32823
+    },
+    "numfloors_additional": {
+      "paper": 13277,
+      "recomputed": 13277
+    },
+    "dem_share_missing": {
+      "paper": 13371,
+      "recomputed": 13371
+    },
+    "dem_overlap_with_farf_group": {
+      "paper": 13234,
+      "recomputed": 13234
+    },
+    "dem_unique_to_dem_share": {
+      "paper": 137,
+      "recomputed": 137
+    },
+    "other_drops_beyond_captured": {
+      "paper": 407,
+      "recomputed": 407
+    },
+    "check_sum": {
+      "farf": 32823,
+      "numfloors_beyond_farf": 13277,
+      "dem_unique_to_dem_share": 137,
+      "other_beyond_captured": 407,
+      "total": 46644,
+      "paper_components": [
+        32823,
+        13277,
+        137,
+        407
+      ],
+      "paper_overlap_adjustment": -53,
+      "paper_total": 46591,
+      "additive_overlap": 53,
+      "additive_overlap_equals_paper_53": true
+    },
+    "shrinkage_pct_0.9449_0.2883": {
+      "paper": "~69 percent",
+      "recomputed_using_4dp_values": 69.49
+    },
+    "shrinkage_pct_m1_to_m2": 34.96,
+    "dem_share_0.10_effect": {
+      "paper_logpoints": "0.0288",
+      "recomputed_products": 0.02883,
+      "paper_pct": "~2.9%",
+      "recomputed_pct": 2.925
+    }
+  }
+}

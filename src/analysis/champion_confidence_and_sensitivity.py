@@ -151,3 +151,56 @@ for _mname in ('lgbm_all_years_political', 'lgbm_all_years_base'):
     _resid = train[TARGET] - predict_frame(_bst, _feats, train)
     write_intervals(_mname, _preds_test, tuple(np.percentile(_resid, [2.5, 97.5])), len(test))
     print(f'Regenerated {_mname} artifacts at full {len(test)}-row test coverage')
+
+# ---------------------------------------------------------------------------
+# Round 9 full-coverage pass: test preds, residual-quantile intervals and the
+# +/-10/25% perturbation sensitivity for EVERY eligible ranked model
+# (src/ops/champion_ranking.py), each scored via src/ops/predictors.py under
+# the exact input convention its own trainer used. The champion (rank-1)
+# block and the two classic LightGBM passes above are skipped by experiment
+# id so nothing is computed twice.
+# ---------------------------------------------------------------------------
+from src.ops.champion_ranking import get_all_models, PAPER_MODEL_NAMES
+from src.ops.predictors import build_predictor
+
+_covered_ids = {champ_id}
+_covered_ids |= {e.get('id') for e in registry if e.get('name') in PAPER_MODEL_NAMES}
+for _ent in get_all_models(write_audit=False):
+    if _ent['experiment_id'] in _covered_ids:
+        continue
+    _pf = build_predictor(_ent)
+    _preds_test2 = _pf(test)
+    _preds_train2 = _pf(train)
+    write_test_preds(_ent['name'], _preds_test2, test)
+    _resid2 = train[TARGET] - _preds_train2
+    write_intervals(_ent['name'], _preds_test2,
+                    tuple(np.percentile(_resid2, [2.5, 97.5])), len(test))
+    _fi = gain_importance(_pf.model, _pf.features)
+    _top5 = [f2 for f2, _v2 in _fi if f2 in _pf.features][:5]
+    _summ = []
+    _base_mean2 = _preds_test2.mean()
+    for feat in _top5:
+        for pct in [0.10, 0.25]:
+            for sign in [1, -1]:
+                factor = 1 + sign * pct
+                # perturb in RAW feature space; the predictor then applies
+                # the family's own convention (linear preproc / fillna(0) /
+                # native NaN) -- the perturbation semantics match the model.
+                X_mod = test[_pf.features].copy()
+                if feat in X_mod.columns:
+                    X_mod[feat] = X_mod[feat] * factor
+                preds_mod = _pf(X_mod)
+                delta = preds_mod - _preds_test2
+                _summ.append({
+                    'feature': feat,
+                    'perturb': f'{sign*pct*100:.0f}%',
+                    'mean_delta': float(delta.mean()),
+                    'median_delta': float(np.median(delta)),
+                    'mean_pct_change': float(delta.mean() / _base_mean2) if _base_mean2 != 0 else None,
+                })
+    with open(ARTIFACT_DIR / f"{_ent['name']}_sensitivity.json", 'w') as fp:
+        json.dump(_summ, fp, indent=2)
+    print(f"Full-coverage pass done for rank {_ent['rank']} "
+          f"({_ent['name']}, {_ent['family']}): test_preds + intervals + sensitivity")
+print('Confidence + sensitivity now covers all', len(get_all_models(write_audit=False)),
+      'eligible ranked models')

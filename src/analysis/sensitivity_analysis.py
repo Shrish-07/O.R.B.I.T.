@@ -125,3 +125,35 @@ for _mname in ('lgbm_all_years_political', 'lgbm_all_years_base'):
         _top = _feats[:10]
     run_sensitivity(_mname, _feats, _top,
                     lambda X_df, _b=_bst, _f=_feats: _b.predict(X_df[_f]))
+
+# ---------------------------------------------------------------------------
+# Round 9 full-coverage pass: perturbation sensitivity for EVERY eligible
+# ranked model (src/ops/champion_ranking.py), each scored via
+# src/ops/predictors.py under the exact input convention its own trainer
+# used. Top features come from each model's OWN freshly regenerated SHAP
+# summary (generate_shap_summary runs before this stage in main.py), falling
+# back to gain importance. Models already covered by the champion block or
+# the two classic LightGBM passes above are skipped by experiment id.
+# ---------------------------------------------------------------------------
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.ops.champion_ranking import get_all_models, PAPER_MODEL_NAMES
+from src.ops.predictors import build_predictor
+
+_covered_ids = {champ.get('selected_experiment')}
+_covered_ids |= {e.get('id') for e in registry if e.get('name') in PAPER_MODEL_NAMES}
+for _ent in get_all_models(write_audit=False):
+    if _ent['experiment_id'] in _covered_ids:
+        continue
+    _pf = build_predictor(_ent)
+    _feats_m = _pf.features
+    _shap_path = ARTIFACT_DIR / f"{_ent['name']}_shap_summary.json"
+    if _shap_path.exists():
+        _shap = json.loads(_shap_path.read_text())
+        _top_m = [s.get('feature') for s in _shap.get('summary', [])][:10]
+    else:
+        _top_m = _feats_m[:10]
+    run_sensitivity(_ent['name'], _feats_m, _top_m,
+                    lambda X_df, _p=_pf: _p(X_df))
+print('Sensitivity analysis now covers all', len(get_all_models(write_audit=False)),
+      'eligible ranked models')

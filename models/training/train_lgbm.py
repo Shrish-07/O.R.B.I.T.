@@ -18,7 +18,7 @@ import lightgbm as lgb
 import yaml
 import json
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 from sklearn.metrics import r2_score, mean_absolute_error
 
 # -----------------------------
@@ -260,11 +260,17 @@ try:
         ["git", "rev-parse", "--short", "HEAD"]).decode().strip()
 except Exception:
     git = None
+try:
+    git_dirty = bool(subprocess.check_output(
+        ["git", "status", "--porcelain"]).decode().strip())
+except Exception:
+    git_dirty = None
 
 exp = {
-    "id": f"exp-{datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')}",
-    "created_utc": datetime.utcnow().isoformat() + "Z",
+    "id": f"exp-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}",
+    "created_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     "git_commit": git,
+    "git_dirty": git_dirty,
     "script": "models/training/train_lgbm.py",
     "name": f"lgbm_{VARIANT}_{MODE}",
     "mode": MODE,

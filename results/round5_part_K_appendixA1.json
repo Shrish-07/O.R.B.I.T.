@@ -1,0 +1,37 @@
+{
+  "section_K_appendixA1_rederived": {
+    "paper_model": "lgbm_all_years_political",
+    "paper_model_rank_this_run": 4,
+    "rederived_n_districts": 51,
+    "rederived_vs_by_model_csv": {
+      "liberal_policy": {
+        "max_abs_diff": 8.881784197001252e-16,
+        "n_cells": 51
+      },
+      "conservative_policy": {
+        "max_abs_diff": 4.440892098500626e-16,
+        "n_cells": 51
+      },
+      "mixed_governance": {
+        "max_abs_diff": 3.552713678800501e-15,
+        "n_cells": 51
+      }
+    },
+    "tex_parsed_n_rows": 51,
+    "rederived_vs_tex": {
+      "liberal_policy": {
+        "max_abs_diff": 0.004966362413405534,
+        "n_cells": 51
+      },
+      "conservative_policy": {
+        "max_abs_diff": 0.004903622770661364,
+        "n_cells": 51
+      },
+      "mixed_governance": {
+        "max_abs_diff": 0.0049299847602952696,
+        "n_cells": 51
+      }
+    },
+    "tolerance_pct_points": 0.005
+  }
+}

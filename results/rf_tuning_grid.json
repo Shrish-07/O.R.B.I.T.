@@ -1,0 +1,493 @@
+{
+  "generated_utc": "2026-10-16T16:11:54.639341Z",
+  "variant": "all_years",
+  "mode": "political",
+  "n_estimators": 200,
+  "mean_leaves_cap": 3000,
+  "cap_rationale": "pre-specified SHAP-tractability cap; the unpruned Round-9 forest exceeded the shap_tiers 90-minute per-tier TreeSHAP budget, so configs above this cap are disqualified before validation MAE is compared",
+  "selection_rule": "lowest validation MAE among cap-satisfying configs (mean leaves per tree <= 3000); ties resolve to fewer mean leaves; test set scored once on the refit winner. Validation slice identical to train_lgbm.py FIX A1 (time-ordered, last 15% of the training years).",
+  "validation_protocol": "time-ordered slice of the TRAINING years only (sort by sale_date, last 15% = validation, earlier 85% = fit) -- identical to models/training/train_lgbm.py FIX A1; the test set was scored exactly once, after selection",
+  "test_used_for_selection": false,
+  "chosen_config": {
+    "max_depth": 25,
+    "min_samples_leaf": 20,
+    "max_features": 0.5,
+    "n_estimators": 200
+  },
+  "chosen_mean_leaves_per_tree_final_refit": 2519.89,
+  "chosen_config_validation_mae": 0.37837633003606436,
+  "final_test_mae": 0.40161417910660113,
+  "final_test_r2": 0.5900387792297042,
+  "n_eligible": 21,
+  "n_disqualified_by_cap": 15,
+  "grid": [
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 10,
+        "min_samples_leaf": 1,
+        "max_features": 1.0,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 698.405,
+      "validation_mae": 0.42293096795262597,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 10,
+        "min_samples_leaf": 1,
+        "max_features": 0.5,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 668.355,
+      "validation_mae": 0.4158923659049665,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 10,
+        "min_samples_leaf": 1,
+        "max_features": 0.33,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 660.69,
+      "validation_mae": 0.4180754496657934,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 10,
+        "min_samples_leaf": 5,
+        "max_features": 1.0,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 513.75,
+      "validation_mae": 0.42233795919694084,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 10,
+        "min_samples_leaf": 5,
+        "max_features": 0.5,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 491.725,
+      "validation_mae": 0.4156846823052656,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 10,
+        "min_samples_leaf": 5,
+        "max_features": 0.33,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 483.8,
+      "validation_mae": 0.4178270171588333,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 10,
+        "min_samples_leaf": 20,
+        "max_features": 1.0,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 363.675,
+      "validation_mae": 0.42375725126402913,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 10,
+        "min_samples_leaf": 20,
+        "max_features": 0.5,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 339.97,
+      "validation_mae": 0.4173989525027386,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 10,
+        "min_samples_leaf": 20,
+        "max_features": 0.33,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 335.055,
+      "validation_mae": 0.41995177774189746,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 14,
+        "min_samples_leaf": 1,
+        "max_features": 1.0,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 3160.665,
+      "validation_mae": 0.385005822077824,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 3161 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 14,
+        "min_samples_leaf": 1,
+        "max_features": 0.5,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 3130.8,
+      "validation_mae": 0.3812892515988569,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 3131 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 14,
+        "min_samples_leaf": 1,
+        "max_features": 0.33,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 3150.19,
+      "validation_mae": 0.3822082859052902,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 3150 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 14,
+        "min_samples_leaf": 5,
+        "max_features": 1.0,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 1815.03,
+      "validation_mae": 0.38447554683023233,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 14,
+        "min_samples_leaf": 5,
+        "max_features": 0.5,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 1770.25,
+      "validation_mae": 0.38250503930514174,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 14,
+        "min_samples_leaf": 5,
+        "max_features": 0.33,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 1738.75,
+      "validation_mae": 0.3842593314627234,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 14,
+        "min_samples_leaf": 20,
+        "max_features": 1.0,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 971.3,
+      "validation_mae": 0.38987542197663144,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 14,
+        "min_samples_leaf": 20,
+        "max_features": 0.5,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 956.56,
+      "validation_mae": 0.3873327601367403,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 14,
+        "min_samples_leaf": 20,
+        "max_features": 0.33,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 938.0,
+      "validation_mae": 0.3903116727316449,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 18,
+        "min_samples_leaf": 1,
+        "max_features": 1.0,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 8265.43,
+      "validation_mae": 0.3749807818817965,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 8265 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 18,
+        "min_samples_leaf": 1,
+        "max_features": 0.5,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 8389.02,
+      "validation_mae": 0.37158925398654413,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 8389 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 18,
+        "min_samples_leaf": 1,
+        "max_features": 0.33,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 8529.93,
+      "validation_mae": 0.3717422996285761,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 8530 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 18,
+        "min_samples_leaf": 5,
+        "max_features": 1.0,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 3945.525,
+      "validation_mae": 0.37403502884877327,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 3946 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 18,
+        "min_samples_leaf": 5,
+        "max_features": 0.5,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 3892.58,
+      "validation_mae": 0.37158629425883327,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 3893 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 18,
+        "min_samples_leaf": 5,
+        "max_features": 0.33,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 3762.425,
+      "validation_mae": 0.3728574996455414,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 3762 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 18,
+        "min_samples_leaf": 20,
+        "max_features": 1.0,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 1720.515,
+      "validation_mae": 0.38157134419390604,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 18,
+        "min_samples_leaf": 20,
+        "max_features": 0.5,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 1675.765,
+      "validation_mae": 0.3793539303788802,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 18,
+        "min_samples_leaf": 20,
+        "max_features": 0.33,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 1610.81,
+      "validation_mae": 0.3824033602908389,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 25,
+        "min_samples_leaf": 1,
+        "max_features": 1.0,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 21236.395,
+      "validation_mae": 0.38109716682225003,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 21236 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 25,
+        "min_samples_leaf": 1,
+        "max_features": 0.5,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 21449.33,
+      "validation_mae": 0.3772855778612951,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 21449 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 25,
+        "min_samples_leaf": 1,
+        "max_features": 0.33,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 21462.1,
+      "validation_mae": 0.37619324135709126,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 21462 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 25,
+        "min_samples_leaf": 5,
+        "max_features": 1.0,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 7301.34,
+      "validation_mae": 0.3739482398253744,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 7301 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 25,
+        "min_samples_leaf": 5,
+        "max_features": 0.5,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 6947.305,
+      "validation_mae": 0.3710879075877822,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 6947 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 25,
+        "min_samples_leaf": 5,
+        "max_features": 0.33,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 6526.26,
+      "validation_mae": 0.37129604153356477,
+      "eligible": false,
+      "status": "disqualified_by_cap (mean leaves 6526 > 3000)"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 25,
+        "min_samples_leaf": 20,
+        "max_features": 1.0,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 2272.495,
+      "validation_mae": 0.380307840335576,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 25,
+        "min_samples_leaf": 20,
+        "max_features": 0.5,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 2178.885,
+      "validation_mae": 0.37837633003606436,
+      "eligible": true,
+      "status": "eligible"
+    },
+    {
+      "stage": "base_grid",
+      "config": {
+        "max_depth": 25,
+        "min_samples_leaf": 20,
+        "max_features": 0.33,
+        "n_estimators": 200
+      },
+      "mean_leaves_per_tree": 2048.83,
+      "validation_mae": 0.38074570283336506,
+      "eligible": true,
+      "status": "eligible"
+    }
+  ]
+}

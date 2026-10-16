@@ -179,6 +179,23 @@ def main():
     print(f"\nWROTE {OUT.relative_to(ROOT)}")
     print(f"all_arms_match: {all_match}")
 
+    # Round 11: machine-countable status
+    sys.path.insert(0, str(ROOT / 'src' / 'verification'))
+    from _shared import record_status  # noqa: E402
+    _checks = []
+    for arm_key, arm in out["arms"].items():
+        for rec in arm["records"]:
+            for name, ok in rec["checks"].items():
+                _checks.append({'check': f"{arm_key}/{rec['bandwidth_pp']}pp.{name}",
+                                'expected': 'match',
+                                'actual': 'match' if ok else 'MISMATCH',
+                                'tolerance': TOL, 'match': bool(ok)})
+    record_status('verify_iv_district_fe_rescue', _checks,
+                  note='Independent rescue-arm re-derivation vs results/causal/'
+                       'iv_district_fe_rescue_results.json.')
+    if not all_match:
+        sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

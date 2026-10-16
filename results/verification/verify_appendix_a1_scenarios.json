@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_appendix_a1_scenarios",
+  "generated_utc": "2026-10-16T17:21:44.763271Z",
+  "n_checks": 309,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Independent re-derivation from the property-level parquets vs (i) by_model CSVs and (ii) the generated appendix_a1_scenarios.tex; tolerance 0.005 pct points."
+}

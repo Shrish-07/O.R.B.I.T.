@@ -17,16 +17,18 @@ verify_*.py scripts).
 Requires: spreg (pip install spreg), libpysal, geopandas — same stack as
 src/analysis/compute_morans_i.py.
 
-Manuscript claims verified (orbit_paper_CER.tex, Section 4.5 + Table 5):
-  - OLS-anchor residual Moran's I = 0.389 (z = 6.05, p < 0.001)
-  - Spatial lag rho = 0.709 (Table 5: 0.7086), p < 0.001
-  - Spatial error lambda = 0.787 (Table 5: 0.7872), p < 0.001
-  - dem_share p-values: 0.385 (OLS anchor), 0.170 (spatial lag), 0.374 (spatial error)
-  - dem_share coefficients positive in all three: 0.201--0.229
-  - pseudo-R^2: 0.708 (spatial lag), 0.406 (spatial error)
+Manuscript claims verified (orbit_paper_CER.tex, Section 4.5 + Table 5) --
+Round 10 targets (post refresh + rebuild):
+  - OLS-anchor residual Moran's I = 0.395 (z = 6.14, p < 0.001)
+  - Spatial lag rho = 0.703 (Table 5: 0.7029), p < 0.001
+  - Spatial error lambda = 0.781 (Table 5: 0.7809), p < 0.001
+  - dem_share p-values: 0.327 (OLS anchor), 0.143 (spatial lag), 0.323 (spatial error)
+  - dem_share coefficients positive in all three: 0.236--0.260
+  - pseudo-R^2: 0.709 (spatial lag), 0.420 (spatial error)
   - mean_commfar significant in all three (p < 0.01)
 """
 import json
+import sys
 import warnings
 from pathlib import Path
 
@@ -48,17 +50,20 @@ SEED = 42
 K = 5
 
 # Paper's reported values (rounded as printed in Table 5 / Section 4.5 prose).
+# Round 10: updated to the manuscript's current values; the dem_share p-values
+# mirror results/spatial_regression.json's current computation (the manuscript's
+# table is generated from that artifact -- see generate_paper_assets.py).
 PAPER = {
-    "rho_slm": 0.7086,          # Table 5 cell; prose: 0.709
-    "lam_sem": 0.7872,          # Table 5 cell; prose: 0.787
-    "dem_share_p_ols": 0.385,
-    "dem_share_p_slm": 0.170,
-    "dem_share_p_sem": 0.374,
-    "dem_share_coef_range": (0.201, 0.229),  # prose: coefficients "0.201 to 0.229"
-    "ols_resid_morans_i": 0.389,
-    "ols_resid_morans_z": 6.05,
-    "pr2_slm": 0.708,
-    "pr2_sem": 0.406,
+    "rho_slm": 0.7029,          # Table 5 cell; prose: 0.703
+    "lam_sem": 0.7809,          # Table 5 cell; prose: 0.781
+    "dem_share_p_ols": 0.327,
+    "dem_share_p_slm": 0.143,
+    "dem_share_p_sem": 0.323,
+    "dem_share_coef_range": (0.2357, 0.2599),  # prose: coefficients "0.236 to 0.260"
+    "ols_resid_morans_i": 0.395,
+    "ols_resid_morans_z": 6.14,
+    "pr2_slm": 0.709,
+    "pr2_sem": 0.420,
     "n": 51,
 }
 
@@ -172,21 +177,21 @@ def main():
     # --- Compare against the manuscript's reported values --------------------
     paper_checks = {
         "n_districts_eq_51": rec["n_districts"] == PAPER["n"],
-        "rho_slm (paper 0.7086, prose 0.709)": close(slm_m["W_median_log_price"]["coef"], PAPER["rho_slm"], 5e-5),
+        "rho_slm (paper 0.7029, prose 0.703)": close(slm_m["W_median_log_price"]["coef"], PAPER["rho_slm"], 5e-5),
         "slm_rho_p_below_0.001": slm_m["W_median_log_price"]["p"] < 0.001,
-        "lambda_sem (paper 0.7872, prose 0.787)": close(sem_m["lambda"]["coef"], PAPER["lam_sem"], 5e-5),
+        "lambda_sem (paper 0.7809, prose 0.781)": close(sem_m["lambda"]["coef"], PAPER["lam_sem"], 5e-5),
         "sem_lambda_p_below_0.001": sem_m["lambda"]["p"] < 0.001,
-        "dem_share_p_ols (paper 0.385)": close(ols_m["dem_share"]["p"], PAPER["dem_share_p_ols"], 5e-4),
-        "dem_share_p_slm (paper 0.170)": close(slm_m["dem_share"]["p"], PAPER["dem_share_p_slm"], 5e-4),
-        "dem_share_p_sem (paper 0.374)": close(sem_m["dem_share"]["p"], PAPER["dem_share_p_sem"], 5e-4),
-        "dem_share_coefs_within_0.201_0.229": all(
+        "dem_share_p_ols (paper 0.327)": close(ols_m["dem_share"]["p"], PAPER["dem_share_p_ols"], 5e-4),
+        "dem_share_p_slm (paper 0.143)": close(slm_m["dem_share"]["p"], PAPER["dem_share_p_slm"], 5e-4),
+        "dem_share_p_sem (paper 0.323)": close(sem_m["dem_share"]["p"], PAPER["dem_share_p_sem"], 5e-4),
+        "dem_share_coefs_within_0.2357_0.2599": all(
             PAPER["dem_share_coef_range"][0] - 5e-4 <= m["dem_share"]["coef"] <= PAPER["dem_share_coef_range"][1] + 5e-4
             and m["dem_share"]["coef"] > 0 for m in (ols_m, slm_m, sem_m)),
-        "ols_resid_morans_i (paper 0.389)": close(rec["ols_residual_morans_i"]["I"], PAPER["ols_resid_morans_i"], 5e-4),
-        "ols_resid_morans_z (paper 6.05)": close(rec["ols_residual_morans_i"]["z"], PAPER["ols_resid_morans_z"], 5e-3),
+        "ols_resid_morans_i (paper 0.395)": close(rec["ols_residual_morans_i"]["I"], PAPER["ols_resid_morans_i"], 5e-4),
+        "ols_resid_morans_z (paper 6.14)": close(rec["ols_residual_morans_i"]["z"], PAPER["ols_resid_morans_z"], 5e-3),
         "ols_resid_morans_p_below_0.001": rec["ols_residual_morans_i"]["p"] < 0.001,
-        "pr2_slm (paper 0.708)": close(float(slm.pr2), PAPER["pr2_slm"], 5e-4),
-        "pr2_sem (paper 0.406)": close(float(sem.pr2), PAPER["pr2_sem"], 5e-4),
+        "pr2_slm (paper 0.709)": close(float(slm.pr2), PAPER["pr2_slm"], 5e-4),
+        "pr2_sem (paper 0.420)": close(float(sem.pr2), PAPER["pr2_sem"], 5e-4),
         "mean_commfar_significant_in_all_three": all(m["mean_commfar"]["p"] < 0.01 for m in (ols_m, slm_m, sem_m)),
     }
     rec["matches_paper"] = bool(all(paper_checks.values()))
@@ -201,6 +206,24 @@ def main():
     print("lambda:", sem_m["lambda"])
     print("dem_share p:", ols_m["dem_share"]["p"], slm_m["dem_share"]["p"], sem_m["dem_share"]["p"])
     print("residual Moran's I:", rec["ols_residual_morans_i"])
+
+    # Round 11: machine-countable status
+    sys.path.insert(0, str(ROOT / 'src' / 'verification'))
+    from _shared import record_status  # noqa: E402
+    _checks = [{'check': k, 'expected': True, 'actual': v,
+                'tolerance': None, 'match': bool(v)}
+               for k, v in paper_checks.items()]
+    if isinstance(rec['matches_pipeline_output'], dict):
+        for spec, ok in rec['matches_pipeline_output'].items():
+            _checks.append({'check': f'pipeline_agreement.{spec}',
+                            'expected': True, 'actual': ok,
+                            'tolerance': 1e-6, 'match': bool(ok)})
+    else:
+        _checks.append({'check': 'pipeline_output_present', 'expected': True,
+                        'actual': False, 'tolerance': None, 'match': False})
+    record_status('verify_spatial_regression', _checks,
+                  note='Section 4.5 spatial models re-fit independently; '
+                       'paper checks + agreement with spatial_regression.json.')
 
 
 if __name__ == "__main__":

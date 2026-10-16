@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_iv_district_fe",
+  "generated_utc": "2026-10-16T17:21:55.230893Z",
+  "n_checks": 20,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Independent IV re-derivation vs results/causal/iv_district_fe_results.json."
+}

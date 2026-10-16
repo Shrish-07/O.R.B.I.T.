@@ -1,0 +1,201 @@
+{
+  "source": "data/processed/council_election_margins.parquet",
+  "n_district_year_races": 204,
+  "cycles": [
+    2013,
+    2017,
+    2021,
+    2025
+  ],
+  "bandwidths_pp": [
+    5,
+    10,
+    15,
+    20
+  ],
+  "close_race_definition": "margin_pct <= bandwidth (margin_pct = (winner_votes - runnerup_votes)/(winner+runnerup)*100)",
+  "thin_race_threshold": 20,
+  "working_bandwidth_pp": 20,
+  "winner_party_domain": [
+    "Democratic",
+    "Other",
+    "Republican"
+  ],
+  "by_bandwidth": {
+    "5": {
+      "total_close_races": 4,
+      "by_cycle": {
+        "2013": 0,
+        "2017": 2,
+        "2021": 2,
+        "2025": 0
+      },
+      "by_winner_party": {
+        "Republican": 2,
+        "Democratic": 2
+      },
+      "by_cycle_and_winner_party": {
+        "2017": {
+          "Republican": 1,
+          "Democratic": 1
+        },
+        "2021": {
+          "Republican": 1,
+          "Democratic": 1
+        }
+      },
+      "usable_for_instrument": {
+        "note": "only 2013/2017/2021 races feed a later canonical election_year; 2025 races have no downstream row",
+        "total": 4,
+        "by_cycle": {
+          "2013": 0,
+          "2017": 2,
+          "2021": 2,
+          "2025": 0
+        },
+        "by_winner_party": {
+          "Republican": 2,
+          "Democratic": 2
+        }
+      },
+      "thin": true
+    },
+    "10": {
+      "total_close_races": 7,
+      "by_cycle": {
+        "2013": 1,
+        "2017": 2,
+        "2021": 3,
+        "2025": 1
+      },
+      "by_winner_party": {
+        "Democratic": 4,
+        "Republican": 3
+      },
+      "by_cycle_and_winner_party": {
+        "2013": {
+          "Republican": 1
+        },
+        "2017": {
+          "Republican": 1,
+          "Democratic": 1
+        },
+        "2021": {
+          "Democratic": 2,
+          "Republican": 1
+        },
+        "2025": {
+          "Democratic": 1
+        }
+      },
+      "usable_for_instrument": {
+        "note": "only 2013/2017/2021 races feed a later canonical election_year; 2025 races have no downstream row",
+        "total": 6,
+        "by_cycle": {
+          "2013": 1,
+          "2017": 2,
+          "2021": 3,
+          "2025": 0
+        },
+        "by_winner_party": {
+          "Republican": 3,
+          "Democratic": 3
+        }
+      },
+      "thin": true
+    },
+    "15": {
+      "total_close_races": 12,
+      "by_cycle": {
+        "2013": 3,
+        "2017": 2,
+        "2021": 4,
+        "2025": 3
+      },
+      "by_winner_party": {
+        "Democratic": 8,
+        "Republican": 4
+      },
+      "by_cycle_and_winner_party": {
+        "2013": {
+          "Democratic": 2,
+          "Republican": 1
+        },
+        "2017": {
+          "Republican": 1,
+          "Democratic": 1
+        },
+        "2021": {
+          "Democratic": 3,
+          "Republican": 1
+        },
+        "2025": {
+          "Democratic": 2,
+          "Republican": 1
+        }
+      },
+      "usable_for_instrument": {
+        "note": "only 2013/2017/2021 races feed a later canonical election_year; 2025 races have no downstream row",
+        "total": 9,
+        "by_cycle": {
+          "2013": 3,
+          "2017": 2,
+          "2021": 4,
+          "2025": 0
+        },
+        "by_winner_party": {
+          "Democratic": 6,
+          "Republican": 3
+        }
+      },
+      "thin": true
+    },
+    "20": {
+      "total_close_races": 17,
+      "by_cycle": {
+        "2013": 4,
+        "2017": 4,
+        "2021": 5,
+        "2025": 4
+      },
+      "by_winner_party": {
+        "Democratic": 13,
+        "Republican": 4
+      },
+      "by_cycle_and_winner_party": {
+        "2013": {
+          "Democratic": 3,
+          "Republican": 1
+        },
+        "2017": {
+          "Democratic": 3,
+          "Republican": 1
+        },
+        "2021": {
+          "Democratic": 4,
+          "Republican": 1
+        },
+        "2025": {
+          "Democratic": 3,
+          "Republican": 1
+        }
+      },
+      "usable_for_instrument": {
+        "note": "only 2013/2017/2021 races feed a later canonical election_year; 2025 races have no downstream row",
+        "total": 13,
+        "by_cycle": {
+          "2013": 4,
+          "2017": 4,
+          "2021": 5,
+          "2025": 0
+        },
+        "by_winner_party": {
+          "Democratic": 10,
+          "Republican": 3
+        }
+      },
+      "thin": true
+    }
+  },
+  "warning": "instrument coverage is thin at this bandwidth; at \u00b120pp only 17 of 204 district-year races qualify (13 usable as a prior-cycle instrument); expect wide confidence intervals"
+}

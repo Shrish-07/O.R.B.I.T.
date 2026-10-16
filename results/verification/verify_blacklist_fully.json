@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_blacklist_fully",
+  "generated_utc": "2026-10-16T17:21:50.711573Z",
+  "n_checks": 7,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Every eligible registry model models/artifacts/<name>_features.json vs config/feature_blacklist.yaml; missing artifact or any hit fails."
+}

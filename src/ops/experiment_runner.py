@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 
 REGISTRY = Path('experiments/registry.json')
 CHAMPION = Path('experiments/champion.json')
@@ -80,19 +80,36 @@ else:
         f'OUTRIGHT WINNER: {best.get("name")} (mae={best_metric:.6f}); '
         f'no other experiment within {EPSILON_MAE} MAE.')
 
+# Round 11: record the provenance of the REFRESH RUN itself -- current HEAD
+# (this selection decision) and the dirty state of the worktree at run time --
+# and preserve the winning entry's training-time provenance separately.
+try:
+    import subprocess
+    _git = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode().strip()
+except Exception:
+    _git = None
+try:
+    import subprocess as _sp
+    _git_dirty = bool(_sp.check_output(['git', 'status', '--porcelain']).decode().strip())
+except Exception:
+    _git_dirty = None
+
 out = {
     'selected_experiment': best.get('id'),
     'metric': float(best_metric),
     'selection_note': selection_note,
     'selection_rule': (f'lowest test MAE among untainted, non-stale, post-2026-05-18 runs; '
                        f'near-ties (<{EPSILON_MAE} MAE) resolve to the base-mode spec'),
-    'selected_utc': datetime.utcnow().isoformat() + 'Z',
-    'git_commit': best.get('git_commit')
+    'selected_utc': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
+    'git_commit': _git,
+    'git_dirty': _git_dirty,
+    'champion_model_git_commit': best.get('git_commit'),
+    'champion_model_git_dirty': best.get('git_dirty'),
 }
 CHAMPION.write_text(json.dumps(out, indent=2))
 
 LOG.parent.mkdir(parents=True, exist_ok=True)
 with open(LOG, 'a') as f:
-    f.write(f"{datetime.utcnow().isoformat()}Z - Champion selected: {out['selected_experiment']} (mae={out['metric']})\n")
+    f.write(f"{datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')} - Champion selected: {out['selected_experiment']} (mae={out['metric']})\n")
 
 print('Champion selected:', out)

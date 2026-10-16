@@ -196,6 +196,20 @@ def main():
     OUT.write_text(json.dumps(out, indent=2, default=float))
     print("WROTE", OUT.relative_to(ROOT))
 
+    # Round 11: machine-countable status (the internal 5e-5 4dp tolerance
+    # per field lives in close() above)
+    sys.path.insert(0, str(ROOT / 'src' / 'verification'))
+    from _shared import record_status  # noqa: E402
+    record_status('verify_city_of_yes_did',
+                  [{'check': c['field'], 'expected': c['pipeline'],
+                    'actual': c['verified'], 'tolerance': TOL,
+                    'match': c['match']} for c in checks],
+                  note='Independent DiD/event-study re-derivation vs '
+                       'results/causal/city_of_yes_did_results.json.')
+
+    if not all_match:
+        sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

@@ -17,6 +17,7 @@ reproduces 0.715908 exactly, and quantifies the two-parser disagreement.
 Output: results/cd1_dem_share_audit.json
 """
 import json
+import sys
 from pathlib import Path
 import pandas as pd
 
@@ -145,6 +146,25 @@ def main():
         json.dump(report, f, indent=2)
     print(json.dumps(report, indent=2))
     print(f"\nSaved audit to {OUT}")
+
+    # Round 11: machine-countable status
+    sys.path.insert(0, str(ROOT / 'src' / 'verification'))
+    from _shared import record_status, check_val  # noqa: E402
+    checks = [
+        check_val('cd1_2017_dem_share_vs_production_file', PAPER_CD1_DEM_SHARE,
+                  cd1_val, tol=1e-6),
+        {'check': 'production_file_matches_paper', 'expected': True,
+         'actual': report.get('ideology_by_council_file', {}).get('matches_paper'),
+         'tolerance': 1e-6,
+         'match': bool(report.get('ideology_by_council_file', {}).get('matches_paper'))},
+    ]
+    di = report.get('district_ideology_area_weighted', {})
+    if di.get('cd1_district_ideology_value') is not None:
+        checks.append(check_val('cd1_district_ideology', PAPER_CD1_DI,
+                                di['cd1_district_ideology_value'], tol=1e-3))
+    record_status('verify_cd1_dem_share', checks,
+                  note='CD1 (2017) dem_share vs production file; district_ideology '
+                       'area-weighted cell; tolerance as manuscript precision.')
 
 
 if __name__ == "__main__":

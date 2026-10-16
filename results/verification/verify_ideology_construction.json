@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_ideology_construction",
+  "generated_utc": "2026-10-16T17:14:43.237396Z",
+  "n_checks": 9,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "CD1 worked example values, dem_share coverage, and the ED->council crosswalk structure vs manuscript targets."
+}

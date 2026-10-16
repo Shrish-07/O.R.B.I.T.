@@ -1,0 +1,82 @@
+{
+  "treatment_framing": "ideology/preference-proxy DiD, NOT a policy-application DiD \u2014 the underlying zoning text amendment applies city-wide regardless of how the member voted; this design tests whether a district's revealed pro-/anti-development political stance predicts differential price trends, not whether the specific policy provisions differentially applied",
+  "task0_finding": "No record in this repo distinguishes City of Yes provisions into universal (city-wide) vs geography-specific components. Searched: build_city_of_yes_roll_calls.py, README.md ('Where the paper stands' \u2014 the merged ACTION_PLAN_FOR_SUBMISSION.md), and VERIFICATION_REPORT.md (incl. its Appendix A, the merged DATA_REFRESH_IMPACT_REPORT.md). The only geographically-targeted City of Yes action on record is Economic Opportunity (June 2024), cited in the merged action plan as an example of spatially-targeted policy; its roll call is not in this repo (Legistar not retrievable \u2014 see build_city_of_yes_roll_calls.py). Housing Opportunity (Dec 2024) is documented as a city-wide text amendment. Proceeding under the ideology/preference-proxy framing per the Round-6 brief.",
+  "outcome": "target_log_price",
+  "treatment_definition": "district voted Yes on City of Yes for Housing Opportunity (2024-12-05)",
+  "controls": [
+    "yearbuilt",
+    "numfloors",
+    "landuse",
+    "commfar",
+    "RESIDENTIAL UNITS",
+    "COMMERCIAL UNITS",
+    "TOTAL UNITS"
+  ],
+  "fixed_effects": [
+    "council district FE",
+    "sale year FE"
+  ],
+  "clustering": "SEs clustered by council district (51 clusters)",
+  "event_study_pre_trends": {
+    "n": 355480,
+    "period_terms": {
+      "yes_x_2016-17": {
+        "coef": -0.1445293429381987,
+        "se": 0.08082806214036496,
+        "p": 0.07375850853926565
+      },
+      "yes_x_2018-19": {
+        "coef": -0.12208882577676257,
+        "se": 0.06072192795477133,
+        "p": 0.044365430599471026
+      },
+      "yes_x_2020-21": {
+        "coef": -0.022482501671699434,
+        "se": 0.0263012002938479,
+        "p": 0.39265691704739414
+      },
+      "yes_x_2024": {
+        "coef": -0.022821833835638957,
+        "se": 0.013989994006625484,
+        "p": 0.1028276874695763
+      },
+      "yes_x_2025": {
+        "coef": -0.00551574882731054,
+        "se": 0.022170458594508582,
+        "p": 0.8035246073410579
+      }
+    },
+    "reference_bin": "2022-23",
+    "pre_period_bins_tested": [
+      "2016-17",
+      "2018-19",
+      "2020-21"
+    ],
+    "pre_trend_joint_wald_f": 4.405585464840547,
+    "pre_trend_joint_wald_p": 0.22086804334742394,
+    "r_squared": 0.29645414962571903,
+    "estimator": "statsmodels OLS, cluster-robust SE by council district"
+  },
+  "did_main": {
+    "n": 333670,
+    "r_squared": 0.2902612878905667,
+    "post_definition": "sale_year in [2025]",
+    "excluded_transition_year_2024": true,
+    "did_coef": 0.07933126948619988,
+    "did_se": 0.0526458802098418,
+    "did_p": 0.13184022319334338,
+    "estimator": "statsmodels OLS, cluster-robust SE by council district"
+  },
+  "did_sensitivity_2024_included": {
+    "n": 355480,
+    "r_squared": 0.295692198896908,
+    "post_definition": "sale_year in [2024, 2025]",
+    "excluded_transition_year_2024": false,
+    "did_coef": 0.07402339561919669,
+    "did_se": 0.049945507644344855,
+    "did_p": 0.13831816995499563,
+    "estimator": "statsmodels OLS, cluster-robust SE by council district"
+  },
+  "pre_trend_verdict": "pre-trends consistent with parallel trends (joint Wald p=0.2209 > 0.05)",
+  "main_verdict": "pre-trend check: PASS; did coef 0.0793 (SE 0.0526, p=0.1318) \u2014 reported under the ideology/preference-proxy framing (not a policy-application effect); treat the causal reading with that gravity"
+}

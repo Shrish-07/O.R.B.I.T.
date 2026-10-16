@@ -1,0 +1,186 @@
+{
+  "instrument_construction": "Z = 1 if the district's prior-cycle council race was close (margin_pct <= bandwidth) AND won by a Democrat; 0 if close and won by a Republican; cell excluded from the sample otherwise (sharp-RD exclusion). prior cycle = canonical election_year - 4 (2017/2021/2025 -> 2013/2017/2021).",
+  "controls": [
+    "yearbuilt",
+    "numfloors",
+    "landuse",
+    "commfar",
+    "RESIDENTIAL UNITS",
+    "COMMERCIAL UNITS"
+  ],
+  "fixed_effects": [
+    "CounDist (district dummies, drop_first)",
+    "sale_year (drop_first)"
+  ],
+  "total_units_exclusion": "TOTAL UNITS == RESIDENTIAL UNITS + COMMERCIAL UNITS for 99.6% of canonical rows (verified on this build); dropping it keeps the linear design non-singular. Information-preserving, documented.",
+  "weak_f_threshold": 10.0,
+  "model4_benchmark": {
+    "source": "results/robustness_checks.json (generate_robustness_checks.py)",
+    "label": "Model 4 \u2014 51 council-district FE, classical SE",
+    "dem_share_coef": 0.7764419471574159,
+    "dem_share_se": 0.0159390674420847,
+    "dem_share_p": 0.0,
+    "dem_share_se_clustered": 0.09232954335599416,
+    "dem_share_p_clustered": 4.118895277779041e-17,
+    "n": 520365,
+    "note": "Model 4 pools all districts/years (classical-SE row shown; the clustered-SE counterpart shares the coefficient). The IV sample is restricted to close-race cells, so compare the dem_share coefficient \u2014 not the sample size \u2014 across designs."
+  },
+  "n_rows_after_base_dropna": 355480,
+  "bw_5pp": {
+    "n_obs": 10424,
+    "n_instrument_cells": 4,
+    "n_districts": 3,
+    "n_close_dem_z1": 3970,
+    "n_close_rep_z0": 6454,
+    "design_params": 16,
+    "design_rank": 15,
+    "instrument_design_rank": 15,
+    "design_rank_ok": {
+      "endog_design_full_rank": false,
+      "instrument_design_full_rank": false
+    },
+    "identified": false,
+    "not_identifiable_reason": "design matrix rank-deficient (regressor block 15/16, instrument block 15/16); only 4 close-race cells across 3 districts. Root cause, verified numerically (residual of Z on the FE block is ~1e-11, i.e. exact): Z varies only at the (district, prior-election-cycle) level, and in this canonical dataset election_year is a deterministic grouping of sale_year (2016-18->2017, 2019-23->2021, 2024-25->2025), so every close-race cell is exactly a district x sale-year-window interaction of the district and sale_year fixed effects. With so few close cells the additive district+year FE span ANY cell-level binary instrument, so the first stage has zero residual instrument variation. This is not a choice that can be coded around: NYC has too few close council races for this instrument to be identified under district FE.",
+    "first_stage": {
+      "equation": "dem_share ~ Z + CounDist_FE + sale_year_FE + controls",
+      "instrument_coef": null,
+      "instrument_se": null,
+      "instrument_p": null,
+      "f_stat": null,
+      "f_pval": null,
+      "partial_r2_excluded_instrument": null
+    },
+    "second_stage": {
+      "equation": "target_log_price ~ dem_share_hat + CounDist_FE + sale_year_FE + controls",
+      "dem_share_coef": null,
+      "dem_share_se": null,
+      "dem_share_p": null,
+      "r_squared": null,
+      "n": 10424
+    },
+    "cov_type_used": null,
+    "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified",
+    "bandwidth_pp": 5,
+    "n_instrument_z_cells": 4
+  },
+  "bw_10pp": {
+    "n_obs": 15313,
+    "n_instrument_cells": 6,
+    "n_districts": 5,
+    "n_close_dem_z1": 4780,
+    "n_close_rep_z0": 10533,
+    "design_params": 21,
+    "design_rank": 19,
+    "instrument_design_rank": 19,
+    "design_rank_ok": {
+      "endog_design_full_rank": false,
+      "instrument_design_full_rank": false
+    },
+    "identified": false,
+    "not_identifiable_reason": "design matrix rank-deficient (regressor block 19/21, instrument block 19/21); only 6 close-race cells across 5 districts. Root cause, verified numerically (residual of Z on the FE block is ~1e-11, i.e. exact): Z varies only at the (district, prior-election-cycle) level, and in this canonical dataset election_year is a deterministic grouping of sale_year (2016-18->2017, 2019-23->2021, 2024-25->2025), so every close-race cell is exactly a district x sale-year-window interaction of the district and sale_year fixed effects. With so few close cells the additive district+year FE span ANY cell-level binary instrument, so the first stage has zero residual instrument variation. This is not a choice that can be coded around: NYC has too few close council races for this instrument to be identified under district FE.",
+    "first_stage": {
+      "equation": "dem_share ~ Z + CounDist_FE + sale_year_FE + controls",
+      "instrument_coef": null,
+      "instrument_se": null,
+      "instrument_p": null,
+      "f_stat": null,
+      "f_pval": null,
+      "partial_r2_excluded_instrument": null
+    },
+    "second_stage": {
+      "equation": "target_log_price ~ dem_share_hat + CounDist_FE + sale_year_FE + controls",
+      "dem_share_coef": null,
+      "dem_share_se": null,
+      "dem_share_p": null,
+      "r_squared": null,
+      "n": 15313
+    },
+    "cov_type_used": null,
+    "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified",
+    "bandwidth_pp": 10,
+    "n_instrument_z_cells": 7
+  },
+  "bw_15pp": {
+    "n_obs": 26514,
+    "n_instrument_cells": 9,
+    "n_districts": 7,
+    "n_close_dem_z1": 15981,
+    "n_close_rep_z0": 10533,
+    "design_params": 23,
+    "design_rank": 22,
+    "instrument_design_rank": 22,
+    "design_rank_ok": {
+      "endog_design_full_rank": false,
+      "instrument_design_full_rank": false
+    },
+    "identified": false,
+    "not_identifiable_reason": "design matrix rank-deficient (regressor block 22/23, instrument block 22/23); only 9 close-race cells across 7 districts. Root cause, verified numerically (residual of Z on the FE block is ~1e-11, i.e. exact): Z varies only at the (district, prior-election-cycle) level, and in this canonical dataset election_year is a deterministic grouping of sale_year (2016-18->2017, 2019-23->2021, 2024-25->2025), so every close-race cell is exactly a district x sale-year-window interaction of the district and sale_year fixed effects. With so few close cells the additive district+year FE span ANY cell-level binary instrument, so the first stage has zero residual instrument variation. This is not a choice that can be coded around: NYC has too few close council races for this instrument to be identified under district FE.",
+    "first_stage": {
+      "equation": "dem_share ~ Z + CounDist_FE + sale_year_FE + controls",
+      "instrument_coef": null,
+      "instrument_se": null,
+      "instrument_p": null,
+      "f_stat": null,
+      "f_pval": null,
+      "partial_r2_excluded_instrument": null
+    },
+    "second_stage": {
+      "equation": "target_log_price ~ dem_share_hat + CounDist_FE + sale_year_FE + controls",
+      "dem_share_coef": null,
+      "dem_share_se": null,
+      "dem_share_p": null,
+      "r_squared": null,
+      "n": 26514
+    },
+    "cov_type_used": null,
+    "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified",
+    "bandwidth_pp": 15,
+    "n_instrument_z_cells": 12
+  },
+  "bw_20pp": {
+    "n_obs": 37555,
+    "n_instrument_cells": 13,
+    "n_districts": 9,
+    "n_close_dem_z1": 27022,
+    "n_close_rep_z0": 10533,
+    "design_params": 25,
+    "design_rank": 25,
+    "instrument_design_rank": 24,
+    "design_rank_ok": {
+      "endog_design_full_rank": true,
+      "instrument_design_full_rank": false
+    },
+    "identified": false,
+    "not_identifiable_reason": "design matrix rank-deficient (regressor block 25/25, instrument block 24/25); only 13 close-race cells across 9 districts. Root cause, verified numerically (residual of Z on the FE block is ~1e-11, i.e. exact): Z varies only at the (district, prior-election-cycle) level, and in this canonical dataset election_year is a deterministic grouping of sale_year (2016-18->2017, 2019-23->2021, 2024-25->2025), so every close-race cell is exactly a district x sale-year-window interaction of the district and sale_year fixed effects. With so few close cells the additive district+year FE span ANY cell-level binary instrument, so the first stage has zero residual instrument variation. This is not a choice that can be coded around: NYC has too few close council races for this instrument to be identified under district FE.",
+    "first_stage": {
+      "equation": "dem_share ~ Z + CounDist_FE + sale_year_FE + controls",
+      "instrument_coef": null,
+      "instrument_se": null,
+      "instrument_p": null,
+      "f_stat": null,
+      "f_pval": null,
+      "partial_r2_excluded_instrument": null
+    },
+    "second_stage": {
+      "equation": "target_log_price ~ dem_share_hat + CounDist_FE + sale_year_FE + controls",
+      "dem_share_coef": null,
+      "dem_share_se": null,
+      "dem_share_p": null,
+      "r_squared": null,
+      "n": 37555
+    },
+    "cov_type_used": null,
+    "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified",
+    "bandwidth_pp": 20,
+    "n_instrument_z_cells": 17
+  },
+  "headline": {
+    "verdict_by_bandwidth": {
+      "5": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified",
+      "10": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified",
+      "15": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified",
+      "20": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+    },
+    "note": "Weak instrument (first-stage F <= 10) at a bandwidth means the 2SLS estimate there is suggestive only and biased toward OLS; the close-election design then cannot rescue identification at that bandwidth."
+  }
+}

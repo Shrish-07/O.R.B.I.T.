@@ -54,7 +54,12 @@ def main():
     if not RESULTS_DIR.exists():
         raise FileNotFoundError("experiments/results directory does not exist")
 
-    for path in RESULTS_DIR.glob("*.json"):
+    # sorted(): deterministic iteration order so the duplicate-key
+    # drop_duplicates(keep='last') below deterministically resolves a retired
+    # stale record (e.g. rf_all_years_political_n200) against its replacement
+    # (rf_all_years_political_tuned -- alphabetically later) instead of
+    # depending on filesystem ordering. Round 10.
+    for path in sorted(RESULTS_DIR.glob("*.json")):
         try:
             with open(path) as f:
                 data = json.load(f)

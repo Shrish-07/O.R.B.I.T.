@@ -1,0 +1,206 @@
+{
+  "source_reverified": "results/causal/iv_district_fe_rescue_results.json",
+  "arms": {
+    "rescue_1a_borough_fe_variant": {
+      "records": [
+        {
+          "bandwidth_pp": 5,
+          "identified": false,
+          "matches_pipeline": true,
+          "checks": {
+            "n_obs": true,
+            "n_close_cells": true,
+            "n_districts": true,
+            "n_z_cells": true,
+            "design_params": true,
+            "design_rank": true,
+            "instrument_design_rank": true,
+            "identified": true
+          },
+          "discrepancies": [],
+          "verdict": "NOT IDENTIFIED at this bandwidth \u2014 design matrix rank-deficient; treating as suggestive at most"
+        },
+        {
+          "bandwidth_pp": 10,
+          "identified": false,
+          "matches_pipeline": true,
+          "checks": {
+            "n_obs": true,
+            "n_close_cells": true,
+            "n_districts": true,
+            "n_z_cells": true,
+            "design_params": true,
+            "design_rank": true,
+            "instrument_design_rank": true,
+            "identified": true
+          },
+          "discrepancies": [],
+          "verdict": "NOT IDENTIFIED at this bandwidth \u2014 design matrix rank-deficient; treating as suggestive at most"
+        },
+        {
+          "bandwidth_pp": 15,
+          "identified": true,
+          "matches_pipeline": true,
+          "checks": {
+            "n_obs": true,
+            "n_close_cells": true,
+            "n_districts": true,
+            "n_z_cells": true,
+            "design_params": true,
+            "design_rank": true,
+            "instrument_design_rank": true,
+            "identified": true,
+            "cov_type_used": true,
+            "f_stat": true,
+            "instrument_coef": true,
+            "dem_share_coef": true,
+            "dem_share_se": true,
+            "dem_share_p": true
+          },
+          "discrepancies": [],
+          "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+        },
+        {
+          "bandwidth_pp": 20,
+          "identified": true,
+          "matches_pipeline": true,
+          "checks": {
+            "n_obs": true,
+            "n_close_cells": true,
+            "n_districts": true,
+            "n_z_cells": true,
+            "design_params": true,
+            "design_rank": true,
+            "instrument_design_rank": true,
+            "identified": true,
+            "cov_type_used": true,
+            "f_stat": true,
+            "instrument_coef": true,
+            "dem_share_coef": true,
+            "dem_share_se": true,
+            "dem_share_p": true
+          },
+          "discrepancies": [],
+          "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+        }
+      ],
+      "all_match": true
+    },
+    "rescue_1b_wider_bandwidth_district_fe": {
+      "records": [
+        {
+          "bandwidth_pp": 20,
+          "identified": false,
+          "matches_pipeline": true,
+          "checks": {
+            "n_obs": true,
+            "n_close_cells": true,
+            "n_districts": true,
+            "n_z_cells": true,
+            "design_params": true,
+            "design_rank": true,
+            "instrument_design_rank": true,
+            "identified": true
+          },
+          "discrepancies": [],
+          "verdict": "NOT IDENTIFIED at this bandwidth \u2014 design matrix rank-deficient; treating as suggestive at most"
+        },
+        {
+          "bandwidth_pp": 25,
+          "identified": true,
+          "matches_pipeline": true,
+          "checks": {
+            "n_obs": true,
+            "n_close_cells": true,
+            "n_districts": true,
+            "n_z_cells": true,
+            "design_params": true,
+            "design_rank": true,
+            "instrument_design_rank": true,
+            "identified": true,
+            "cov_type_used": true,
+            "f_stat": true,
+            "instrument_coef": true,
+            "dem_share_coef": true,
+            "dem_share_se": true,
+            "dem_share_p": true
+          },
+          "discrepancies": [],
+          "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+        },
+        {
+          "bandwidth_pp": 30,
+          "identified": true,
+          "matches_pipeline": true,
+          "checks": {
+            "n_obs": true,
+            "n_close_cells": true,
+            "n_districts": true,
+            "n_z_cells": true,
+            "design_params": true,
+            "design_rank": true,
+            "instrument_design_rank": true,
+            "identified": true,
+            "cov_type_used": true,
+            "f_stat": true,
+            "instrument_coef": true,
+            "dem_share_coef": true,
+            "dem_share_se": true,
+            "dem_share_p": true
+          },
+          "discrepancies": [],
+          "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+        },
+        {
+          "bandwidth_pp": 35,
+          "identified": true,
+          "matches_pipeline": true,
+          "checks": {
+            "n_obs": true,
+            "n_close_cells": true,
+            "n_districts": true,
+            "n_z_cells": true,
+            "design_params": true,
+            "design_rank": true,
+            "instrument_design_rank": true,
+            "identified": true,
+            "cov_type_used": true,
+            "f_stat": true,
+            "instrument_coef": true,
+            "dem_share_coef": true,
+            "dem_share_se": true,
+            "dem_share_p": true
+          },
+          "discrepancies": [],
+          "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+        },
+        {
+          "bandwidth_pp": 40,
+          "identified": true,
+          "matches_pipeline": true,
+          "checks": {
+            "n_obs": true,
+            "n_close_cells": true,
+            "n_districts": true,
+            "n_z_cells": true,
+            "design_params": true,
+            "design_rank": true,
+            "instrument_design_rank": true,
+            "identified": true,
+            "cov_type_used": true,
+            "f_stat": true,
+            "instrument_coef": true,
+            "dem_share_coef": true,
+            "dem_share_se": true,
+            "dem_share_p": true
+          },
+          "discrepancies": [],
+          "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+        }
+      ],
+      "all_match": true
+    }
+  },
+  "all_arms_match": true,
+  "note": "For identified specs we re-fit fresh and compare 4dp; for not-identified specs the honest match is the concordant verdict and counts. A rescue that passes an F threshold is independently re-derived here before it can be trusted."
+}

@@ -8,7 +8,15 @@ information with live pass/fail status.
 
 Legend: **Builds** = produces the number/figure. **Verifies** = independently
 re-derives it from raw artifacts as a check (see `results/FULL_PAPER_FACT_CHECK.md`
-for the consolidated, already-reviewed report).
+for the consolidated, already-reviewed report; per-verifier machine-readable
+status now lives in `results/verification/`, aggregated by the
+`verification_summary` stage). Round 10 additionally introduced a *generator*
+tier — `src/figures/generate_paper_assets.py` — that emits the manuscript's
+LaTeX tables and PNG figures straight from the repo artifacts into
+`docs/paper_assets/` (no hand-assembled numbers; models resolved by NAME via
+`src/ops/champion_ranking.py`; Round 11 adds the standalone LaTeX compile
+check and the layout/escaping conventions listed under "Generated paper
+assets" below).
 
 ---
 
@@ -113,35 +121,25 @@ finding (now Section 4.4 of the manuscript), not a bug.
 |---|---|---|
 | Champion LightGBM (base, 16 feat.) | `models/training/train_lgbm.py --variant all_years --mode base` &rarr; `models/lgbm_all_years_base.txt` | — |
 | Champion LightGBM (political, 17 feat.) | `models/training/train_lgbm.py --variant all_years --mode political` &rarr; `models/lgbm_all_years_political.txt` | — |
-| Table 2 (MAE/R² for LightGBM + 5 comparison families) | `models/training/train_{random_forest,linear_baselines,catboost,xgboost}.py`, tabulated by `src/analysis/compare_models.py` | `src/verification/verify_ml_performance.py` |
+| Table 2 (MAE/R² for LightGBM + 5 comparison families) | `models/training/train_{random_forest,linear_baselines,catboost,xgboost}.py`, tabulated by `src/analysis/compare_models.py` | `src/verification/verify_ml_performance.py`  Round 10: the RF is the complexity-constrained, validation-tuned forest (`rf_all_years_political_tuned`; grid + cap audit in `results/rf_tuning_grid.json`); the unpruned `rf_all_years_political_n200` is retired via the `stale` registry flag. |
 | Figure 3 (`model_comparison.png`) | `src/figures/generate_figures.py` | — |
-| Table 3 (SHAP importance) | `src/analysis/generate_shap_summary.py` &rarr; `models/artifacts/lgbm_all_years_political_shap_summary.json` (the final `tables/table3_shap_importance.tex` is **not** script-generated — see the note under Appendix A.1); Figure 4 (`shap_top15.png`) via `src/figures/generate_figures.py` | `src/verification/verify_shap_importance.py` |
+| Table 3 (SHAP importance) | `src/analysis/generate_shap_summary.py` (Round 9/10: every eligible ranked model goes through the tiered SHAP ladder; the depth-capped tier (b) applies to unpruned forests only, a 5-minute startup watchdog respawns a stalled child once without charging the tier budget, and fidelity-check-rejected variants are honestly labeled REJECTED (no SHAP computed on them) `src/ops/shap_tiers.py`, ranking via `src/ops/champion_ranking.py` -> audit `results/rank1_rank2_selection.json`) &rarr; `models/artifacts/lgbm_all_years_political_shap_summary.json` (the final `tables/table3_shap_importance.tex` is **not** script-generated — see the note under Appendix A.1); Figure 4 (`shap_top15.png`) via `src/figures/generate_figures.py` | `src/verification/verify_shap_importance.py` |
 
 ## Section 4.7 — Counterfactual Policy Simulation
 
 | Claim | Builds | Verifies |
 |---|---|---|
-| Liberal / conservative / mixed-governance scenarios | `src/analysis/political_scenarios.py` | `src/verification/verify_scenario_mechanics.py` (re-derives which columns each scenario touches and re-runs the LightGBM inference — this stage alone takes several minutes; see the note in `README.md` (Where the paper stands)) |
-| Figure 5 (`scenario_impact_all_three.png`) | `src/figures/generate_fig5_scenario_impact.py` (added 2026-09-06, Round-4 follow-up: until then, **no script in this repo produced that file**, and the manuscript's copy lived only in the paper's own `figures/` folder) — three 51-district panels straight from `results/political_scenarios/*_by_council.csv` | — |
+| Liberal / conservative / mixed-governance scenarios | `src/analysis/political_scenarios.py` (Round 9: ALL three scenarios x every eligible ranked model; rank 1 keeps legacy filenames, ranks 2..N write `results/political_scenarios/{scenario}_rank{N}_by_council.csv` + `*_all_properties.parquet`; per-rank model identity recorded in `scenario_run_metadata.json`; Round 10: name-keyed copies `results/political_scenarios/by_model/<model>/<scenario>_by_council.csv` so consumers resolve models by NAME, never rank number) | `src/verification/verify_scenario_mechanics.py` (re-derives which columns each scenario touches and re-runs the per-rank inference for every ranked model -> `results/round5_part_K_mechanics_rank{N}.json` + legacy rank-1 file; Round 11: per-rank producer-diagnostic concordance is machine-countable; no paper-era constants) |
+| Figure 5 (`scenario_impact_all_three.png`) | `src/figures/generate_fig5_scenario_impact.py` (added 2026-09-06, Round-4 follow-up: until then, **no script in this repo produced that file**, and the manuscript's copy lived only in the paper's own `figures/` folder) — three 51-district panels; Round 10: input files are the NAME-keyed `results/political_scenarios/by_model/lgbm_all_years_political/` copies (fallback: rank-1 legacy files) — never rank-derived | — |
 | Scenario-impact figure variants | `src/figures/generate_scenario_map.py` (choropleth-style, `scenario_impact_all_three_FIXED.png`), `src/figures/generate_figures.py` (grouped-bar, `scenario_impact_by_district.png`) | — |
 
 ## Appendix A.1 — Full 51 &times; 3 Scenario Table
 
 | Claim | Builds | Verifies |
 |---|---|---|
-| Table A.1 (51 &times; 3 scenario table) | `src/analysis/political_scenarios.py` &rarr; `results/political_scenarios/{liberal_policy,conservative_policy,mixed_governance}_by_council.csv` (+ `*_all_properties.parquet`) | `src/verification/verify_appendix_a1_scenarios.py` |
+| Table A.1 (51 &times; 3 scenario table) | `src/analysis/political_scenarios.py` &rarr; `results/political_scenarios/{liberal_policy,conservative_policy,mixed_governance}_by_council.csv` (+ `*_all_properties.parquet`; Round 9: these legacy names are the rank-1 current-champion outputs; sibling `{scenario}_rank{N}_*` files cover all other eligible models); manuscript layout = two-block longtable (1-26 \| 27-51) written by `src/figures/generate_paper_assets.py` with borough names derived from `results/council_district_borough_map.csv` | `src/verification/verify_appendix_a1_scenarios.py` (Round 11: INDEPENDENT re-derivation from the rank-suffixed property-level parquets — producer filters replicated: `base_pred >= 9.0`, clip to [-100,100], district mean — compared per cell against (i) the NAME-keyed `by_model/lgbm_all_years_political/` CSVs and (ii) the generated `docs/paper_assets/appendix_a1_scenarios.tex`; tolerance 0.005 pct points; stale embedded-paper-table comparison REMOVED; informational per-rank summary `results/round5_part_K_appendixA1_all_models.json` kept) |
 
-**Note (corrected during Round 2 verification):** the final `.tex` for
-Tables 1, 3, and A.1 (and Table 2) is **not currently automated**. No script
-in this repo writes a manuscript-ready `.tex` file —
-`generate_regression_table.py`, `generate_shap_summary.py`, and
-`political_scenarios.py` write the CSV/JSON/TXT data behind those tables
-(shown in the rows above), while the `tables/table1_ols_regression.tex`,
-`table3_shap_importance.tex`, and `tableA1_scenario_comparison.tex` files
-the paper `\input`s live in the paper's own `tables/` folder and are
-hand-formatted. An earlier draft of this map listed those `.tex` paths as
-script outputs; the rows above now state the real data files each script
-actually writes.
+**Note (Round 11 update):** manuscript-ready `.tex` tables are automated and checked: `src/figures/generate_paper_assets.py` writes Tables 1–5, the SHAP tables, the scenario tables (incl. Appendix A.1), the IV/DiD tables and Figures 3–7 from repo artifacts into `docs/paper_assets/`; headers/captions/notes are LaTeX emitted verbatim (esc() applies to data cells only); every generated `.tex` must compile standalone with only booktabs/amsmath/float/longtable — the stage wraps each table in a minimal document and runs pdflatex when it is on PATH (a clear SKIP is printed on machines without TeX; compile errors fail the stage loudly). The pre-existing `tables/*.tex` drop-ins remain as by-convention copies.
 
 ## Appendix A.2 — Regression Diagnostics
 
@@ -190,7 +188,36 @@ base / 19-feature political** — `BBL_pluto` is blacklisted in
 parcel identifier, not a genuine feature), superseding the 19/20-feature spec
 above. See `VERIFICATION_REPORT.md` Round 7.
 
+## Generated paper assets (Round 10; conventions updated Round 11)
+
+`src/figures/generate_paper_assets.py` (registered in `main.py` as the `generate_paper_assets` stage, after `generate_research_summary`) writes the manuscript's LaTeX tables and PNG figures entirely from repo artifacts into `docs/paper_assets/`; its `manifest.json` maps every output to the exact source artifact. Serif font, white background; models resolved by experiment NAME (never rank number). Round 11 conventions: headers/captions/notes are LaTeX emitted verbatim (esc() for data cells only); Appendix A.1 is a two-block longtable with CSV-derived borough names and a `-0.00` guard; the scenario summary is wide (one row per model); the cross-model SHAP table prints `zeroed (tie among N zeros)` for exactly-zero dem_share; the IV table sorts bandwidths numerically and lists the duplicated ±20pp district-FE spec once (footnoted); Figure 6 is a horizontal bar chart; Figure 3 uses readable display names and marks the champion (via champion.json) plus both LightGBM paper specs; every `.tex` gets a standalone-compile check (booktabs/amsmath/float/longtable only) when pdflatex is on PATH.
+
+| Manuscript asset | Repo inputs |
+|---|---|
+| Table 1 (OLS), Table 4 (robustness), Table 5 (spatial) | `results/regression_table.csv`, `results/robustness_checks.json`, `results/spatial_regression.json` |
+| Table 2 (model performance) + Figure 3 (MAE bar) | `experiments/registry.json` (eligible entries only) |
+| Table 3 (full SHAP table, dem_share highlighted) + Figure 4; cross-model provenance table | `models/artifacts/*_shap_summary.json` |
+| 7-model scenario summary, Appendix A.1 (51 × 3), Figure 5 | `results/political_scenarios/by_model/<name>/` (rank→name map in `scenario_run_metadata.json`) |
+| IV specification-search table + Figure 6 | `results/causal/iv_district_fe_results.json` + `iv_district_fe_rescue_results.json` |
+| City of Yes DiD table + Figure 7 (event study) | `results/causal/city_of_yes_did_results.json` |
+
 ## Cross-cutting fact-check output
+
+**Round 11 harness additions:** every `src/verification/*.py` stage (plus
+`editorial_audit/verify_blacklist_fully.py`) now ends with
+`_shared.record_status(...)`, writing `results/verification/<verifier>.json`
+with `n_checks` / `n_mismatches` / the full failing-cell list. The new final
+stage `verification_summary` (`src/ops/verification_summary.py`) aggregates
+them into `results/verification_summary.json`, prints the per-verifier table,
+and exits NON-ZERO if any verifier reports a mismatch beyond its tolerance,
+fails to report, or reports from a stale (pre-this-run) status file — the
+mismatches are machine-countable and cannot hide in print output. The
+`main.py` report header shows the run's `git_commit` / `git_dirty` and these
+totals. The new `stale_artifact_audit` stage (`src/ops/stale_artifact_audit.py`)
+lists files in `docs/figures` / `docs/paper_assets` / `models/artifacts` not
+regenerated by the current run (write-only listing: `results/stale_artifacts.json`).
+`src/analysis/generate_pdp.py` (regeneration) additionally DELETES PDP PNGs
+whose (model, feature) pair is absent from the current run's PDP summaries.
 
 `results/FULL_PAPER_FACT_CHECK.md` is the already-finalized, human-reviewed
 synthesis of every `verify_*.py` script above. `src/verification/` does not
@@ -212,9 +239,9 @@ what to do with each.
 
 | Asset | Script | Output |
 |---|---|---|
-| Partial dependence plots, top-5 features (champion base + political models) | `src/analysis/generate_pdp.py` | `models/artifacts/pdp_lgbm_all_years_{base,political}_*.png` + `*_pdp_summary.json` (regenerated on every full run; blacklist gate = verify_blacklist_fully) |
-| Per-property prediction intervals (both LightGBM models, full 56,817-row test split) | `src/analysis/confidence_intervals.py` (bootstrap `{name}_prediction_intervals.parquet`), `src/analysis/champion_confidence_and_sensitivity.py` (residual-quantile `{name}_intervals.csv` + `{name}_test_preds.parquet`) | `experiments/predictions/*` |
-| Feature-perturbation sensitivity analysis | `src/analysis/sensitivity_analysis.py` | `models/artifacts/lgbm_all_years_{base,political}_sensitivity_analysis.json` (regenerated on every full run; blacklist gate = verify_blacklist_fully) |
+| Partial dependence plots, top-5 features per model (Round 9: every eligible ranked model, family-optimized scoring) | `src/analysis/generate_pdp.py` | `models/artifacts/pdp_lgbm_all_years_{base,political}_*.png` + `*_pdp_summary.json` (regenerated on every full run; blacklist gate = verify_blacklist_fully) |
+| Per-property prediction intervals (every eligible ranked model, full test split) | `src/analysis/confidence_intervals.py` (bootstrap `{name}_prediction_intervals.parquet`), `src/analysis/champion_confidence_and_sensitivity.py` (residual-quantile `{name}_intervals.csv` + `{name}_test_preds.parquet`) | `experiments/predictions/*` |
+| Feature-perturbation sensitivity analysis | `src/analysis/sensitivity_analysis.py` | `models/artifacts/{name}_sensitivity_analysis.json` (every eligible ranked model; regenerated on every full run; blacklist gate = verify_blacklist_fully) |
 | Combined confidence + sensitivity pass | `src/analysis/champion_confidence_and_sensitivity.py` | `experiments/predictions/*_intervals.csv` + `*_test_preds.parquet`, `models/artifacts/*_sensitivity.json` |
 
 ## Robustness checks — origin note

@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_followup_resolution",
+  "generated_utc": "2026-10-16T17:21:52.059670Z",
+  "n_checks": 6,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Step2 missingness reconciliation + Step3 prediction-artifact row parity against the current test split."
+}

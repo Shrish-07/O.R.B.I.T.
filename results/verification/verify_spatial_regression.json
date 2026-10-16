@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_spatial_regression",
+  "generated_utc": "2026-10-16T17:14:56.376682Z",
+  "n_checks": 19,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Section 4.5 spatial models re-fit independently; paper checks + agreement with spatial_regression.json."
+}

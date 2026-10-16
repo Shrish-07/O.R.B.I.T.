@@ -93,7 +93,7 @@ STAGES = [
     dict(id="train_random_forest", category="training", heavy=True,
          script="models/training/train_random_forest.py",
          args=["--variant", "all_years", "--mode", "political", "--n_estimators", "200"],
-         desc="Random Forest comparison model (n_estimators=200).",
+         desc="Complexity-constrained, validation-tuned Random Forest (Round 10): explicit grid max_depth {10,14,18,25} x min_samples_leaf {1,5,20} x max_features {1.0,0.5,0.33}, n_estimators=200; pre-specified SHAP-tractability cap (<=3000 mean leaves/tree) applied before MAE comparison; selection on the time-ordered training validation slice (same protocol as train_lgbm) with the test set scored exactly once; retires the unpruned rf_all_years_political_n200 (stale flag) and writes results/rf_tuning_grid.json.",
          paper_ref="4.6, Table 2 (comparison model family)"),
     # NOTE: production Table 2 Ridge/ElasticNet numbers come from
     # models/training/train_linear_baselines.py, NOT the standalone
@@ -148,27 +148,27 @@ STAGES = [
          paper_ref="4.5 Formal Spatial Regression, Table 5"),
     dict(id="political_scenarios", category="analysis",
          script="src/analysis/political_scenarios.py", args=[],
-         desc="Runs the liberal/conservative/mixed-governance counterfactual simulations.",
+         desc="Runs the liberal/conservative/mixed-governance counterfactual simulations for EVERY eligible ranked model (rank 1 = champion.json selection; ranks 2+ = ascending test MAE via src/ops/champion_ranking.py), writing per-rank outputs plus the legacy rank-1 filenames AND (Round 10) name-keyed results/political_scenarios/by_model/<model>/<scenario>_by_council.csv copies so consumers can resolve models by name, never by rank; mixed_governance is no longer hard-wired to lgbm_all_years_political.",
          paper_ref="4.7 Counterfactual Policy Simulation"),
     dict(id="generate_shap_summary", category="analysis",
          script="src/analysis/generate_shap_summary.py", args=[],
-         desc='Mean |SHAP| values for the champion plus BOTH paper models (political and base); every pass regenerates on each run so no model SHAP artifact can go stale.',
+         desc='Mean |SHAP| values for EVERY eligible ranked model via the tiered SHAP ladder in src/ops/shap_tiers.py (exact TreeSHAP on the standard sample / depth-capped RF variant for unpruned forests only / fixed 5,000-row sample / labeled gain fallback); the tier used is recorded in each payload. Round 10: 5-minute startup watchdog with one child respawn (unspent budget), tier (b) auto-skipped for complexity-constrained forests, and an honest REJECTED-via-fidelity-check note.',
          paper_ref="4.6.2 SHAP Feature Importance, Table 3"),
     dict(id="generate_pdp", category="analysis",
          script="src/analysis/generate_pdp.py", args=[],
-         desc='Partial dependence plots for top features of the champion and both paper models. NOT currently cited in the paper - see PAPER_TO_CODE_MAP.md. Regenerated on every full run.',
+         desc='Partial dependence plots for top features of EVERY eligible ranked model (top-5 by per-family importance (gain or |coef|); predictions via src/ops/predictors.py). Round 11: after writing this run\'s summaries, DELETES any stale models/artifacts/pdp_*.png (model/feature not in the run\'s summaries -- the pre-blacklist BBL_pluto leftover class). NOT currently cited in the paper - see PAPER_TO_CODE_MAP.md. Regenerated on every full run.',
          paper_ref="(unused — candidate addition, see action plan)"),
     dict(id="confidence_intervals", category="analysis",
          script="src/analysis/confidence_intervals.py", args=[],
-         desc='Per-property prediction intervals (residual bootstrap) for the champion and both paper models on the full test split. NOT currently cited in the paper - see PAPER_TO_CODE_MAP.md.',
+         desc='Per-property prediction intervals (residual bootstrap) for EVERY eligible ranked model on the full test split (family-optimized prediction conventions via src/ops/predictors.py). NOT currently cited in the paper - see PAPER_TO_CODE_MAP.md.',
          paper_ref="(unused — candidate addition, see action plan)"),
     dict(id="sensitivity_analysis", category="analysis",
          script="src/analysis/sensitivity_analysis.py", args=[],
-         desc='Feature-perturbation sensitivity for the champion and both paper models. NOT currently cited in the paper - see PAPER_TO_CODE_MAP.md.',
+         desc='Feature-perturbation sensitivity for EVERY eligible ranked model (top features from the models own freshly regenerated SHAP summary). NOT currently cited in the paper - see PAPER_TO_CODE_MAP.md.',
          paper_ref="(unused — candidate addition, see action plan)"),
     dict(id="champion_confidence_and_sensitivity", category="analysis",
          script="src/analysis/champion_confidence_and_sensitivity.py", args=[],
-         desc='Combined confidence+sensitivity pass for the current champion; also writes BOTH paper models (political plus base) test_preds.parquet and intervals.csv at full test-split coverage.',
+         desc='Combined confidence+sensitivity pass for EVERY eligible ranked model; writes test_preds.parquet and intervals.csv at full test-split coverage for all of them (rank 1 = champion).',
          paper_ref="(unused — candidate addition, see action plan)"),
     dict(id="compare_models", category="analysis",
          script="src/analysis/compare_models.py", args=[],
@@ -223,6 +223,14 @@ STAGES = [
          script="src/figures/generate_research_summary.py", args=[],
          desc="Writes docs/research_summary.md, a plain-language digest of all results.",
          paper_ref="N/A (supporting documentation, not cited in the manuscript)"),
+    dict(id="generate_paper_assets", category="figures",
+         script="src/figures/generate_paper_assets.py", args=[],
+         desc="Round 11: builds the paper's LaTeX tables + PNG figures entirely from repo artifacts (no hard-coded numbers) into docs/paper_assets/; models resolved by experiment NAME via src/ops/champion_ranking.py; headers/captions/notes emitted verbatim (only data cells escaped); Appendix A.1 = two-block longtable with CSV-derived borough names; wide scenario summary; IV table numeric-sorted with the +-20pp district-FE duplicate footnoted; Fig 6 horizontal bars; Fig 3 readable names + champion (via champion.json) + LightGBM marks; every generated .tex wrapped in a tiny standalone doc (booktabs/amsmath/float/longtable) and pdflatex-checked when available (SKIPPED with a clear message otherwise); any compile error fails the stage.",
+         paper_ref="Tables 1, 2, 4, 5; SHAP Table 3 + cross-model provenance table; Appendix A.1; Figures 3, 4, 5, 6, 7"),
+    dict(id="stale_artifact_audit", category="figures",
+         script="src/ops/stale_artifact_audit.py", args=[],
+         desc="Round 11: LISTS (never deletes) files in docs/figures, docs/paper_assets and models/artifacts whose mtime predates this run's start -- i.e. artifacts NOT regenerated by the current run (leftover candidates). Writes results/stale_artifacts.json. Informational only; always passes.",
+         paper_ref="N/A (repository hygiene audit)"),
 
     # ---- 5. Independent fact-check / verification harness ---------------
     # These re-derive every numeric claim in the paper directly from the
@@ -245,7 +253,7 @@ STAGES = [
          paper_ref="3.3 Canonical Dataset, 3.4 Train/Test Split"),
     dict(id="verify_spatial_pattern", category="verification",
          script="src/verification/verify_spatial_pattern.py", args=[],
-         desc="Re-derives the 51-district bivariate dem_share/price correlation (r=0.163).",
+         desc="Re-derives the 51-district bivariate dem_share/price correlation (r=0.175).",
          paper_ref="4.1 Spatial Pattern of Ideology and Price"),
     dict(id="verify_regression_missingness", category="verification",
          script="src/verification/verify_regression_missingness.py", args=[],
@@ -273,11 +281,11 @@ STAGES = [
          paper_ref="4.6.2 SHAP Feature Importance, Table 3"),
     dict(id="verify_scenario_mechanics", category="verification",
          script="src/verification/verify_scenario_mechanics.py", args=[],
-         desc="Re-derives which columns each counterfactual scenario actually modifies, plus clip rates.",
+         desc="Re-derives which columns each counterfactual scenario actually modifies, plus clip rates, independently for EVERY ranked model (same ranking as the producer: src/ops/champion_ranking.py); writes per-rank results/round5_part_K_mechanics_rank{N}.json plus the legacy rank-1 file. Round 11: no paper-era 109/9/816; clip counts recomputed fresh each run and cross-checked against the producer's rank diag files.",
          paper_ref="4.7 Counterfactual Policy Simulation"),
     dict(id="verify_appendix_a1_scenarios", category="verification",
          script="src/verification/verify_appendix_a1_scenarios.py", args=[],
-         desc="Re-derives all 51x3 Appendix A.1 scenario percentages.",
+         desc="Re-derives all 51x3 Appendix A.1 district means INDEPENDENTLY from the rank-suffixed property-level parquets (lgbm_all_years_political resolved BY NAME via scenario_run_metadata.json; producer filters replicated: base_pred >= 9.0, pct_change clipped [-100,100], district mean) and compares per cell against (i) the name-keyed by_model CSVs and (ii) docs/paper_assets/appendix_a1_scenarios.tex (two-block longtable parsed); tolerance 0.005 pct points, not loosened. The stale embedded old-manuscript table (152 bogus exceptions) is GONE.",
          paper_ref="Appendix A.1"),
     dict(id="verify_borough_map_and_crosscutting", category="verification",
          script="src/verification/verify_borough_map_and_crosscutting.py", args=[],
@@ -285,11 +293,11 @@ STAGES = [
          paper_ref="Appendix A.3; cross-cutting"),
     dict(id="verify_blacklist_fully", category="verification",
          script="src/verification/editorial_audit/verify_blacklist_fully.py", args=[],
-         desc="Confirms every blacklisted feature is absent from both trained models' feature lists.",
+         desc="Round 11: checks EVERY eligible registry model's models/artifacts/<name>_features.json against config/feature_blacklist.yaml (all families, not LightGBM .txt only); missing feature list or any hit fails the gate. Stale '17/18-feature era' text removed.",
          paper_ref="3.3 Canonical Dataset (feature blacklist paragraph)"),
     dict(id="verify_followup_resolution", category="verification",
          script="src/verification/verify_followup_resolution.py", args=[],
-         desc="Resolves the two known loose ends (53-row missingness gap, 19-row prediction-interval gap).",
+         desc="Resolves the two known loose ends (additive-vs-union missingness gap; prediction-interval row-count parity). Round 11: the hard-coded 44,136/44,083 narrative and 'needs_patch_sentence' flag are removed; all values computed live.",
          paper_ref="results/FULL_PAPER_FACT_CHECK.md ('NEW findings' section)"),
     dict(id="verify_iv_district_fe", category="verification",
          script="src/verification/verify_iv_district_fe.py", args=[],
@@ -308,6 +316,10 @@ STAGES = [
               "from the canonical parquet + roll-call parquet and compares every field to "
               "results/causal/city_of_yes_did_results.json to 4dp.",
          paper_ref="(candidate causal-identification design, Round 6 — see README.md §Causal identification and VERIFICATION_REPORT.md Round 6; not yet adopted into the manuscript)"),
+    dict(id="verification_summary", category="verification",
+         script="src/ops/verification_summary.py", args=[],
+         desc="Round 11: aggregates every verifier's machine-countable status (results/verification/<verifier>.json, written via src/verification/_shared.record_status) into results/verification_summary.json, prints the per-verifier table, and EXITS NON-ZERO if any verifier reports a mismatch beyond its tolerance or failed to report at all. This is the gate that keeps verifiers from hiding mismatches.",
+         paper_ref="N/A (verification harness governance)"),
 ]
 
 STAGE_BY_ID = {s["id"]: s for s in STAGES}
@@ -376,6 +388,33 @@ def write_report(results, out_path):
     lines.append("# O.R.B.I.T. Pipeline Run Report")
     lines.append("")
     lines.append(f"Generated: {datetime.now().isoformat(timespec='seconds')}")
+    lines.append("")
+    # Round 11: provenance (git head + dirty state at report time)
+    git_commit = None
+    git_dirty = None
+    try:
+        git_commit = subprocess.check_output(
+            ['git', 'rev-parse', '--short', 'HEAD'], cwd=ROOT).decode().strip()
+    except Exception:
+        pass
+    try:
+        git_dirty = bool(subprocess.check_output(
+            ['git', 'status', '--porcelain'], cwd=ROOT).decode().strip())
+    except Exception:
+        pass
+    lines.append(f"Provenance: git_commit={git_commit}, git_dirty={git_dirty}")
+    # Round 11: machine-countable verification totals (when available)
+    vs_path = ROOT / 'results' / 'verification_summary.json'
+    if vs_path.exists():
+        try:
+            vs = json.loads(vs_path.read_text(encoding='utf-8'))
+            lines.append(
+                f"Verification: {vs.get('total_checks')} checks / "
+                f"{vs.get('total_mismatches')} mismatches / "
+                f"{vs.get('n_problem_verifiers')} problem verifier(s) "
+                f"(see results/verification_summary.json + results/verification/*.json).")
+        except Exception as _e:
+            lines.append(f"Verification summary unreadable: {_e}")
     lines.append("")
     n_pass = sum(1 for r in results if r["result"]["status"] == "PASS")
     n_fail = sum(1 for r in results if r["result"]["status"] == "FAIL")
@@ -490,6 +529,9 @@ def main():
 
     log_dir = ROOT / "results" / "logs" / "pipeline"
     log_dir.mkdir(parents=True, exist_ok=True)
+    # Round 11: run-start marker, used by the stale_artifact_audit and
+    # verification_summary stages to reference THIS run's regenerations.
+    (log_dir / ".run_start_utc").write_text(str(time.time()))
 
     print("=" * 100)
     print(f"Running {len(run_list)} stage(s)")

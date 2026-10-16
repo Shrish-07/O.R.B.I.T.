@@ -1,0 +1,243 @@
+{
+  "purpose": "Round 6 rescue: specification search over the two openings the Round-5 not-identified finding left open, recorded in full (identified or not) with per-record credibility notes.",
+  "controls": [
+    "yearbuilt",
+    "numfloors",
+    "landuse",
+    "commfar",
+    "RESIDENTIAL UNITS",
+    "COMMERCIAL UNITS"
+  ],
+  "rescue_1a_borough_fe_variant": [
+    {
+      "bandwidth_pp": 5,
+      "fe_variant": "BOROUGH",
+      "credibility_note": "borough FE controls only for 5 region-level confounders, not the 51 district-level ones the district-FE design (and Model 4) control for \u2014 a materially weaker design even where it identifies",
+      "n_obs": 10424,
+      "n_close_cells": 4,
+      "n_districts": 3,
+      "n_z_cells": 4,
+      "design_params": 15,
+      "design_rank": 15,
+      "instrument_design_rank": 14,
+      "identified": false,
+      "second_stage": null,
+      "first_stage": null,
+      "verdict": "NOT IDENTIFIED at this bandwidth \u2014 design matrix rank-deficient; treating as suggestive at most"
+    },
+    {
+      "bandwidth_pp": 10,
+      "fe_variant": "BOROUGH",
+      "credibility_note": "borough FE controls only for 5 region-level confounders, not the 51 district-level ones the district-FE design (and Model 4) control for \u2014 a materially weaker design even where it identifies",
+      "n_obs": 15313,
+      "n_close_cells": 6,
+      "n_districts": 5,
+      "n_z_cells": 7,
+      "design_params": 18,
+      "design_rank": 18,
+      "instrument_design_rank": 17,
+      "identified": false,
+      "second_stage": null,
+      "first_stage": null,
+      "verdict": "NOT IDENTIFIED at this bandwidth \u2014 design matrix rank-deficient; treating as suggestive at most"
+    },
+    {
+      "bandwidth_pp": 15,
+      "fe_variant": "BOROUGH",
+      "credibility_note": "borough FE controls only for 5 region-level confounders, not the 51 district-level ones the district-FE design (and Model 4) control for \u2014 a materially weaker design even where it identifies",
+      "n_obs": 26514,
+      "n_close_cells": 9,
+      "n_districts": 7,
+      "n_z_cells": 12,
+      "design_params": 19,
+      "design_rank": 19,
+      "instrument_design_rank": 19,
+      "identified": true,
+      "cov_type_used": "clustered",
+      "first_stage": {
+        "equation": "dem_share ~ Z + FE + sale_year_FE + controls",
+        "instrument_coef": -0.024331338334482755,
+        "instrument_se": 0.023849041156396238,
+        "instrument_p": 0.3076227513127374,
+        "f_stat": 1.0408548002223614
+      },
+      "second_stage": {
+        "equation": "target_log_price ~ dem_share_hat + FE + sale_year_FE + controls",
+        "dem_share_coef": -14.693456301247352,
+        "dem_share_se": 14.802948754588964,
+        "dem_share_p": 0.32090329890945046,
+        "r_squared": -0.29599074680402215,
+        "n": 26514
+      },
+      "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+    },
+    {
+      "bandwidth_pp": 20,
+      "fe_variant": "BOROUGH",
+      "credibility_note": "borough FE controls only for 5 region-level confounders, not the 51 district-level ones the district-FE design (and Model 4) control for \u2014 a materially weaker design even where it identifies",
+      "n_obs": 37555,
+      "n_close_cells": 13,
+      "n_districts": 9,
+      "n_z_cells": 17,
+      "design_params": 20,
+      "design_rank": 20,
+      "instrument_design_rank": 20,
+      "identified": true,
+      "cov_type_used": "clustered",
+      "first_stage": {
+        "equation": "dem_share ~ Z + FE + sale_year_FE + controls",
+        "instrument_coef": 0.018615610313315933,
+        "instrument_se": 0.024238504595462316,
+        "instrument_p": 0.44247643006936377,
+        "f_stat": 0.5898518061778065
+      },
+      "second_stage": {
+        "equation": "target_log_price ~ dem_share_hat + FE + sale_year_FE + controls",
+        "dem_share_coef": 18.284180618356913,
+        "dem_share_se": 24.073722603872508,
+        "dem_share_p": 0.4475488368369078,
+        "r_squared": -0.5977501833411532,
+        "n": 37555
+      },
+      "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+    }
+  ],
+  "rescue_1b_wider_bandwidth_district_fe": [
+    {
+      "bandwidth_pp": 20,
+      "fe_variant": "CounDist",
+      "credibility_note": "as bandwidth widens beyond the original \u00b120pp cap, races included are decreasingly 'close' and the as-good-as-random assumption underlying the instrument gets progressively weaker \u2014 treat any identified result here as a lower-confidence robustness probe, not a primary estimate",
+      "n_obs": 37555,
+      "n_close_cells": 13,
+      "n_districts": 9,
+      "n_z_cells": 17,
+      "design_params": 25,
+      "design_rank": 25,
+      "instrument_design_rank": 24,
+      "identified": false,
+      "second_stage": null,
+      "first_stage": null,
+      "verdict": "NOT IDENTIFIED at this bandwidth \u2014 design matrix rank-deficient; treating as suggestive at most"
+    },
+    {
+      "bandwidth_pp": 25,
+      "fe_variant": "CounDist",
+      "credibility_note": "as bandwidth widens beyond the original \u00b120pp cap, races included are decreasingly 'close' and the as-good-as-random assumption underlying the instrument gets progressively weaker \u2014 treat any identified result here as a lower-confidence robustness probe, not a primary estimate",
+      "n_obs": 44283,
+      "n_close_cells": 17,
+      "n_districts": 11,
+      "n_z_cells": 22,
+      "design_params": 27,
+      "design_rank": 27,
+      "instrument_design_rank": 27,
+      "identified": true,
+      "cov_type_used": "clustered",
+      "first_stage": {
+        "equation": "dem_share ~ Z + FE + sale_year_FE + controls",
+        "instrument_coef": 0.04254990620764687,
+        "instrument_se": 0.027219266249728077,
+        "instrument_p": 0.11799908818167859,
+        "f_stat": 2.443680294431578
+      },
+      "second_stage": {
+        "equation": "target_log_price ~ dem_share_hat + FE + sale_year_FE + controls",
+        "dem_share_coef": 3.732630798127502,
+        "dem_share_se": 2.8547524976187697,
+        "dem_share_p": 0.1910379725704936,
+        "r_squared": 0.31980986156604707,
+        "n": 44283
+      },
+      "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+    },
+    {
+      "bandwidth_pp": 30,
+      "fe_variant": "CounDist",
+      "credibility_note": "as bandwidth widens beyond the original \u00b120pp cap, races included are decreasingly 'close' and the as-good-as-random assumption underlying the instrument gets progressively weaker \u2014 treat any identified result here as a lower-confidence robustness probe, not a primary estimate",
+      "n_obs": 74390,
+      "n_close_cells": 26,
+      "n_districts": 17,
+      "n_z_cells": 31,
+      "design_params": 33,
+      "design_rank": 33,
+      "instrument_design_rank": 33,
+      "identified": true,
+      "cov_type_used": "clustered",
+      "first_stage": {
+        "equation": "dem_share ~ Z + FE + sale_year_FE + controls",
+        "instrument_coef": 0.06010295072299438,
+        "instrument_se": 0.022091681905344118,
+        "instrument_p": 0.006516069580529749,
+        "f_stat": 7.4017434058663065
+      },
+      "second_stage": {
+        "equation": "target_log_price ~ dem_share_hat + FE + sale_year_FE + controls",
+        "dem_share_coef": 0.5182650550276444,
+        "dem_share_se": 1.5076269415420092,
+        "dem_share_p": 0.7310251791394544,
+        "r_squared": 0.3205293816417826,
+        "n": 74390
+      },
+      "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+    },
+    {
+      "bandwidth_pp": 35,
+      "fe_variant": "CounDist",
+      "credibility_note": "as bandwidth widens beyond the original \u00b120pp cap, races included are decreasingly 'close' and the as-good-as-random assumption underlying the instrument gets progressively weaker \u2014 treat any identified result here as a lower-confidence robustness probe, not a primary estimate",
+      "n_obs": 85923,
+      "n_close_cells": 30,
+      "n_districts": 18,
+      "n_z_cells": 35,
+      "design_params": 34,
+      "design_rank": 34,
+      "instrument_design_rank": 34,
+      "identified": true,
+      "cov_type_used": "clustered",
+      "first_stage": {
+        "equation": "dem_share ~ Z + FE + sale_year_FE + controls",
+        "instrument_coef": 0.05054708448333933,
+        "instrument_se": 0.022308754982036653,
+        "instrument_p": 0.023463885528745454,
+        "f_stat": 5.1338308392345615
+      },
+      "second_stage": {
+        "equation": "target_log_price ~ dem_share_hat + FE + sale_year_FE + controls",
+        "dem_share_coef": 0.6066430318169296,
+        "dem_share_se": 1.682117258458439,
+        "dem_share_p": 0.7183666880600548,
+        "r_squared": 0.31178908335496824,
+        "n": 85923
+      },
+      "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+    },
+    {
+      "bandwidth_pp": 40,
+      "fe_variant": "CounDist",
+      "credibility_note": "as bandwidth widens beyond the original \u00b120pp cap, races included are decreasingly 'close' and the as-good-as-random assumption underlying the instrument gets progressively weaker \u2014 treat any identified result here as a lower-confidence robustness probe, not a primary estimate",
+      "n_obs": 92873,
+      "n_close_cells": 32,
+      "n_districts": 19,
+      "n_z_cells": 37,
+      "design_params": 35,
+      "design_rank": 35,
+      "instrument_design_rank": 35,
+      "identified": true,
+      "cov_type_used": "clustered",
+      "first_stage": {
+        "equation": "dem_share ~ Z + FE + sale_year_FE + controls",
+        "instrument_coef": 0.05902080693677014,
+        "instrument_se": 0.021845408906169313,
+        "instrument_p": 0.006897585620459168,
+        "f_stat": 7.299446489011924
+      },
+      "second_stage": {
+        "equation": "target_log_price ~ dem_share_hat + FE + sale_year_FE + controls",
+        "dem_share_coef": -0.012249459890881553,
+        "dem_share_se": 1.162640734963906,
+        "dem_share_p": 0.991593728128277,
+        "r_squared": 0.3341721684595925,
+        "n": 92873
+      },
+      "verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+    }
+  ]
+}

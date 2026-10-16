@@ -180,10 +180,12 @@ def main():
     # 7.69 from a pre-revision environment; the 2026-09-06 fresh re-run and the
     # current manuscript BOTH report z = 7.46 / 7.99 — updated so this script's
     # own sanity print doesn't raise false discrepancy flags.)
-    EXPECTED_I_PRICE = 0.5959
-    EXPECTED_Z_PRICE = 7.46
-    EXPECTED_I_DEM = 0.5797
-    EXPECTED_Z_DEM = 7.99
+    # Manuscript's CURRENT values (Round 10 refresh of the comparison targets;
+    # tolerances unchanged — 0.01 on I, 0.10 on z).
+    EXPECTED_I_PRICE = 0.5942
+    EXPECTED_Z_PRICE = 7.4264
+    EXPECTED_I_DEM = 0.5705
+    EXPECTED_Z_DEM = 7.8625
 
     discrepancies = []
     if abs(I_p - EXPECTED_I_PRICE) > 0.01:

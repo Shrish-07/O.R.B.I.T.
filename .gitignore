@@ -33,8 +33,8 @@ data/*.tar
 data/*.gzip
 data/*.bz2
 
-# Model artifacts
-models/artifacts/
+# Model artifacts (contents ignored; whitelists below re-include JSONs)
+models/artifacts/*
 models/*.joblib
 models/*.cbm
 models/*.model
@@ -42,10 +42,28 @@ models/*.model
 # Experiment outputs
 experiments/predictions/
 # (git never descends into an ignored directory, so to keep a re-inclusion
-# working we ignore the directory's CONTENTS, then whitelist the snapshot)
+# working we ignore the directory's CONTENTS, then whitelist exceptions)
 results/*
+# Round 11: whitelist the small, paper-relevant artifacts so an auditor sees
+# every reported number without re-running (~well under 1 MB total; parquet,
+# joblib and PNG stay out via the global ignores below and non-whitelisting).
+!results/*.json
+!results/causal/
+!results/political_scenarios/
+results/political_scenarios/*
+!results/political_scenarios/by_model/
+!results/verification/
 # But keep the dated full-pipeline-run snapshots (durable evidence of a full pass)
 !results/PIPELINE_RUN_REPORT_full_*.md
+
+# Model artifacts (Round 11: whitelist the small provenance/SKILL jsons only --
+# *.joblib, *.png and other artifacts stay out)
+models/artifacts/*
+!models/artifacts/*_shap_summary.json
+!models/artifacts/*_features.json
+models/*.joblib
+models/*.cbm
+models/*.model
 
 # Training logs
 catboost_info/

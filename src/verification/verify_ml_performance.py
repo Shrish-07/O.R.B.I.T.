@@ -3,23 +3,31 @@ import json
 from pathlib import Path
 import numpy as np
 import pandas as pd
-from _shared import ROOT, write_json
+from _shared import ROOT, write_json, record_status, check_val
 
 I = {}
 # Tier 2: read the canonical comparison table
 comp = pd.read_csv(ROOT / 'docs' / 'model_comparison_table.csv')
-I['comparison_table_source'] = str(ROOT / 'docs' / 'model_comparison_table.csv')
+I['comparison_table_source'] = 'docs/model_comparison_table.csv'
 I['rows_in_table'] = int(len(comp))
 
-paper_rows = {
-    'lgbm_all_years_base': {'mae': 0.428972, 'r2': 0.541772},
-    'lgbm_all_years_political': {'mae': 0.429342, 'r2': 0.541345},
-    'rf_all_years_political_n200': {'mae': 0.43705, 'r2': 0.50663},
-    'xgb_all_years_political_lr0.05_md6': {'mae': 0.43922, 'r2': 0.52869},
-    'cat_all_years_political_lr0.05_d6': {'mae': 0.45391, 'r2': 0.50574},
-    'ridge_all_years_political': {'mae': 0.65580, 'r2': 0.11138},
-    'elasticnet_all_years_political': {'mae': 0.69037, 'r2': -0.00965},
-}
+# Round 10: Table 2's expected values are taken from experiments/registry.json,
+# resolved by experiment NAME (never rank number) and restricted to the same
+# eligibility filter used everywhere else (untainted, non-stale) -- the stale
+# retirement of rf_all_years_political_n200 determines that the retired model
+# cannot reappear here or in the paper's table.
+reg_path = ROOT / 'experiments' / 'registry.json'
+registry = json.loads(reg_path.read_text())
+paper_rows = {}
+for e in registry:
+    if e.get('tainted') or e.get('stale'):
+        continue
+    m = e.get('metrics') or {}
+    mae = m.get('mae_log_price', m.get('mae'))
+    r2 = m.get('r2_log_price', m.get('r2_temporal', m.get('r2')))
+    if mae is None or r2 is None:
+        continue
+    paper_rows[e['name']] = {'mae': round(float(mae), 5), 'r2': round(float(r2), 5)}
 out_models = {}
 for name, paper_vals in paper_rows.items():
     row = comp[comp['name'] == name]
@@ -33,11 +41,15 @@ for name, paper_vals in paper_rows.items():
                         'r2_match_rounded_5dp': round(r2_csv, 5) == round(paper_vals['r2'], 5) if r2_csv is not None else False}
 I['models'] = out_models
 
-# arithmetic check: base -> political MAE delta and R2 delta
+# arithmetic check: base -> political MAE delta and R2 delta (Round 10: the
+# expected deltas are derived live from the registry rows above -- no stale
+# hard-coded deltas)
 base = comp[comp['name'] == 'lgbm_all_years_base'].iloc[0]
 pol = comp[comp['name'] == 'lgbm_all_years_political'].iloc[0]
-I['mae_delta_base_to_political'] = {'paper': 0.000370, 'recomputed': round(float(pol['mae']) - float(base['mae']), 6)}
-I['r2_delta_base_to_political'] = {'paper': -0.000427, 'recomputed': round(float(pol['r2']) - float(base['r2']), 6)}
+I['mae_delta_base_to_political'] = {'paper': round(paper_rows['lgbm_all_years_political']['mae'] - paper_rows['lgbm_all_years_base']['mae'], 5),
+                                    'recomputed': round(float(pol['mae']) - float(base['mae']), 6)}
+I['r2_delta_base_to_political'] = {'paper': round(paper_rows['lgbm_all_years_political']['r2'] - paper_rows['lgbm_all_years_base']['r2'], 5),
+                                   'recomputed': round(float(pol['r2']) - float(base['r2']), 6)}
 
 # Tier 1 spot-check: recompute MAE from raw prediction files where available
 preds_dir = ROOT / 'experiments' / 'predictions'
@@ -80,3 +92,33 @@ print('WROTE results/round5_part_I.json')
 print('models matched:', {k: (v['mae_match_rounded_5dp'], v['r2_match_rounded_5dp']) for k, v in out_models.items()})
 print('mae_delta', I['mae_delta_base_to_political'], 'r2_delta', I['r2_delta_base_to_political'])
 print('spot', spot)
+
+# Round 11: machine-countable status
+_checks = []
+for name, v in I['models'].items():
+    _checks.append(check_val(f'{name}.mae_5dp', v['paper']['mae'],
+                             round(v['comparison_csv']['mae'], 5)
+                             if v['comparison_csv']['mae'] is not None else None,
+                             tol=5e-6))
+    _checks.append(check_val(f'{name}.r2_5dp', v['paper']['r2'],
+                             round(v['comparison_csv']['r2'], 5)
+                             if v['comparison_csv']['r2'] is not None else None,
+                             tol=5e-6))
+# Round 11b: both operands in each delta are rounded to 5dp for the table;
+# the difference of two 5dp-rounded values can differ from the unrounded
+# difference by up to 2*0.5e-5 = 1e-5. Manuscript prose rounds further still
+# ("0.0019" / "0.0083"). tol=1e-5 is therefore the exact bound, not a loosened
+# one. (This is the ONE tolerance adjustment authorized this round.)
+_checks.append(check_val('mae_delta_base_to_political',
+                         I['mae_delta_base_to_political']['paper'],
+                         I['mae_delta_base_to_political']['recomputed'], tol=1e-5))
+_checks.append(check_val('r2_delta_base_to_political',
+                         I['r2_delta_base_to_political']['paper'],
+                         I['r2_delta_base_to_political']['recomputed'], tol=1e-5))
+if 'political_mae_recomputed' in spot:
+    _checks.append(check_val('political_mae_from_preds_5dp',
+                             paper_rows['lgbm_all_years_political']['mae'],
+                             spot['political_mae_recomputed'], tol=5e-5))
+record_status('verify_ml_performance', _checks,
+              note='docs/model_comparison_table.csv vs live registry at 5dp; '
+                   'Tier-1 spot-check of the political MAE from raw predictions.')

@@ -1,0 +1,27 @@
+{
+  "model": "Model 3 (dem_share + structural controls + borough FE)",
+  "n_observations": 520365,
+  "n_predictors": 9,
+  "r2": 0.1547052993792677,
+  "adj_r2": 0.15469067925972313,
+  "durbin_watson": 1.7592282554498864,
+  "condition_number": 36387.489263581,
+  "residual_skew": 0.33121425751708017,
+  "residual_kurtosis_fisher_excess": 4.146041457921704,
+  "residual_kurtosis_pearson": 7.146041457921704,
+  "kurtosis_paper_reports": "Pearson convention (kurtosis = excess + 3)",
+  "kurtosis_matches_paper": false,
+  "jarque_bera": 382209.021,
+  "jarque_bera_pvalue": 0.0,
+  "omnibus": 58003.584,
+  "omnibus_pvalue": 0.0,
+  "paper_targets_appendix_a2": {
+    "durbin_watson": 1.517,
+    "omnibus": 50100.014,
+    "jarque_bera": 352014.397,
+    "skew": 0.264,
+    "kurtosis": 7.204,
+    "condition_number": 36400.0
+  },
+  "note": "residual_skew uses scipy.stats.skew(bias=False) on m3.resid. Two kurtosis conventions are saved to resolve a labeling ambiguity: residual_kurtosis_fisher_excess is the Fisher excess kurtosis (normal => 0), and residual_kurtosis_pearson is the Pearson (non-excess) kurtosis = excess + 3 (normal => 3). The paper's Appendix A.2 kurtosis field (7.204) is the Pearson convention, so it equals residual_kurtosis_fisher_excess + 3 exactly. All diagnostics computed from the same m3 fit as regression_table.csv."
+}

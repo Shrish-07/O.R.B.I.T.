@@ -1,0 +1,163 @@
+{
+  "section_4_5_spatial_regression": {
+    "n_districts": 51,
+    "weights_spec": "k=5_row_standardized_knn (independent re-fit; identical construction to compute_morans_i.py)",
+    "seed": 42,
+    "ols_anchor": {
+      "CONSTANT": {
+        "coef": 10.936423621620955,
+        "se": 1.2725997627039665,
+        "z": 8.593765252936793,
+        "p": 4.003063833523739e-11
+      },
+      "dem_share": {
+        "coef": 0.23574620981872432,
+        "se": 0.2378013872877298,
+        "z": 0.9913575883957364,
+        "p": 0.3266972995038515
+      },
+      "mean_numfloors": {
+        "coef": 0.0013392858933260461,
+        "se": 0.013103341682898862,
+        "z": 0.10220949172636967,
+        "p": 0.9190346532035241
+      },
+      "mean_yearbuilt": {
+        "coef": 0.0012122307855942896,
+        "se": 0.0006475826518768643,
+        "z": 1.87193214963515,
+        "p": 0.06758194335873784
+      },
+      "mean_commfar": {
+        "coef": 0.16361216737960835,
+        "se": 0.054441155453782794,
+        "z": 3.005302992117885,
+        "p": 0.004285638669043974
+      }
+    },
+    "spatial_lag_model": {
+      "CONSTANT": {
+        "coef": 1.8509211442278861,
+        "se": 1.5940310387019665,
+        "z": 1.1611575303672301,
+        "p": 0.24557784234077917
+      },
+      "dem_share": {
+        "coef": 0.24945890275586124,
+        "se": 0.1703340722634936,
+        "z": 1.4645273223431639,
+        "p": 0.14304992338303193
+      },
+      "mean_numfloors": {
+        "coef": -0.00825038629444277,
+        "se": 0.00932384598010615,
+        "z": -0.8848694317823601,
+        "p": 0.37622705646263044
+      },
+      "mean_yearbuilt": {
+        "coef": 0.0010306522813072851,
+        "se": 0.0004594024709213592,
+        "z": 2.2434626423324415,
+        "p": 0.024866996285978927
+      },
+      "mean_commfar": {
+        "coef": 0.10433830799119007,
+        "se": 0.03912236882622772,
+        "z": 2.666973169611382,
+        "p": 0.007653778182856379
+      },
+      "W_median_log_price": {
+        "coef": 0.7029284592488315,
+        "se": 0.10421800370044847,
+        "z": 6.744789137098072,
+        "p": 1.5324942181271573e-11
+      },
+      "pr2": 0.7092270255578411
+    },
+    "spatial_error_model": {
+      "CONSTANT": {
+        "coef": 11.52174350657082,
+        "se": 0.9380838720162503,
+        "z": 12.282210418783567,
+        "p": 1.1287162879290335e-34
+      },
+      "dem_share": {
+        "coef": 0.25992804070434006,
+        "se": 0.26274692866561883,
+        "z": 0.9892714713142615,
+        "p": 0.3225303381973862
+      },
+      "mean_numfloors": {
+        "coef": -0.014844645656251465,
+        "se": 0.01195193978788511,
+        "z": -1.2420281493802787,
+        "p": 0.2142261763004102
+      },
+      "mean_yearbuilt": {
+        "coef": 0.0009209685250785719,
+        "se": 0.00045927528310351024,
+        "z": 2.005264726756494,
+        "p": 0.04493475362547178
+      },
+      "mean_commfar": {
+        "coef": 0.13840918041583772,
+        "se": 0.0448812461325518,
+        "z": 3.083897893722948,
+        "p": 0.0020430770246236225
+      },
+      "lambda": {
+        "coef": 0.7809098493021295,
+        "se": 0.0886012320107069,
+        "z": 8.813758359565039,
+        "p": 1.2101875694229379e-18
+      },
+      "pr2": 0.4202708826074305
+    },
+    "ols_residual_morans_i": {
+      "I": 0.39497536123101507,
+      "z": 6.138788571670112,
+      "p": 8.315315009685688e-10
+    },
+    "numpy_ols_crosscheck": {
+      "order": [
+        "CONSTANT",
+        "dem_share",
+        "mean_numfloors",
+        "mean_yearbuilt",
+        "mean_commfar"
+      ],
+      "betas": [
+        10.936423621626489,
+        0.23574620981827005,
+        0.0013392858933358083,
+        0.0012122307855923775,
+        0.16361216737961612
+      ]
+    },
+    "ols_matches_numpy_lstsq": true,
+    "matches_pipeline_output": {
+      "ols_anchor": true,
+      "spatial_lag_model": true,
+      "spatial_error_model": true,
+      "ols_residual_morans_i": true
+    },
+    "matches_paper": true,
+    "paper_checks": {
+      "n_districts_eq_51": true,
+      "rho_slm (paper 0.7029, prose 0.703)": true,
+      "slm_rho_p_below_0.001": true,
+      "lambda_sem (paper 0.7809, prose 0.781)": true,
+      "sem_lambda_p_below_0.001": true,
+      "dem_share_p_ols (paper 0.327)": true,
+      "dem_share_p_slm (paper 0.143)": true,
+      "dem_share_p_sem (paper 0.323)": true,
+      "dem_share_coefs_within_0.2357_0.2599": true,
+      "ols_resid_morans_i (paper 0.395)": true,
+      "ols_resid_morans_z (paper 6.14)": true,
+      "ols_resid_morans_p_below_0.001": true,
+      "pr2_slm (paper 0.709)": true,
+      "pr2_sem (paper 0.420)": true,
+      "mean_commfar_significant_in_all_three": true
+    }
+  }
+}
