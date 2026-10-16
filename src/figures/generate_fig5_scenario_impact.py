@@ -32,8 +32,23 @@ TITLES = ['Liberal Policy Scenario\n(+0.15 dem_share)',
 CMAPS = ['RdYlGn', 'RdYlGn_r', 'PuOr']
 
 frames = {}
+# Round 10: the manuscript's Figure 5 is the PAPER model,
+# lgbm_all_years_political -- resolved by experiment NAME, never by rank.
+# The rank-1 legacy unsuffixed files follow whichever model champion.json
+# currently selects, which shifts when the eligible set changes; the
+# name-keyed by_model copies written by political_scenarios.py are the
+# stable inputs. Legacy files are kept only as a fallback for pre-Round-10
+# output layouts.
+PAPER_MODEL = 'lgbm_all_years_political'
+SCEN_BY_MODEL = ROOT / 'results' / 'political_scenarios' / 'by_model' / PAPER_MODEL
 for s in SCENARIOS:
-    df_s = pd.read_csv(ROOT / 'results' / 'political_scenarios' / f'{s}_by_council.csv')
+    src = SCEN_BY_MODEL / f'{s}_by_council.csv'
+    if not src.exists():
+        src = ROOT / 'results' / 'political_scenarios' / f'{s}_by_council.csv'
+        print(f"NOTE: name-keyed by_model file missing for {s}; falling back to "
+              f"rank-1 legacy file {src.name} (model identity = current champion "
+              "-- check scenario_run_metadata.json)")
+    df_s = pd.read_csv(src)
     ccol = next(c for c in df_s.columns if 'coun' in c.lower())
     frames[s] = df_s[[ccol, 'mean_pct_change']].rename(columns={ccol: 'CounDist'})
     assert len(frames[s]) == 51, f'{s}: expected 51 districts, got {len(frames[s])}'

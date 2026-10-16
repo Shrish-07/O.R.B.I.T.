@@ -1,0 +1,125 @@
+{
+  "generated_utc": "2026-10-16T17:23:22.486178+00:00Z",
+  "n_verifiers_expected": 19,
+  "n_verifiers_reported": 19,
+  "total_checks": 647,
+  "total_mismatches": 0,
+  "n_problem_verifiers": 0,
+  "stale_status_files_ignored": [],
+  "verifiers": [
+    {
+      "verifier": "verify_abstract_and_intro",
+      "status": "PASS",
+      "n_checks": 11,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_appendix_a1_scenarios",
+      "status": "PASS",
+      "n_checks": 309,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_blacklist_fully",
+      "status": "PASS",
+      "n_checks": 7,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_borough_map_and_crosscutting",
+      "status": "PASS",
+      "n_checks": 12,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_canonical_dataset_and_split",
+      "status": "PASS",
+      "n_checks": 15,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_cd1_dem_share",
+      "status": "PASS",
+      "n_checks": 3,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_city_of_yes_did",
+      "status": "PASS",
+      "n_checks": 29,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_followup_resolution",
+      "status": "PASS",
+      "n_checks": 6,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_ideology_construction",
+      "status": "PASS",
+      "n_checks": 9,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_iv_district_fe",
+      "status": "PASS",
+      "n_checks": 20,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_iv_district_fe_rescue",
+      "status": "PASS",
+      "n_checks": 108,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_ml_performance",
+      "status": "PASS",
+      "n_checks": 16,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_numfloors_missingness",
+      "status": "PASS",
+      "n_checks": 5,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_regression_missingness",
+      "status": "PASS",
+      "n_checks": 11,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_regression_ols",
+      "status": "PASS",
+      "n_checks": 44,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_scenario_mechanics",
+      "status": "PASS",
+      "n_checks": 7,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_shap_importance",
+      "status": "PASS",
+      "n_checks": 4,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_spatial_pattern",
+      "status": "PASS",
+      "n_checks": 12,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_spatial_regression",
+      "status": "PASS",
+      "n_checks": 19,
+      "n_mismatches": 0
+    }
+  ]
+}

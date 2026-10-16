@@ -1,0 +1,95 @@
+{
+  "n_obs_used": 520365,
+  "model3_classical_se": {
+    "label": "Model 3 (paper) \u2014 classical SE",
+    "n": 520365,
+    "dem_share_coef": 0.2883174939152257,
+    "dem_share_se": 0.008672969705796375,
+    "dem_share_p": 4.599663794695979e-242,
+    "r_squared": 0.1547052993792677
+  },
+  "check1_model3_clustered_by_council_district": {
+    "label": "Model 3 \u2014 SE clustered by CounDist (51 clusters)",
+    "n": 520365,
+    "dem_share_coef": 0.2883174939152257,
+    "dem_share_se": 0.1719738471630657,
+    "dem_share_p": 0.09363649624093529,
+    "r_squared": 0.1547052993792677
+  },
+  "check1_n_clusters": 51,
+  "check2_model4_council_district_fe_classical_se": {
+    "label": "Model 4 \u2014 51 council-district FE, classical SE",
+    "n": 520365,
+    "dem_share_coef": 0.7764419471574159,
+    "dem_share_se": 0.0159390674420847,
+    "dem_share_p": 0.0,
+    "r_squared": 0.1978634596146852
+  },
+  "check2_model4_council_district_fe_clustered_se": {
+    "label": "Model 4 \u2014 51 council-district FE, SE clustered by CounDist",
+    "n": 520365,
+    "dem_share_coef": 0.7764419471574159,
+    "dem_share_se": 0.09232954335599416,
+    "dem_share_p": 4.118895277779041e-17,
+    "r_squared": 0.1978634596146852
+  },
+  "check3_model5_borough_and_year_fe": {
+    "label": "Model 5 \u2014 Model 3 + sale-year FE, classical SE",
+    "n": 520365,
+    "dem_share_coef": 0.06667957375649923,
+    "dem_share_se": 0.009589104016461965,
+    "dem_share_p": 3.562913277093161e-12,
+    "r_squared": 0.16815410099304207
+  },
+  "check3_model5_borough_and_year_fe_clustered_se": {
+    "label": "Model 5 \u2014 Model 3 + sale-year FE, SE clustered by CounDist",
+    "n": 520365,
+    "dem_share_coef": 0.06667957375649923,
+    "dem_share_se": 0.20309154558597095,
+    "dem_share_p": 0.7426676483807734,
+    "r_squared": 0.16815410099304207
+  },
+  "check3_sale_years_present": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "check4a_winsorized_1_99pct": {
+    "label": "Model 3 \u2014 target_log_price winsorized at 1st/99th pct",
+    "n": 520365,
+    "dem_share_coef": 0.28596236278494713,
+    "dem_share_se": 0.008140750201589615,
+    "dem_share_p": 5.372234643712977e-270,
+    "r_squared": 0.1629828794515774
+  },
+  "check4a_winsor_bounds": {
+    "lower": 11.083521185743036,
+    "upper": 16.766374327577353
+  },
+  "check4b_cooks_distance_threshold": 7.686912071334544e-06,
+  "check4b_n_dropped": 28833,
+  "check4b_pct_dropped": 5.540918393819723,
+  "check4b_model3_cooks_trimmed": {
+    "label": "Model 3 \u2014 high-Cook's-D observations dropped",
+    "n": 491532,
+    "dem_share_coef": 0.22878566691752916,
+    "dem_share_se": 0.006635316500170725,
+    "dem_share_p": 3.284120924493101e-260,
+    "r_squared": 0.22650613329038827
+  },
+  "headline": {
+    "dem_share_coef_range": [
+      0.06667957375649923,
+      0.7764419471574159
+    ],
+    "sign_stable_across_all_checks": true,
+    "note": "Clustering by CounDist (check 1) is the check that matters most given the Moran's I evidence in Section 4.2 \u2014 compare its p-value to the classical-SE p-value in model3_classical_se directly; a material increase in the p-value under clustering is the expected, honest signature of previously-understated significance, not a sign of a coding error."
+  }
+}

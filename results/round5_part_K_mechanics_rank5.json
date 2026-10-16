@@ -1,0 +1,36 @@
+{
+  "section_K_mechanics": {
+    "mechanics_liberal": "R3->R7 substring substitution on zonedist1 + residfar (*first far col*) x1.5 (Tier 1: read from src/analysis/political_scenarios.py -- unchanged Round 9)",
+    "mechanics_conservative": "R7->R3 substring substitution on zonedist1 + residfar (*first far col*) x0.7 (Tier 1: read from src/analysis/political_scenarios.py -- unchanged Round 9)",
+    "mechanics_mixed": "dem_share + 0.15 clipped to [0,1], re-predicted through the SAME rank model as liberal/conservative for this rank (Round 9: mixed_governance is no longer hard-wired to lgbm_all_years_political) (Tier 1: read from src/analysis/political_scenarios.py)",
+    "filter_base_pred_lt_9_removed": "base_pred >= 9.0 keeps rows; removes rows with base predicted log-price < 9.0",
+    "clip_to_neg100_100": "pct_change clipped to [-100, 100]",
+    "rank": 5,
+    "model_name": "lgbm_all_years_base",
+    "model_family": "lightgbm",
+    "model_mode": "base",
+    "test_mae": 0.44182670516761613,
+    "base_pred_min": 9.608147324320672,
+    "base_pred_max": 21.256855898000776,
+    "filter_9.0_removed_rows": 0,
+    "filter_9.0_removes_zero_rows": true,
+    "clip_counts": {
+      "liberal_upper": 17,
+      "liberal_lower": 0,
+      "conservative_upper": 8,
+      "conservative_lower": 0,
+      "mixed_upper": 0,
+      "mixed_lower": 0
+    },
+    "mixed_support_diag": {
+      "n_rows_with_dem_share": 553585,
+      "n_shock_clipped_at_1p0": 174897,
+      "pct_shock_clipped_at_1p0": 31.59,
+      "train_dem_share_max_all_years_split": 0.9582126381289561,
+      "n_shocked_beyond_train_support": 212030,
+      "pct_beyond_train_support": 38.3
+    },
+    "mixed_support_diag_producer_model": "lgbm_all_years_base",
+    "mixed_support_diag_matches_producer": true
+  }
+}

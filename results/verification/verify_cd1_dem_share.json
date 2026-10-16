@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_cd1_dem_share",
+  "generated_utc": "2026-10-16T17:14:44.022066Z",
+  "n_checks": 3,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "CD1 (2017) dem_share vs production file; district_ideology area-weighted cell; tolerance as manuscript precision."
+}

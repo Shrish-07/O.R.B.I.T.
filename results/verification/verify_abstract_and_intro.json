@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_abstract_and_intro",
+  "generated_utc": "2026-10-16T17:14:41.998664Z",
+  "n_checks": 11,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Abstract/intro headline cells vs canonical, regression_table.csv, metrics, SHAP and morans_i artifacts."
+}

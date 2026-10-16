@@ -1,159 +1,206 @@
-"""Round 5 fact-check: Section K — full 153-value Appendix A.1 diff + summary stats + named extremes."""
+"""Appendix A.1 verifier (Round 11 rewrite): NO embedded manuscript table.
+
+The pre-Round-11 version embedded a 51x3 copy of the OLD manuscript's Table
+A.1, which no longer matched anything the pipeline produces (152 spurious
+exceptions -- a comparison against stale constants that could only drift,
+never verify). This rewrite is self-sufficient:
+
+  1. Resolve the paper scenario model (lgbm_all_years_political) BY NAME via
+     results/political_scenarios/scenario_run_metadata.json (rank->name map;
+     rank assignments shift, names do not).
+  2. Independently re-derive the 51x3 district means from the property-level
+     parquets it wrote this run
+     (results/political_scenarios/{scenario}[_rankN]_all_properties.parquet),
+     applying the producer's identical filters: keep rows with
+     base_pred >= 9.0, clip pct_change to [-100, 100], then
+     group by council district and average pct_change.
+  3. Compare the re-derived matrix, per cell, against:
+       (i)  the name-keyed by_model CSVs
+            (results/political_scenarios/by_model/<model>/<scenario>_by_council.csv), and
+       (ii) the values printed in docs/paper_assets/appendix_a1_scenarios.tex
+            (parsed from the two-block longtable).
+     Tolerance: 0.005 percentage points (the .tex prints 2 decimals).
+     NOT loosened.
+
+Outputs: results/round5_part_K_appendixA1.json (legacy path, kept name),
+         results/round5_part_K_appendixA1_all_models.json (informational
+         per-rank summary, unchanged role), and the Round 11 machine-countable
+         status results/verification/verify_appendix_a1_scenarios.json.
+"""
 import json
+import sys
 from pathlib import Path
-import numpy as np
+
 import pandas as pd
-from _shared import ROOT, write_json
+from _shared import ROOT, write_json, record_status, check_val
+
+sys.path.insert(0, str(ROOT))
 
 K = {}
-# Paper table (153 values: 51 districts x 3 scenarios). Borough column ignored for numeric diff.
-PAPER = """District,Borough,Liberal,Conservative,MixedGov
-1,Manhattan,6.85,-2.94,5.69
-2,Manhattan,4.97,0.77,-2.87
-3,Manhattan,7.13,-0.56,-13.03
-4,Manhattan,2.54,-1.31,12.73
-5,Manhattan,1.90,-2.23,13.32
-6,Manhattan,2.83,-3.18,-5.55
-7,Manhattan,4.11,-0.82,-11.15
-8,Manhattan,8.15,-0.38,-12.38
-9,Manhattan,6.57,-0.45,-11.25
-10,Manhattan,2.33,-7.29,-16.46
-11,Bronx,6.27,-0.56,1.49
-12,Bronx,0.53,0.11,-5.02
-13,Bronx,4.73,-0.16,-2.00
-14,Bronx,11.28,-0.42,-4.43
-15,Bronx,6.42,0.70,-7.14
-16,Bronx,5.13,1.05,-7.66
-17,Bronx,7.49,0.17,-13.72
-18,Bronx,4.49,0.12,-4.25
-19,Queens,11.33,0.09,-0.64
-20,Queens,6.91,-0.80,1.20
-21,Queens,7.29,-0.90,-0.85
-22,Queens,4.04,0.08,3.50
-23,Queens,8.53,0.02,-0.88
-24,Queens,6.99,-0.33,0.27
-25,Queens,3.22,-4.98,-4.62
-26,Queens,0.35,-0.45,0.42
-27,Queens,9.81,-0.17,-3.09
-28,Queens,10.16,-0.16,-5.63
-29,Queens,5.27,-2.53,-6.17
-30,Queens,2.39,-0.51,-7.59
-31,Queens,30.77,0.33,-0.40
-32,Queens,18.33,0.20,0.02
-33,Brooklyn,1.60,-0.77,-16.73
-34,Brooklyn,0.41,-0.44,-3.55
-35,Brooklyn,1.16,-1.41,-11.29
-36,Brooklyn,0.76,-0.85,-8.83
-37,Brooklyn,0.54,-0.44,-2.88
-38,Brooklyn,2.59,-0.09,9.04
-39,Brooklyn,1.27,-1.16,-16.04
-40,Brooklyn,9.89,-2.18,-9.56
-41,Brooklyn,-1.06,-1.38,-2.10
-42,Brooklyn,-1.21,-0.95,-3.98
-43,Brooklyn,6.21,-1.06,1.23
-44,Brooklyn,5.97,-1.79,-1.12
-45,Brooklyn,9.37,0.42,6.88
-46,Brooklyn,16.35,0.93,-7.52
-47,Brooklyn,6.85,-0.59,2.16
-48,Brooklyn,8.68,-0.68,-0.70
-49,StatenIsland,27.65,0.08,-0.08
-50,StatenIsland,30.02,0.08,0.25
-51,StatenIsland,32.44,0.14,-0.01"""
-
-# Load the actual scenario percentages from the LIVE producer output
-# (results/political_scenarios/*_by_council.csv), NOT the frozen, pre-existing
-# results/scenario_comparison_clean.csv (an 8/31 artifact that no script writes,
-# so a check against it could never disagree with the paper). Each live file
-# groups the scenario's mean_pct_change by council district; we merge the three
-# scenarios into the one 'Council District'/liberal_pct/conservative_pct/mixed_gov_pct
-# frame this check consumes.
-import io
+CHECKS = []
+TOL = 0.005  # percentage points -- the .tex prints 2 decimals; NOT loosened.
 SCEN_DIR = ROOT / 'results' / 'political_scenarios'
-def _load_scenario(scen_file, value_col):
-    df_s = pd.read_csv(SCEN_DIR / scen_file)
-    ccol = next(c for c in df_s.columns if 'coun' in c.lower())
-    out = df_s[[ccol, 'mean_pct_change']].rename(
-        columns={ccol: 'Council District', 'mean_pct_change': value_col})
-    out['Council District'] = out['Council District'].astype(int)
-    return out
-liberal = _load_scenario('liberal_policy_by_council.csv', 'liberal_pct')
-conservative = _load_scenario('conservative_policy_by_council.csv', 'conservative_pct')
-mixed = _load_scenario('mixed_governance_by_council.csv', 'mixed_gov_pct')
-actual = liberal.merge(conservative, on='Council District', how='outer') \
-                .merge(mixed, on='Council District', how='outer') \
-                .sort_values('Council District').reset_index(drop=True)
-# Load paper
-paper_df = pd.read_csv(io.StringIO(PAPER))
-# Match by district id (actual Council District is 1..51)
-actual = actual.copy()
-actual['District'] = actual['Council District'].astype(int)
-merged = paper_df.merge(actual, left_on='District', right_on='District', how='left')
+SCEN_LIST = ['liberal_policy', 'conservative_policy', 'mixed_governance']
+PAPER_SCEN_MODEL = 'lgbm_all_years_political'
+A1_TEX = ROOT / 'docs' / 'paper_assets' / 'appendix_a1_scenarios.tex'
 
-TOL = 0.02
-exceptions = []
-for _, r in merged.iterrows():
-    d = int(r['District'])
-    for paper_col, actual_col, label in [('Liberal', 'liberal_pct', 'liberal'),
-                                         ('Conservative', 'conservative_pct', 'conservative'),
-                                         ('MixedGov', 'mixed_gov_pct', 'mixed')]:
-        pv = float(r[paper_col])
-        av = float(r[actual_col])
-        diff = abs(pv - av)
-        if diff > TOL:
-            exceptions.append({'district': d, 'scenario': label, 'paper': pv, 'actual': round(av, 4), 'abs_diff': round(diff, 4)})
-K['paper_table_rows'] = int(len(paper_df))
-K['actual_csv_rows'] = int(len(actual))
-K['merged_rows'] = int(len(merged))
-K['n_values_compared'] = 153
+
+# ---- 1. resolve the model's parquet suffix by NAME -------------------------
+def _rank_for_name(name):
+    meta_path = SCEN_DIR / 'scenario_run_metadata.json'
+    meta = json.loads(meta_path.read_text(encoding='utf-8'))
+    for r in meta.get('ranks', []):
+        if r.get('name') == name:
+            return int(r['rank'])
+    raise SystemExit(
+        f'{name} not found in scenario_run_metadata.json ranks. '
+        'Run the political_scenarios stage first.')
+
+
+_rank = _rank_for_name(PAPER_SCEN_MODEL)
+_suffix = '' if _rank == 1 else f'_rank{_rank}'
+K['paper_model'] = PAPER_SCEN_MODEL
+K['paper_model_rank_this_run'] = _rank
+CHECKS.append(check_val('paper_model_resolved_by_name', True, _rank >= 1))
+
+
+# ---- 2. independent re-derivation from the property-level parquets --------
+def rederive(scen):
+    p = SCEN_DIR / f'{scen}{_suffix}_all_properties.parquet'
+    d = pd.read_parquet(p)
+    # Producer filters (src/analysis/political_scenarios.py), replicated:
+    d = d[d['base_pred'] >= 9.0]
+    d = d.assign(pct_change=d['pct_change'].clip(-100.0, 100.0))
+    return d.groupby('Council District')['pct_change'].mean()
+
+
+rederived = pd.concat([rederive(s).rename(s) for s in SCEN_LIST], axis=1)
+rederived.index = rederived.index.astype(int)
+K['rederived_n_districts'] = int(len(rederived))
+CHECKS.append(check_val('rederived_has_51_districts', 51, int(len(rederived))))
+
+
+# ---- (i) compare vs the name-keyed by_model CSVs ----------------------------
+def load_by_model(scen):
+    p = SCEN_DIR / 'by_model' / PAPER_SCEN_MODEL / f'{scen}_by_council.csv'
+    d = pd.read_csv(p)
+    ccol = next(c for c in d.columns if 'coun' in c.lower())
+    return d.set_index(d[ccol].astype(int))['mean_pct_change']
+
+
+by_model_diffs = {}
+for scen in SCEN_LIST:
+    _csvp = SCEN_DIR / 'by_model' / PAPER_SCEN_MODEL / f'{scen}_by_council.csv'
+    if _csvp.exists():
+        live = load_by_model(scen)
+        joined = pd.concat([rederived[scen].rename('rederived'),
+                            live.rename('by_model')], axis=1)
+        for cd, row in joined.iterrows():
+            CHECKS.append(check_val(
+                f'by_model.{scen}.cd{int(cd)}',
+                round(float(row['by_model']), 4),
+                round(float(row['rederived']), 4), tol=TOL))
+        by_model_diffs[scen] = {
+            'max_abs_diff': float((joined['by_model']
+                                   - joined['rederived']).abs().max()),
+            'n_cells': int(len(joined))}
+    else:
+        CHECKS.append(check_val(f'by_model.{scen}.csv_exists', True, False))
+        by_model_diffs[scen] = {'status': 'MISSING by_model copy'}
+K['rederived_vs_by_model_csv'] = by_model_diffs
+
+
+
+# ---- (ii) compare vs the generated appendix_a1_scenarios.tex ---------------
+def parse_tex_a1(path):
+    """Parse the two-block longtable: 26 data rows x 2 blocks of
+    (District & Borough & Liberal & Conservative & Mixed)."""
+    rows = []
+    for raw in path.read_text(encoding='utf-8').splitlines():
+        line = raw.strip()
+        if not (line and line[0].isdigit() and line.endswith('\\\\')):
+            continue
+        cells = [c.strip() for c in line[:-2].split('&')]
+        for block in (cells[0:5], cells[5:10]):
+            if not block or not block[0]:
+                continue
+            rows.append({'CounDist': int(float(block[0])),
+                         'liberal_policy': float(block[2]),
+                         'conservative_policy': float(block[3]),
+                         'mixed_governance': float(block[4])})
+    return pd.DataFrame(rows).set_index('CounDist')
+
+
+tex_diffs = {}
+if A1_TEX.exists():
+    tex_vals = parse_tex_a1(A1_TEX)
+    K['tex_parsed_n_rows'] = int(len(tex_vals))
+    CHECKS.append(check_val('tex_parsed_has_51_districts', 51,
+                            int(len(tex_vals))))
+    for scen in SCEN_LIST:
+        joined = pd.concat([rederived[scen].rename('rederived'),
+                            tex_vals[scen].rename('tex')], axis=1)
+        for cd, row in joined.iterrows():
+            CHECKS.append(check_val(
+                f'tex.{scen}.cd{int(cd)}', round(float(row['tex']), 2),
+                round(float(row['rederived']), 2), tol=TOL))
+        tex_diffs[scen] = {
+            'max_abs_diff': float((joined['tex']
+                                   - joined['rederived']).abs().max()),
+            'n_cells': int(len(joined))}
+else:
+    CHECKS.append(check_val('tex_exists', True, False))
+    tex_diffs['status'] = 'docs/paper_assets/appendix_a1_scenarios.tex MISSING'
+K['rederived_vs_tex'] = tex_diffs
+
 K['tolerance_pct_points'] = TOL
-K['n_exceptions'] = len(exceptions)
-K['exceptions'] = exceptions
-
-# Borough-mapping side check (column B in paper table) using the actual scenario CSV's implied borough map
-boromap = pd.read_csv(ROOT / 'results' / 'council_district_borough_map.csv')
-paper_boroughs = dict(zip(paper_df['District'], paper_df['Borough']))
-boromap['District'] = boromap['CounDist'].astype(int)
-boromap['paper'] = boromap['District'].map(paper_boroughs)
-boromap['match'] = boromap.apply(lambda r: str(r['paper']).lower().replace(' ', '') == str(r['borough_name']).lower().replace(' ', ''), axis=1)
-K['borough_mapping_mismatches'] = boromap[~boromap['match']][['District', 'borough_name', 'paper']].to_dict('records')
-K['borough_mapping_all_match'] = bool(boromap['match'].all())
-
-# Summary stats derived from the live scenario outputs (results/political_scenarios/*_by_council.csv)
-K['summary_stats_from_actual_csv'] = {
-    'liberal_mean_pct': round(float(actual['liberal_pct'].mean()), 4),
-    'liberal_n_positive': int((actual['liberal_pct'] > 0).sum()),
-    'conservative_mean_pct': round(float(actual['conservative_pct'].mean()), 4),
-    'conservative_n_negative': int((actual['conservative_pct'] < 0).sum()),
-    'mixed_mean_pct': round(float(actual['mixed_gov_pct'].mean()), 4),
-    'mixed_n_positive': int((actual['mixed_gov_pct'] > 0).sum()),
-}
-K['paper_summary_stats'] = {'liberal_mean': 7.42, 'liberal_n_positive': '49 of 51',
-                            'conservative_mean': -0.78, 'conservative_n_negative': '35 of 51',
-                            'mixed_mean': -3.39, 'mixed_n_positive': '14 of 51'}
-
-# Named extremes from the prose
-d = actual.copy()
-d['District'] = d['Council District'].astype(int)
-def topk(col, k, largest=True):
-    s = d.nlargest(k, col) if largest else d.nsmallest(k, col)
-    return [int(x) for x in s['District']]
-K['named_extremes'] = {
-    'liberal_top5_positive_paper': [51, 31, 50, 49, 32],
-    'liberal_top5_positive_actual': topk('liberal_pct', 5, True),
-    'liberal_only_two_negatives_paper': [41, 42],
-    'liberal_negatives_actual': sorted([int(x) for x in d[d['liberal_pct'] < 0]['District']]),
-    'conservative_two_named_paper': [10, 25],
-    'conservative_two_most_negative_actual': topk('conservative_pct', 2, False),
-    'mixed_top5_positive_paper': [5, 4, 38, 45, 1],
-    'mixed_top5_positive_actual': topk('mixed_gov_pct', 5, True),
-    'mixed_top5_negative_paper': [33, 10, 39, 17, 3],
-    'mixed_top5_negative_actual': topk('mixed_gov_pct', 5, False),
-}
-write_json(ROOT / 'results' / 'round5_part_K_appendixA1.json', {'section_K_appendixA1_diff': K})
+write_json(ROOT / 'results' / 'round5_part_K_appendixA1.json',
+           {'section_K_appendixA1_rederived': K})
 print('WROTE results/round5_part_K_appendixA1.json')
-print('n_exceptions', len(exceptions))
-for e in exceptions[:30]:
-    print(e)
-print('summary_stats', K['summary_stats_from_actual_csv'])
-print('named_extremes', K['named_extremes'])
-print('borough mapping all match', K['borough_mapping_all_match'])
+print('by_model max_abs_diff:', {s: v.get('max_abs_diff')
+                               for s, v in by_model_diffs.items()
+                               if isinstance(v, dict)})
+print('tex max_abs_diff:', {s: v.get('max_abs_diff')
+                           for s, v in tex_diffs.items() if isinstance(v, dict)})
+
+# ---------------------------------------------------------------------------
+# Informational addendum (kept from Round 9/10): per-rank scenario summaries
+# for every eligible ranked model. NOT a paper comparison.
+# ---------------------------------------------------------------------------
+from src.ops.champion_ranking import get_all_models
+
+_all_models_summary = {}
+for _e9 in get_all_models(write_audit=False):
+    _r9 = int(_e9['rank'])
+    _suffix9 = '' if _r9 == 1 else f'_rank{_r9}'
+    row = {'model_name': _e9['name'], 'family': _e9.get('family'),
+           'mode': _e9.get('mode'), 'test_mae': _e9.get('test_mae')}
+    for _scen9 in SCEN_LIST:
+        _csv9 = SCEN_DIR / f'{_scen9}{_suffix9}_by_council.csv'
+        if _csv9.exists():
+            _d9 = pd.read_csv(_csv9)
+            row[_scen9 + '_mean_pct_change'] = round(
+                float(_d9['mean_pct_change'].mean()), 4)
+            row[_scen9 + '_n_districts'] = int(len(_d9))
+        else:
+            row[_scen9 + '_status'] = 'missing'
+    _diag9 = SCEN_DIR / f'mixed_governance_support_diag_rank{_r9}.json'
+    if _diag9.exists():
+        row['mixed_gov_pct_beyond_train_support'] = json.loads(
+            _diag9.read_text()).get('pct_beyond_train_support')
+    _all_models_summary[f'rank{_r9}'] = row
+
+write_json(ROOT / 'results' / 'round5_part_K_appendixA1_all_models.json',
+           {'appendixA1_all_models_informational': {
+               'round9_note': ('INFORMATIONAL ONLY. Rank 1 = current champion '
+                               'per experiments/champion.json; ranks 2..N = '
+                               'next-lowest-MAE eligible models. Models other '
+                               'than the paper model are not expected to '
+                               'reproduce the Appendix A.1 values.'),
+               'per_rank_summaries': _all_models_summary}})
+print('WROTE results/round5_part_K_appendixA1_all_models.json')
+
+record_status('verify_appendix_a1_scenarios', CHECKS,
+              note=('Independent re-derivation from the property-level '
+                    'parquets vs (i) by_model CSVs and (ii) the generated '
+                    'appendix_a1_scenarios.tex; tolerance 0.005 pct points.'))

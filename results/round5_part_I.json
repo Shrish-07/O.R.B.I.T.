@@ -1,0 +1,123 @@
+{
+  "section_I_model_comparison": {
+    "comparison_table_source": "docs/model_comparison_table.csv",
+    "rows_in_table": 7,
+    "models": {
+      "lgbm_all_years_base": {
+        "paper": {
+          "mae": 0.44183,
+          "r2": 0.53504
+        },
+        "comparison_csv": {
+          "mae": 0.4418267051676161,
+          "r2": 0.5350382066966075
+        },
+        "mae_match_rounded_5dp": true,
+        "r2_match_rounded_5dp": true
+      },
+      "lgbm_all_years_political": {
+        "paper": {
+          "mae": 0.43994,
+          "r2": 0.54336
+        },
+        "comparison_csv": {
+          "mae": 0.439941234228952,
+          "r2": 0.5433591928764994
+        },
+        "mae_match_rounded_5dp": true,
+        "r2_match_rounded_5dp": true
+      },
+      "rf_all_years_political_tuned": {
+        "paper": {
+          "mae": 0.40161,
+          "r2": 0.59004
+        },
+        "comparison_csv": {
+          "mae": 0.4016141791066011,
+          "r2": 0.5900387792297042
+        },
+        "mae_match_rounded_5dp": true,
+        "r2_match_rounded_5dp": true
+      },
+      "ridge_all_years_political": {
+        "paper": {
+          "mae": 0.62934,
+          "r2": 0.17915
+        },
+        "comparison_csv": {
+          "mae": 0.629341791343628,
+          "r2": 0.1791541147004576
+        },
+        "mae_match_rounded_5dp": true,
+        "r2_match_rounded_5dp": true
+      },
+      "elasticnet_all_years_political": {
+        "paper": {
+          "mae": 0.63127,
+          "r2": 0.17708
+        },
+        "comparison_csv": {
+          "mae": 0.6312658045356286,
+          "r2": 0.1770844213769116
+        },
+        "mae_match_rounded_5dp": true,
+        "r2_match_rounded_5dp": true
+      },
+      "cat_all_years_political_lr0.05_d6": {
+        "paper": {
+          "mae": 0.41736,
+          "r2": 0.58128
+        },
+        "comparison_csv": {
+          "mae": 0.4173643391336282,
+          "r2": 0.5812828576992348
+        },
+        "mae_match_rounded_5dp": true,
+        "r2_match_rounded_5dp": true
+      },
+      "xgb_all_years_political_lr0.05_md6": {
+        "paper": {
+          "mae": 0.4177,
+          "r2": 0.5702
+        },
+        "comparison_csv": {
+          "mae": 0.4176951509183549,
+          "r2": 0.5702048188828388
+        },
+        "mae_match_rounded_5dp": true,
+        "r2_match_rounded_5dp": true
+      }
+    },
+    "mae_delta_base_to_political": {
+      "paper": -0.00189,
+      "recomputed": -0.001885
+    },
+    "r2_delta_base_to_political": {
+      "paper": 0.00832,
+      "recomputed": 0.008321
+    },
+    "tier1_spot_label": "Political MAE recomputed from raw prediction file if both pred+truth columns present; else read from comparison CSV (Tier 2). No point-prediction file exists for the base LGBM, so base MAE remains Tier 2 unless a paired truth file is found.",
+    "tier1_spot_check": {
+      "political_test_preds_columns": [
+        "BBL",
+        "pred_log_price"
+      ],
+      "political_pred_or_truth_not_found": [
+        "pred_log_price",
+        null
+      ],
+      "intervals_csv_columns": [
+        "pred",
+        "lower",
+        "upper"
+      ],
+      "intervals_csv_rows": 56723,
+      "base_prediction_intervals_columns": [
+        "pred",
+        "lower",
+        "upper"
+      ],
+      "base_prediction_intervals_rows": 56723
+    }
+  }
+}

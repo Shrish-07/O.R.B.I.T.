@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_scenario_mechanics",
+  "generated_utc": "2026-10-16T17:21:42.697322Z",
+  "n_checks": 7,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Per-rank mixed-governance support diagnostics re-derived and compared to the producer's rank diag files; all scenario counts recomputed live."
+}

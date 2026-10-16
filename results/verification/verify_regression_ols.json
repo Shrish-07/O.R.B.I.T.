@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_regression_ols",
+  "generated_utc": "2026-10-16T17:14:52.826436Z",
+  "n_checks": 44,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Fresh statsmodels OLS re-fit vs manuscript Table 1 cells. Round 11b: yearbuilt SEs compared at the printed (0.0000); adj_R2/F_stat dropped (not manuscript claims)."
+}

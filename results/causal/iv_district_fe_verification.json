@@ -1,0 +1,61 @@
+{
+  "source_reverified": "results/causal/iv_district_fe_results.json",
+  "bandwidths_pp": [
+    5,
+    10,
+    15,
+    20
+  ],
+  "per_bandwidth": {
+    "bw_5pp": {
+      "matches_pipeline": true,
+      "checks": {
+        "n_instrument_z_cells": true,
+        "n_obs": true,
+        "n_instrument_cells": true,
+        "n_districts": true,
+        "identified": true
+      },
+      "discrepancies": [],
+      "recorded_verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+    },
+    "bw_10pp": {
+      "matches_pipeline": true,
+      "checks": {
+        "n_instrument_z_cells": true,
+        "n_obs": true,
+        "n_instrument_cells": true,
+        "n_districts": true,
+        "identified": true
+      },
+      "discrepancies": [],
+      "recorded_verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+    },
+    "bw_15pp": {
+      "matches_pipeline": true,
+      "checks": {
+        "n_instrument_z_cells": true,
+        "n_obs": true,
+        "n_instrument_cells": true,
+        "n_districts": true,
+        "identified": true
+      },
+      "discrepancies": [],
+      "recorded_verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+    },
+    "bw_20pp": {
+      "matches_pipeline": true,
+      "checks": {
+        "n_instrument_z_cells": true,
+        "n_obs": true,
+        "n_instrument_cells": true,
+        "n_districts": true,
+        "identified": true
+      },
+      "discrepancies": [],
+      "recorded_verdict": "instrument is weak at this bandwidth \u2014 treat as suggestive, not identified"
+    }
+  },
+  "all_bandwidths_match": true,
+  "note": "When a bandwidth is not identified, the honest match is the concordance of the identification verdict and the sample/cell counts \u2014 there is no coefficient to compare."
+}

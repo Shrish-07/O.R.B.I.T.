@@ -1,0 +1,151 @@
+{
+  "raw": {
+    "canonical_file": "modeling_dataset_canonical_v2.parquet"
+  },
+  "section_D": {
+    "dataset_rows": {
+      "paper": 566956,
+      "recomputed": 566956,
+      "actual_loaded": 566956
+    },
+    "dataset_cols": {
+      "paper": 53,
+      "recomputed": 53,
+      "actual_loaded": 53
+    },
+    "base_feature_count": {
+      "paper": 24,
+      "from_feature_names_line": 24,
+      "from_max_feature_idx_plus1": 24,
+      "feature_names": [
+        "BOROUGH",
+        "ZIP_CODE",
+        "RESIDENTIAL_UNITS",
+        "COMMERCIAL_UNITS",
+        "TOTAL_UNITS",
+        "LAND_SQUARE_FEET",
+        "GROSS_SQUARE_FEET",
+        "YEAR_BUILT",
+        "TAX_CLASS_AT_TIME_OF_SALE",
+        "Community_Board",
+        "Council_District",
+        "Census_Tract_2020",
+        "landuse",
+        "lotarea",
+        "bldgarea",
+        "numfloors",
+        "unitsres",
+        "unitstotal",
+        "yearbuilt",
+        "residfar",
+        "commfar",
+        "facilfar",
+        "election_year",
+        "CounDist"
+      ]
+    },
+    "political_feature_count": {
+      "paper": 25,
+      "from_feature_names_line": 25,
+      "from_max_feature_idx_plus1": 25,
+      "feature_names": [
+        "BOROUGH",
+        "ZIP_CODE",
+        "RESIDENTIAL_UNITS",
+        "COMMERCIAL_UNITS",
+        "TOTAL_UNITS",
+        "LAND_SQUARE_FEET",
+        "GROSS_SQUARE_FEET",
+        "YEAR_BUILT",
+        "TAX_CLASS_AT_TIME_OF_SALE",
+        "Community_Board",
+        "Council_District",
+        "Census_Tract_2020",
+        "landuse",
+        "lotarea",
+        "bldgarea",
+        "numfloors",
+        "unitsres",
+        "unitstotal",
+        "yearbuilt",
+        "residfar",
+        "commfar",
+        "facilfar",
+        "election_year",
+        "CounDist",
+        "dem_share"
+      ]
+    },
+    "yearbuilt_vs_YEARBUILT": {
+      "paper_both_populated": 512349,
+      "recomputed_both_populated": 512349,
+      "paper_agree": 453992,
+      "recomputed_agree": 453992,
+      "paper_disagree": 58357,
+      "recomputed_disagree": 58357,
+      "paper_max_disagreement_years": 2025,
+      "recomputed_max_disagreement_years": 2025.0,
+      "paper_correlation": 0.144,
+      "recomputed_correlation": 0.144456,
+      "paper_agree_pct": 88.61,
+      "recomputed_agree_pct": 88.61,
+      "paper_disagree_pct": 11.39,
+      "recomputed_disagree_pct": 11.39
+    }
+  },
+  "section_E": {
+    "train_rows": {
+      "paper": 121052,
+      "recomputed": 121052
+    },
+    "test_rows": {
+      "paper": 56723,
+      "recomputed": 56723
+    },
+    "election_year_distribution": {
+      "2017": {
+        "rows": 177775,
+        "pct": 31.36
+      },
+      "2021": {
+        "rows": 285240,
+        "pct": 50.31
+      },
+      "2025": {
+        "rows": 103941,
+        "pct": 18.33
+      }
+    },
+    "election_year_distribution_paper": {
+      "2017": {
+        "rows": 177775,
+        "pct": 31.4
+      },
+      "2021": {
+        "rows": 285240,
+        "pct": 50.3
+      },
+      "2025": {
+        "rows": 103941,
+        "pct": 18.3
+      }
+    },
+    "train_plus_test": {
+      "value": 177775,
+      "paper": 177775
+    },
+    "election_year_2017_subset": {
+      "value": 177775,
+      "paper": 177775
+    },
+    "identity_holds": true,
+    "train_sale_year_range": [
+      2016,
+      2017
+    ],
+    "test_sale_year_range": [
+      2018,
+      2018
+    ]
+  }
+}

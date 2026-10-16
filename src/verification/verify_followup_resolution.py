@@ -23,7 +23,9 @@ df, cname = p1a.load_canonical()
 
 OUT = {}
 # ---------------------------------------------------------------
-# STEP 2: Missingness reconciliation (the 53-row gap, 44,136 vs 44,083)
+# STEP 2: Missingness reconciliation (the additive-vs-union gap; current
+# build values computed live below -- Round 11 removed the hard-coded
+# "44,136 vs 44,083" narrative)
 # ---------------------------------------------------------------
 sub_vars = ['target_log_price', 'dem_share', 'yearbuilt', 'numfloors', 'landuse', 'BOROUGH', 'commfar']
 sub = df.dropna(subset=sub_vars)
@@ -86,7 +88,7 @@ OUT['step2_missingness'] = {
         'other_vs_dem_overlap': other_vs_dem, 'other_vs_farf_overlap': other_vs_farf,
     },
     'naive_additive_sum_4components': additive_sum,
-    'matches_dropped_naive_44136_vs_44083': additive_sum == dropped,
+    'matches_dropped_naive_sum': additive_sum == dropped,
     'gap_vs_dropped': additive_sum - dropped,
     'proper_union_4components': proper_union_count,
     'proper_union_matches_dropped': proper_union_count == dropped,
@@ -100,14 +102,15 @@ OUT['step2_missingness'] = {
         "numfloors_beyond_farf AND dem_unique_to_dem_share. "
         f"Naive sum = {additive_sum}; proper union = {proper_union_count}; "
         f"actual dropped = {dropped}; overlap double-counted = {overlap_in_partition}. "
-        "The 53-row overcount (44,136 - 44,083 = 53) is exactly this overlap "
-        "double-counting, NOT a missing category."
+        f"The {overlap_in_partition}-row overcount ({additive_sum:,} - {dropped:,} "
+        f"= {additive_sum - dropped}) is exactly this overlap double-counting, "
+        "NOT a missing category. (Round 11: values are computed live; the "
+        "hard-coded 44,136/44,083 narrative was stale Round-5 text.)"
     ),
-    'needs_patch_sentence': proper_union_count == dropped,
 }
 
 # ---------------------------------------------------------------
-# STEP 3: 19-row prediction-interval row-count mismatch
+# STEP 3: prediction-interval row-count parity (the old 19-row gap)
 # ---------------------------------------------------------------
 test = pd.read_parquet(SPLIT)
 pol_preds = pd.read_parquet(POL_PREDS)
@@ -143,7 +146,7 @@ OUT['step3_pred_intervals_gap'] = {
     'rows_missing_from_political_preds': n_missing,
     'rows_missing_from_base_intervals': int(len(test) - base_pi_rows),
     'missing_rows_characteristics': m_chars,
-    'lightgbm_predict_returns_full_56817': True,
+    'lightgbm_predict_returns_full_test_split': True,
     'preds_indices_subset_of_test': int(len(set(pol_preds.index) - set(test.index))) == 0,
     'metric_source_note': (
         f"The political model's MAE/R2 ({_pol_mae:.6f} / {_pol_r2:.6f}) were computed INSIDE "
@@ -157,14 +160,15 @@ OUT['step3_pred_intervals_gap'] = {
     'affects_table2_metrics': False,
     'recommended_action': (
         "RESOLVED (2026-09-06): lgbm_all_years_political_test_preds.parquet and "
-        "_intervals.csv are now regenerated from the full 56,817-row test split by "
+        "_intervals.csv are now regenerated from the full "
+        f"{len(test):,}-row test split by "
         "src/analysis/champion_confidence_and_sensitivity.py (with a length assertion "
         "inside its writer so the gap cannot silently recur), and "
         "lgbm_all_years_political_prediction_intervals.parquet likewise via "
         "src/analysis/confidence_intervals.py. No further action needed."
         if (n_missing == 0 and intervals_csv_rows == len(test)) else
         "Regenerate lgbm_all_years_political_test_preds.parquet and _intervals.csv from "
-        "the full 56,817-row test set so all prediction artifacts share the test split's "
+        f"the full {len(test):,}-row test set so all prediction artifacts share the test split's "
         "row count and the registered metric base."
     ),
     'gap_closed': bool(n_missing == 0 and intervals_csv_rows == len(test)),
@@ -183,4 +187,20 @@ print('=== STEP 2 ===')
 print(json.dumps(OUT['step2_missingness'], indent=2, default=str))
 print('=== STEP 3 ===')
 print(json.dumps(OUT['step3_pred_intervals_gap'], indent=2, default=str))
+
+# Round 11: machine-countable status
+import _shared as _sh  # noqa: E402  (same module as p1a)
+_sh.record_status('verify_followup_resolution', [
+    _sh.check_val('drop_union_equals_dropped', dropped, drop_union_count),
+    _sh.check_val('proper_union_equals_dropped', dropped, proper_union_count),
+    _sh.check_val('political_preds_rows_equal_test_rows', len(test),
+                  len(pol_preds)),
+    _sh.check_val('political_intervals_rows_equal_test_rows', len(test),
+                  intervals_csv_rows),
+    _sh.check_val('base_intervals_rows_equal_test_rows', len(test),
+                  base_pi_rows),
+    _sh.check_val('preds_indices_subset_of_test', True,
+                  OUT['step3_pred_intervals_gap']['preds_indices_subset_of_test']),
+], note='Step2 missingness reconciliation + Step3 prediction-artifact row '
+        'parity against the current test split.')
 

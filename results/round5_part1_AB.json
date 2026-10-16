@@ -1,0 +1,91 @@
+{
+  "section": {
+    "A_abstract": {
+      "transaction_count": {
+        "paper": 566956,
+        "recomputed": 566956
+      },
+      "council_districts": {
+        "paper": 51,
+        "recomputed": 51
+      },
+      "election_years": {
+        "paper": [
+          2017,
+          2021,
+          2025
+        ],
+        "recomputed": [
+          2017,
+          2021,
+          2025
+        ]
+      },
+      "bivariate_beta": {
+        "paper": 0.9449,
+        "recomputed": 0.9449,
+        "p": 0.0
+      },
+      "controlled_boroughFE_beta": {
+        "paper": 0.2883,
+        "recomputed": 0.2883,
+        "p": 0.0
+      },
+      "shrinkage_pct": {
+        "paper": "~69 percent (from 0.9449 to 0.2883)",
+        "recomputed_pct": 69.49
+      },
+      "lgbm_base_mae": {
+        "paper": 0.4418,
+        "recomputed": 0.441827
+      },
+      "lgbm_political_mae": {
+        "paper": 0.4399,
+        "recomputed": 0.439941
+      },
+      "shap_rank_dem_share": {
+        "paper": "11th of 25",
+        "recomputed_rank_among_nonzero": 11,
+        "n_nonzero_features": 24,
+        "n_total_entries_in_json": 25
+      },
+      "morans_i_price": {
+        "paper": 0.594,
+        "stored_full": 0.5942031799360221,
+        "rounds_to_3dec": 0.594
+      },
+      "morans_i_dem_share": {
+        "paper": 0.57,
+        "stored_full": 0.5704774339620367,
+        "rounds_to_3dec": 0.57
+      },
+      "morans_p_paper": 0.001,
+      "morans_p_stored": 0.001
+    },
+    "B_intro_ranges": {
+      "dem_share_per_cd_mean_min": {
+        "value": 0.2021141063070565,
+        "cd": 51
+      },
+      "dem_share_per_cd_mean_max": {
+        "value": 0.9556500238886132,
+        "cd": 36
+      },
+      "median_logprice_per_cd_min": {
+        "value": 12.821258284620408,
+        "cd": 18
+      },
+      "median_logprice_per_cd_max": {
+        "value": 14.423909163076374,
+        "cd": 1
+      },
+      "dem_share_ideology_min_any_cdyear": 0.1549376739682924,
+      "dem_share_ideology_max_any_cdyear": 0.9826259178152776
+    }
+  },
+  "raw": {
+    "canonical_file": "modeling_dataset_canonical_v2.parquet",
+    "n_rows": 566956,
+    "n_cols": 53
+  }
+}

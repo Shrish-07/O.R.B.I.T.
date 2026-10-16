@@ -233,6 +233,21 @@ def main():
     print(f"\nWROTE {OUT.relative_to(ROOT)}")
     print(f"all_bandwidths_match: {all_match}")
 
+    # Round 11: machine-countable status
+    sys.path.insert(0, str(ROOT / 'src' / 'verification'))
+    from _shared import record_status  # noqa: E402
+    _checks = []
+    for key, per in out["per_bandwidth"].items():
+        for name, ok in per["checks"].items():
+            _checks.append({'check': f'{key}.{name}', 'expected': 'match',
+                            'actual': 'match' if ok else 'MISMATCH',
+                            'tolerance': TOL, 'match': bool(ok)})
+    record_status('verify_iv_district_fe', _checks,
+                  note='Independent IV re-derivation vs '
+                       'results/causal/iv_district_fe_results.json.')
+    if not all_match:
+        sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

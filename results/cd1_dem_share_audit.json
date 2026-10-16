@@ -1,0 +1,46 @@
+{
+  "claim": "Section 3.2 worked example: CD1 (2017) dem_share vote-summed and district_ideology area-weighted",
+  "paper_values": {
+    "cd1_dem_share_vote_summed": 0.715908,
+    "cd1_district_ideology_area_weighted": 0.711309
+  },
+  "production_pipeline": {
+    "canonical_script": "src/data_pipeline/rebuild_canonical.py",
+    "canonical_ideology_source": "data\\processed\\ideology_by_council.parquet",
+    "ideology_builder": "src/data_pipeline/build_ideology_scores.py (custom line-by-line raw-CSV parser)",
+    "blacklisted_separate_pipeline": "src/compute_ideology.py -> ed_ideology.parquet -> src/build_district_ideology.py -> district_ideology.parquet (ALL blacklisted in config/feature_blacklist.yaml, feeds no model)"
+  },
+  "ideology_by_council_file": {
+    "path": "data\\processed\\ideology_by_council.parquet",
+    "columns": [
+      "CounDist",
+      "election_year",
+      "dem_share"
+    ],
+    "cd1_2017_dem_share": 0.7159080199792668,
+    "matches_paper": true,
+    "diff_from_paper": 1.9979266796532613e-08
+  },
+  "diagnostic_wrong_source_file_ed_ideology": {
+    "path": "data\\processed\\ed_ideology.parquet",
+    "cd1_2017_dem_share_recomputed_vote_sum": 0.7211319975211733,
+    "dem_sum": 13964.0,
+    "rep_sum": 5400.0,
+    "matches_paper": false,
+    "diff_from_paper": 0.005223997521173307,
+    "interpretation": "This number comes from the ABANDONED ed_ideology.parquet parser. It does NOT feed any model. Quoting it as the 'vote-summed' figure in the paper's worked example would have imported the wrong parser's values."
+  },
+  "district_ideology_area_weighted": {
+    "path": "data\\processed\\district_ideology.parquet",
+    "cd1_district_ideology_value": 0.7113089490787546,
+    "matches_paper": true
+  },
+  "two_parser_disagreement": {
+    "cd1_2017_production_dem_share": 0.7159080199792668,
+    "cd1_2017_abandoned_parser_dem_share": 0.7211319975211733,
+    "production_minus_abandoned": -0.00522397754190651,
+    "council_level_abs_diff_pp": 0.522397754190651,
+    "interpretation": "CD1 2017 council-level dem_share: production parser (build_ideology_scores.py) = 0.715908; abandoned parser (compute_ideology.py via ed_ideology.parquet) = 0.721132; abs difference = 0.522 percentage points. The two raw-CSV parsers disagree non-trivially at the council level \u2014 an undisclosed methodological confound in the paper's framing of the dem_share-vs-district_ideology gap as 'purely area-weighting'."
+  },
+  "required_action": "No manuscript correction needed for the CD1 dem_share worked example: the paper's 0.715908 is exactly reproduced by reading the CORRECT production file (data/processed/ideology_by_council.parquet). The prior audit's 0.721132 'discrepancy' was a misattribution that read the wrong file (ed_ideology.parquet). The two-parser disagreement should be noted as a methodological confound but does not require changing the published 0.715908 / 0.711309 numbers."
+}

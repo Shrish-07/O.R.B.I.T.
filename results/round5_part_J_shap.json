@@ -1,0 +1,135 @@
+{
+  "section_J_shap": {
+    "n_entries_in_json": 25,
+    "paper_shap_table_size": 25,
+    "headline_cells": {
+      "Community Board": {
+        "paper_value": 0.32088,
+        "json_value": 0.32087552254592333,
+        "json_value_rounded5": 0.32088,
+        "matches_at_5dp": true
+      },
+      "dem_share": {
+        "paper_value": 0.04685,
+        "json_value": 0.04684551073761311,
+        "json_value_rounded5": 0.04685,
+        "matches_at_5dp": true
+      }
+    },
+    "nonzero_count": 24,
+    "zero_count": 1,
+    "zero_features": [
+      "election_year"
+    ],
+    "dem_share_rank_by_descending_nonzero": 11,
+    "paper_dem_share_rank": "11th of 25",
+    "all_features_sorted_descending": [
+      [
+        "Community Board",
+        0.32087552254592333
+      ],
+      [
+        "GROSS SQUARE FEET",
+        0.151545037476663
+      ],
+      [
+        "LAND SQUARE FEET",
+        0.14902702889631905
+      ],
+      [
+        "numfloors",
+        0.10730947410963537
+      ],
+      [
+        "TOTAL UNITS",
+        0.0925083839168113
+      ],
+      [
+        "RESIDENTIAL UNITS",
+        0.08849234806678953
+      ],
+      [
+        "Council District",
+        0.07745849242151229
+      ],
+      [
+        "ZIP CODE",
+        0.06950246204108482
+      ],
+      [
+        "unitstotal",
+        0.06432742418838325
+      ],
+      [
+        "yearbuilt",
+        0.053044721281328554
+      ],
+      [
+        "dem_share",
+        0.04684551073761311
+      ],
+      [
+        "TAX CLASS AT TIME OF SALE",
+        0.04680297545589564
+      ],
+      [
+        "Census Tract 2020",
+        0.04109769943420242
+      ],
+      [
+        "YEAR BUILT",
+        0.03738690558800268
+      ],
+      [
+        "facilfar",
+        0.0365981302622234
+      ],
+      [
+        "unitsres",
+        0.03562304333272213
+      ],
+      [
+        "COMMERCIAL UNITS",
+        0.029497214046402688
+      ],
+      [
+        "landuse",
+        0.02525720915508776
+      ],
+      [
+        "residfar",
+        0.018472100449935545
+      ],
+      [
+        "BOROUGH",
+        0.01847204407491025
+      ],
+      [
+        "commfar",
+        0.018380842928046367
+      ],
+      [
+        "CounDist",
+        0.012615241999987271
+      ],
+      [
+        "bldgarea",
+        0.006317699824762823
+      ],
+      [
+        "lotarea",
+        0.0010682886731262465
+      ],
+      [
+        "election_year",
+        0.0
+      ]
+    ],
+    "dem_share_rank_including_zeros": 11,
+    "base_model_community_board_shap": {
+      "paper": null,
+      "recomputed": 0.31649051382251603,
+      "note": "informational only; base-model CB cell was not quoted in the current manuscript draft"
+    }
+  }
+}

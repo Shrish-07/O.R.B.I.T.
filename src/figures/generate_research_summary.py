@@ -95,7 +95,11 @@ if champ_name and champ_name != PAPER_SHAP_MODEL:
 
 # political scenario summary
 scen_dir = Path('results/political_scenarios')
-scen_files = list(scen_dir.glob('*_by_council.csv'))
+# Round 9: scenario files now also exist per rank ({scenario}_rank{N}_by_council.csv).
+# This summary reports the rank-1 (legacy-filename) scenarios only -- per-rank
+# detail lives in political_scenarios/scenario_run_metadata.json and
+# results/rank1_rank2_selection.json.
+scen_files = [f for f in scen_dir.glob('*_by_council.csv') if '_rank' not in f.stem]
 scen_summaries = {}
 for f in scen_files:
     df = pd.read_csv(f)
@@ -137,6 +141,31 @@ with open(DOCS / 'research_summary.md', 'w') as f:
         ).get('summary', []))
         df_champ_full['rank'] = range(1, len(df_champ_full) + 1)
         f.write(df_champ_full.to_string(index=False))
+        f.write('\n\n')
+    # Round 9: one top-10 table per remaining eligible ranked model (the
+    # paper model and the champion already have dedicated sections above).
+    f.write('## SHAP top-10 -- all other eligible interpreted models (Round 9)\n\n')
+    f.write('Rank ordering recomputed fresh via src/ops/champion_ranking.py; audit in results/rank1_rank2_selection.json. Each table carries the tier recorded in its own payload.\n\n')
+    _done = {PAPER_SHAP_MODEL} | ({champ_name} if champ_name else set())
+    for _sp in sorted(Path('models/artifacts').glob('*_shap_summary.json')):
+        _mn = _sp.name[:-len('_shap_summary.json')]
+        if _mn in _done:
+            continue
+        _js = json.loads(_sp.read_text())
+        _rows = _js.get('summary', [])[:10]
+        if not _rows:
+            continue
+        _method = _js.get('method', 'shap')
+        _tier = _js.get('shap_fallback_tier')
+        _fnote = _js.get('shap_fallback_note')
+        _hdr = '### %s (method=%s' % (_mn, _method)
+        if _tier:
+            _hdr += ', tier %s' % _tier
+        _hdr += ')\n'
+        f.write(_hdr)
+        if _fnote:
+            f.write('*%s*\n\n' % _fnote)
+        f.write(pd.DataFrame(_rows).to_string(index=False))
         f.write('\n\n')
     if scen_summaries:
         f.write('## Political scenario summaries\n')

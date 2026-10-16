@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_shap_importance",
+  "generated_utc": "2026-10-16T17:14:58.322987Z",
+  "n_checks": 4,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "SHAP headline cells at 5dp vs manuscript Table 3; paper target: 11th of 25."
+}

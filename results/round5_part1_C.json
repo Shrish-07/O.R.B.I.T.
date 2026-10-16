@@ -1,0 +1,62 @@
+{
+  "section_C_ideology": {
+    "cd1_2017_dem_share": {
+      "paper": 0.715908,
+      "recomputed": 0.7159080199792668,
+      "diff": 1.9979266796532613e-08
+    },
+    "district_ideology_columns": [
+      "year",
+      "COUNCIL_DISTRICT",
+      "district_ideology"
+    ],
+    "district_ideology_years_present": [
+      2017
+    ],
+    "cd1_district_ideology": {
+      "paper": 0.711309,
+      "recomputed": 0.7113089490787546,
+      "value_column_used": "district_ideology"
+    },
+    "dem_share_missing": {
+      "paper": 13371,
+      "recomputed": 13371
+    },
+    "dem_share_coverage_pct": {
+      "paper": 97.64,
+      "recomputed": 97.6416
+    },
+    "dem_share_missing_pct": {
+      "paper": 2.36,
+      "recomputed": 2.3584
+    },
+    "canonical_total": 566956,
+    "crosswalk_columns": [
+      "ElectDist",
+      "CounDist",
+      "area"
+    ],
+    "crosswalk_n_rows": {
+      "paper": 5783,
+      "recomputed": 5783
+    },
+    "crosswalk_n_distinct_ed": {
+      "paper": 4264,
+      "recomputed": 4264
+    },
+    "crosswalk_ed_in_gt1_row": {
+      "paper": 1383,
+      "recomputed": 1383
+    },
+    "crosswalk_ed_multi_pct": {
+      "paper": 32.4,
+      "recomputed": 32.43
+    },
+    "crosswalk_max_minority_share": {
+      "paper_le": 0.11,
+      "recomputed_fraction": 0.0010647895207527291,
+      "recomputed_pct": 0.1065,
+      "n_split_eds": 1383
+    }
+  }
+}

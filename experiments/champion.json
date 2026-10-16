@@ -1,8 +1,11 @@
 {
-  "selected_experiment": "exp-20260925T041001Z",
-  "metric": 0.4167477032408586,
-  "selection_note": "NEAR-TIE: 3 experiments within 0.001 MAE; selected best MAE rf_all_years_political_n200 (mae=0.416748).",
+  "selected_experiment": "exp-20261016T161155Z",
+  "metric": 0.40161417910660113,
+  "selection_note": "OUTRIGHT WINNER: rf_all_years_political_tuned (mae=0.401614); no other experiment within 0.001 MAE.",
   "selection_rule": "lowest test MAE among untainted, non-stale, post-2026-05-18 runs; near-ties (<0.001 MAE) resolve to the base-mode spec",
-  "selected_utc": "2026-09-25T04:10:34.819263Z",
-  "git_commit": "1a1412f"
+  "selected_utc": "2026-10-16T16:13:40.442875Z",
+  "git_commit": "ab25d31",
+  "git_dirty": true,
+  "champion_model_git_commit": "ab25d31",
+  "champion_model_git_dirty": true
 }

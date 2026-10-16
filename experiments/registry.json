@@ -1,8 +1,39 @@
 [
   {
-    "id": "exp-20260925T040932Z",
-    "created_utc": "2026-09-25T04:09:32.931275Z",
-    "git_commit": "1a1412f",
+    "id": "exp-20260928T153051Z",
+    "created_utc": "2026-09-28T15:30:51.642009Z",
+    "git_commit": "ab25d31",
+    "script": "models/training/train_random_forest.py",
+    "name": "rf_all_years_political_n200",
+    "mode": "political",
+    "scope": "all",
+    "hypothesis": "RandomForest baseline for diversity",
+    "reasoning": "Automated model family comparison",
+    "metrics": {
+      "r2": 0.530168999422612,
+      "mae": 0.41674770324085864
+    },
+    "results": {
+      "model": "RandomForest",
+      "name": "rf_all_years_political_n200",
+      "variant": "all_years",
+      "mode": "political",
+      "n_train": 121052,
+      "n_test": 56723,
+      "n_features": 25,
+      "r2": 0.530168999422612,
+      "mae": 0.41674770324085864
+    },
+    "features_path": "models/artifacts/rf_all_years_political_n200_features.json",
+    "model_path": "models/rf_all_years_political_n200.joblib",
+    "stale": true,
+    "stale_reason": "Retired in Round 10: unpruned forest (max_depth=None, ~990 MB) -- exact TreeSHAP intractable (tiers a/c exceeded the 90-min per-tier budget on 2026-09-28; tier-b depth-25 variant rejected on MAE fidelity), so it only ever received gain importance. Replaced by rf_all_years_political_tuned, selected on validation data only under the pre-specified 3000-mean-leaves tractability cap. Kept for audit history; excluded from champion selection and all downstream analysis via the existing stale filter."
+  },
+  {
+    "id": "exp-20261016T154341Z",
+    "created_utc": "2026-10-16T15:43:41.845524Z",
+    "git_commit": "ab25d31",
+    "git_dirty": true,
     "script": "models/training/train_lgbm.py",
     "name": "lgbm_all_years_base",
     "mode": "base",
@@ -28,9 +59,10 @@
     "model_path": "models/lgbm_all_years_base.txt"
   },
   {
-    "id": "exp-20260925T040942Z",
-    "created_utc": "2026-09-25T04:09:42.242742Z",
-    "git_commit": "1a1412f",
+    "id": "exp-20261016T154430Z",
+    "created_utc": "2026-10-16T15:44:30.513784Z",
+    "git_commit": "ab25d31",
+    "git_dirty": true,
     "script": "models/training/train_lgbm.py",
     "name": "lgbm_all_years_political",
     "mode": "political",
@@ -56,37 +88,67 @@
     "model_path": "models/lgbm_all_years_political.txt"
   },
   {
-    "id": "exp-20260925T041001Z",
-    "created_utc": "2026-09-25T04:10:01.613968Z",
-    "git_commit": "1a1412f",
+    "id": "exp-20261016T161155Z",
+    "created_utc": "2026-10-16T16:11:55.065380Z",
+    "git_commit": "ab25d31",
+    "git_dirty": true,
     "script": "models/training/train_random_forest.py",
-    "name": "rf_all_years_political_n200",
+    "name": "rf_all_years_political_tuned",
     "mode": "political",
     "scope": "all",
-    "hypothesis": "RandomForest baseline for diversity",
-    "reasoning": "Automated model family comparison",
+    "hypothesis": "Complexity-constrained, validation-tuned RandomForest (SHAP-tractable replacement for the unpruned forest)",
+    "reasoning": "Round 10: the unpruned forest was intractable for exact TreeSHAP; this entry is selected on validation data only under a pre-specified mean-leaves cap",
     "metrics": {
-      "r2": 0.530168999422612,
-      "mae": 0.4167477032408586
+      "r2": 0.5900387792297042,
+      "mae": 0.40161417910660113
     },
     "results": {
       "model": "RandomForest",
-      "name": "rf_all_years_political_n200",
+      "name": "rf_all_years_political_tuned",
       "variant": "all_years",
       "mode": "political",
       "n_train": 121052,
       "n_test": 56723,
       "n_features": 25,
-      "r2": 0.530168999422612,
-      "mae": 0.4167477032408586
+      "r2": 0.5900387792297042,
+      "mae": 0.40161417910660113,
+      "tuning": {
+        "mean_leaves_cap": 3000,
+        "selection_rule": "lowest validation MAE among cap-satisfying configs (mean leaves per tree <= 3000); ties resolve to fewer mean leaves; test set scored once on the refit winner. Validation slice identical to train_lgbm.py FIX A1 (time-ordered, last 15% of the training years).",
+        "chosen_config": {
+          "max_depth": 25,
+          "min_samples_leaf": 20,
+          "max_features": 0.5,
+          "n_estimators": 200
+        },
+        "chosen_mean_leaves_per_tree": 2519.89,
+        "validation_mae_of_chosen_config": 0.37837633003606436,
+        "grid_results_file": "results/rf_tuning_grid.json",
+        "widened_grid_used": false
+      }
     },
-    "features_path": "models/artifacts/rf_all_years_political_n200_features.json",
-    "model_path": "models/rf_all_years_political_n200.joblib"
+    "features_path": "models/artifacts/rf_all_years_political_tuned_features.json",
+    "model_path": "models/rf_all_years_political_tuned.joblib",
+    "tuning": {
+      "mean_leaves_cap": 3000,
+      "selection_rule": "lowest validation MAE among cap-satisfying configs (mean leaves per tree <= 3000); ties resolve to fewer mean leaves; test set scored once on the refit winner. Validation slice identical to train_lgbm.py FIX A1 (time-ordered, last 15% of the training years).",
+      "chosen_config": {
+        "max_depth": 25,
+        "min_samples_leaf": 20,
+        "max_features": 0.5,
+        "n_estimators": 200
+      },
+      "chosen_mean_leaves_per_tree": 2519.89,
+      "validation_mae_of_chosen_config": 0.37837633003606436,
+      "grid_results_file": "results/rf_tuning_grid.json",
+      "widened_grid_used": false
+    }
   },
   {
-    "id": "exp-20260925T041012Z",
-    "created_utc": "2026-09-25T04:10:12.688322Z",
-    "git_commit": "1a1412f",
+    "id": "exp-20261016T161232Z",
+    "created_utc": "2026-10-16T16:12:32.926350Z",
+    "git_commit": "ab25d31",
+    "git_dirty": true,
     "script": "models/training/train_linear_baselines.py",
     "name": "ridge_all_years_political",
     "mode": "political",
@@ -117,9 +179,10 @@
     "model_path": "models/ridge_all_years_political.joblib"
   },
   {
-    "id": "exp-20260925T041014Z",
-    "created_utc": "2026-09-25T04:10:14.522626Z",
-    "git_commit": "1a1412f",
+    "id": "exp-20261016T161243Z",
+    "created_utc": "2026-10-16T16:12:43.781867Z",
+    "git_commit": "ab25d31",
+    "git_dirty": true,
     "script": "models/training/train_linear_baselines.py",
     "name": "elasticnet_all_years_political",
     "mode": "political",
@@ -152,9 +215,10 @@
     "model_path": "models/elasticnet_all_years_political.joblib"
   },
   {
-    "id": "exp-20260925T041024Z",
-    "created_utc": "2026-09-25T04:10:24.994213Z",
-    "git_commit": "1a1412f",
+    "id": "exp-20261016T161314Z",
+    "created_utc": "2026-10-16T16:13:14.428235Z",
+    "git_commit": "ab25d31",
+    "git_dirty": true,
     "script": "models/training/train_catboost.py",
     "name": "cat_all_years_political_lr0.05_d6",
     "mode": "political",
@@ -181,9 +245,10 @@
     "model_path": "models/cat_all_years_political_lr0.05_d6.cbm"
   },
   {
-    "id": "exp-20260925T041034Z",
-    "created_utc": "2026-09-25T04:10:34.168545Z",
-    "git_commit": "1a1412f",
+    "id": "exp-20261016T161337Z",
+    "created_utc": "2026-10-16T16:13:37.510389Z",
+    "git_commit": "ab25d31",
+    "git_dirty": true,
     "script": "models/training/train_xgboost.py",
     "name": "xgb_all_years_political_lr0.05_md6",
     "mode": "political",

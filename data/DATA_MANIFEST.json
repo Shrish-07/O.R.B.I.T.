@@ -1,9 +1,9 @@
 {
-  "run_utc": "2026-09-25T04:09:14.699507+00:00",
+  "run_utc": "2026-10-16T15:42:29.774059+00:00",
   "sales_file": "NYC_Citywide_Annualized_Calendar_Sales_Update_20260910.csv",
   "sales_row_count": 845607,
   "sales_modified_utc": "2026-09-11T01:13:10.669379+00:00",
   "pluto_file": "Primary_Land_Use_Tax_Lot_Output_(PLUTO)_20260105.csv",
   "canonical_output_rows": 566956,
-  "canonical_output_path": "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\data\\canonical\\modeling_dataset_canonical_v2.parquet"
+  "canonical_output_path": "data/canonical/modeling_dataset_canonical_v2.parquet"
 }

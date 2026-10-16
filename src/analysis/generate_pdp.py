@@ -1,70 +1,45 @@
-import json
+﻿import json
 from pathlib import Path
 import numpy as np
 import pandas as pd
 # Headless backend BEFORE pyplot (matches src/figures/* convention). TkAgg
-# teardown can abort the interpreter at exit ("Tcl_AsyncDelete: async
-# handler deleted by the wrong thread") after the script otherwise
-# completed, producing a spurious FAIL — observed 2026-09-24.
+# teardown can produce a spurious FAIL after otherwise-successful completion.
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-import lightgbm as lgb
-
-# The champion may be any model family (2026-09-24 fix: a RandomForest
-# .joblib champion crashed this script at lgb.Booster). Family-agnostic
-# loading / importance / prediction via src/ops/model_io.py.
+# Round 9: PDPs are generated for EVERY eligible ranked model (not just the
+# champion plus the two paper models). Ranking via src/ops/champion_ranking.py
+# (rank 1 = champion.json selection; ranks 2..N ascending test MAE); each
+# model is predicted via src/ops/predictors.py under the exact input
+# convention its trainer used, and ranked via src/ops/model_io.gain_importance.
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from src.ops.model_io import load_model, gain_importance, predict_frame
+from src.ops.model_io import gain_importance
+from src.ops.champion_ranking import get_all_models
+from src.ops.predictors import (load_entry_model, features_of,
+                                predict_entry_with_features)
 
-CHAMP = Path('experiments/champion.json')
-REG = Path('experiments/registry.json')
 SPLIT_DIR = Path('data/splits')
 ARTIFACT_DIR = Path('models/artifacts')
 
-if not CHAMP.exists():
-    print('No champion file')
-    raise SystemExit(1)
-if not REG.exists():
-    print('No registry file')
-    raise SystemExit(1)
 
-champ = json.loads(CHAMP.read_text())
-registry = json.loads(REG.read_text())
-champ_id = champ.get('selected_experiment')
-exp = next((e for e in registry if e.get('id') == champ_id), None)
-if exp is None:
-    print('Champion entry not found in registry')
-    raise SystemExit(1)
-
-name = exp.get('name')
-model_path = Path(exp.get('model_path'))
-features_path = Path(exp.get('features_path'))
-
-if not model_path.exists() or not features_path.exists():
-    print('Missing model or features artifact')
-    raise SystemExit(1)
-
-features = json.loads(features_path.read_text())
-
-# load test split
-test = pd.read_parquet(SPLIT_DIR / 'all_years_test.parquet')
-
-# load model (any family — .txt/.joblib/.cbm/.model)
-booster = load_model(model_path)
-
-def _generate_pdp(md_name, booster, feature_list):
-    """One PDP panel per top-gain feature (top 5), writing
-    models/artifacts/pdp_{name}_{feature}.png + {name}_pdp_summary.json."""
-    fi = gain_importance(booster, feature_list)
+def _generate_pdp(entry, model, preproc, feature_list, test):
+    """One PDP panel per top-importance feature (top 5), writing
+    models/artifacts/pdp_{name}_{feature}.png + {name}_pdp_summary.json.
+    Importance and prediction are both family-aware (gain for tree models,
+    |coef| for the linear baselines; the linear models are scored through
+    their saved median-impute+scale preproc, exactly as trained)."""
+    fi = gain_importance(model, feature_list)
     top_features = [f for f, _ in fi if f in feature_list][:5]
 
     out_summary = []
     for feat in top_features:
         col = feat
-        series = test[col].dropna()
+        series = pd.to_numeric(test[col], errors='coerce').dropna()
+        if len(series) == 0:
+            print('  PDP skipped for non-numeric feature', col, 'of', entry['name'])
+            continue
         vmin = series.quantile(0.05)
         vmax = series.quantile(0.95)
         grid = np.linspace(vmin, vmax, 20)
@@ -74,14 +49,17 @@ def _generate_pdp(md_name, booster, feature_list):
         for v in grid:
             sample_mod = sample.copy()
             sample_mod[col] = v
-            preds = predict_frame(booster, sample_mod[feature_list])
+            # raw-space grid; the predictor applies each family's own
+            # convention (preproc/fillna/native-NaN) afterwards
+            preds = predict_entry_with_features(entry, feature_list, sample_mod,
+                                                model=model, preproc=preproc)
             means.append(preds.mean())
-        plt.figure(figsize=(6,4))
+        plt.figure(figsize=(6, 4))
         plt.plot(grid, means, marker='o')
         plt.xlabel(col)
         plt.ylabel('Predicted log-price')
-        plt.title(f'PDP: {md_name} — {col}')
-        out_file = ARTIFACT_DIR / f"pdp_{md_name}_{col}.png"
+        plt.title(f"PDP: {entry['name']} -- {col} (rank {entry['rank']})")
+        out_file = ARTIFACT_DIR / f"pdp_{entry['name']}_{col}.png"
         plt.tight_layout()
         plt.savefig(out_file, dpi=300)
         plt.close()
@@ -89,33 +67,45 @@ def _generate_pdp(md_name, booster, feature_list):
         # portable (see VERIFICATION_REPORT.md Rounds 1-2 for this bug class).
         out_summary.append({'feature': col, 'plot': out_file.as_posix()})
 
-    with open(ARTIFACT_DIR / f"{md_name}_pdp_summary.json", 'w') as f:
+    with open(ARTIFACT_DIR / f"{entry['name']}_pdp_summary.json", 'w') as f:
         json.dump(out_summary, f, indent=2)
-    print('PDPs generated for', md_name, '->', [c['feature'] for c in out_summary])
+    print('PDPs generated for rank', entry['rank'], f"({entry['name']},"
+          f" {entry['family']}) ->", [c['feature'] for c in out_summary])
 
 
-_generate_pdp(name, booster, features)
+ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
+models = get_all_models()
+test = pd.read_parquet(SPLIT_DIR / 'all_years_test.parquet')
+for entry in models:
+    model, preproc = load_entry_model(entry)
+    _generate_pdp(entry, model, preproc, features_of(entry), test)
+print('PDP passes completed for all', len(models), 'eligible ranked models')
+
 
 # ---------------------------------------------------------------------------
-# Paper's political model (19-feature spec after the Round 7 BBL_pluto
-# blacklist): regenerate its PDPs too. The
-# previous lgbm_all_years_political_* PDP/sensitivity artifacts on disk were
-# computed against a PRE-BLACKLIST-CLEANUP model (they referenced assesstot,
-# exempttot, appbbl, taxmap, schooldist, ...) — exactly the staleness the
-# paper's Appendix A.4 documents. This block makes the fresh, blacklist-clean
-# political artifacts the only ones on disk.
+# Round 11: prune stale PDP PNGs. Any models/artifacts/pdp_*.png whose
+# (model, feature) pair is not in THIS run's PDP summary JSONs is a leftover
+# from an obsolete feature set (e.g. the pre-blacklist pdp_<model>_BBL_pluto
+# .png) and is DELETED. This run's *_pdp_summary.json files are the source of
+# truth for what was regenerated.
 # ---------------------------------------------------------------------------
-# FIX B1 (structural): ALWAYS regenerate the two paper models' artifacts on
-# every run. The previous 'X IS the champion -> skip the other pass' shortcut
-# let the non-champion model's artifacts go silently stale while verify
-# scripts and the paper read them as if current.
-for _mname in ('lgbm_all_years_political', 'lgbm_all_years_base'):
-    _e = next((e for e in registry if e.get('name') == _mname), None)
-    if _e is None:
-        print(f'NOTE: {_mname} not in registry; artifacts not regenerated')
-        continue
-    if _e.get('id') == champ_id:
-        continue  # the champion pass above already wrote this model's artifacts
-    _feats = json.loads(Path(_e.get('features_path')).read_text())
-    _bst = lgb.Booster(model_file=str(_e.get('model_path')))
-    _generate_pdp(_mname, _bst, _feats)
+current_pngs = set()
+for _e in models:
+    expected_pngs = json.loads(
+        (ARTIFACT_DIR / f"{_e['name']}_pdp_summary.json").read_text())
+    for rec in expected_pngs:
+        current_pngs.add(f"pdp_{_e['name']}_{rec.get('feature', '')}.png")
+        if rec.get('plot'):
+            current_pngs.add(Path(rec['plot']).name)
+removed = []
+for png in ARTIFACT_DIR.glob('pdp_*.png'):
+    if png.name not in current_pngs:
+        removed.append(png.name)
+        png.unlink()  # DELETE the stale artifact
+        print('Deleted stale PDP artifact:', png.name)
+print(f'PDP pruning: {len(removed)} stale PNG(s) deleted; '
+      f'{len(current_pngs)} current panels across {len(models)} models.')
+if removed:
+    with open(ARTIFACT_DIR / 'pdp_prune_log.json', 'w') as _f:
+        json.dump({'deleted_stale_pdps': removed}, _f, indent=2)
+

@@ -1,0 +1,98 @@
+{
+  "appendixA1_all_models_informational": {
+    "round9_note": "INFORMATIONAL ONLY. Rank 1 = current champion per experiments/champion.json; ranks 2..N = next-lowest-MAE eligible models. Models other than the paper model are not expected to reproduce the Appendix A.1 values.",
+    "per_rank_summaries": {
+      "rank1": {
+        "model_name": "rf_all_years_political_tuned",
+        "family": "sklearn",
+        "mode": "political",
+        "test_mae": 0.40161417910660113,
+        "liberal_policy_mean_pct_change": 0.5819,
+        "liberal_policy_n_districts": 51,
+        "conservative_policy_mean_pct_change": -0.379,
+        "conservative_policy_n_districts": 51,
+        "mixed_governance_mean_pct_change": -2.8497,
+        "mixed_governance_n_districts": 51,
+        "mixed_gov_pct_beyond_train_support": 38.3
+      },
+      "rank2": {
+        "model_name": "cat_all_years_political_lr0.05_d6",
+        "family": "catboost",
+        "mode": "political",
+        "test_mae": 0.41736433913362825,
+        "liberal_policy_mean_pct_change": 6.3336,
+        "liberal_policy_n_districts": 51,
+        "conservative_policy_mean_pct_change": -1.299,
+        "conservative_policy_n_districts": 51,
+        "mixed_governance_mean_pct_change": -8.5334,
+        "mixed_governance_n_districts": 51,
+        "mixed_gov_pct_beyond_train_support": 38.3
+      },
+      "rank3": {
+        "model_name": "xgb_all_years_political_lr0.05_md6",
+        "family": "xgboost",
+        "mode": "political",
+        "test_mae": 0.41769515091835496,
+        "liberal_policy_mean_pct_change": 10.5666,
+        "liberal_policy_n_districts": 51,
+        "conservative_policy_mean_pct_change": -1.0172,
+        "conservative_policy_n_districts": 51,
+        "mixed_governance_mean_pct_change": -11.0002,
+        "mixed_governance_n_districts": 51,
+        "mixed_gov_pct_beyond_train_support": 38.3
+      },
+      "rank4": {
+        "model_name": "lgbm_all_years_political",
+        "family": "lightgbm",
+        "mode": "political",
+        "test_mae": 0.43994123422895204,
+        "liberal_policy_mean_pct_change": 4.6212,
+        "liberal_policy_n_districts": 51,
+        "conservative_policy_mean_pct_change": -1.0642,
+        "conservative_policy_n_districts": 51,
+        "mixed_governance_mean_pct_change": -8.5051,
+        "mixed_governance_n_districts": 51,
+        "mixed_gov_pct_beyond_train_support": 38.3
+      },
+      "rank5": {
+        "model_name": "lgbm_all_years_base",
+        "family": "lightgbm",
+        "mode": "base",
+        "test_mae": 0.44182670516761613,
+        "liberal_policy_mean_pct_change": 4.7158,
+        "liberal_policy_n_districts": 51,
+        "conservative_policy_mean_pct_change": -0.9658,
+        "conservative_policy_n_districts": 51,
+        "mixed_governance_mean_pct_change": 0.0,
+        "mixed_governance_n_districts": 51,
+        "mixed_gov_pct_beyond_train_support": 38.3
+      },
+      "rank6": {
+        "model_name": "ridge_all_years_political",
+        "family": "linear",
+        "mode": "political",
+        "test_mae": 0.629341791343628,
+        "liberal_policy_mean_pct_change": 4.2779,
+        "liberal_policy_n_districts": 51,
+        "conservative_policy_mean_pct_change": -2.7731,
+        "conservative_policy_n_districts": 51,
+        "mixed_governance_mean_pct_change": -1.0965,
+        "mixed_governance_n_districts": 51,
+        "mixed_gov_pct_beyond_train_support": 38.3
+      },
+      "rank7": {
+        "model_name": "elasticnet_all_years_political",
+        "family": "linear",
+        "mode": "political",
+        "test_mae": 0.6312658045356286,
+        "liberal_policy_mean_pct_change": 4.683,
+        "liberal_policy_n_districts": 51,
+        "conservative_policy_mean_pct_change": -3.0163,
+        "conservative_policy_n_districts": 51,
+        "mixed_governance_mean_pct_change": 0.0,
+        "mixed_governance_n_districts": 51,
+        "mixed_gov_pct_beyond_train_support": 38.3
+      }
+    }
+  }
+}

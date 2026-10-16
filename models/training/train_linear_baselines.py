@@ -13,7 +13,7 @@ import json
 import yaml
 import subprocess
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timezone
 from sklearn.linear_model import RidgeCV, ElasticNetCV
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
@@ -142,11 +142,17 @@ for cls, name, fit_kwargs in [
         git = subprocess.check_output(['git','rev-parse','--short','HEAD']).decode().strip()
     except Exception:
         git = None
+    try:
+        git_dirty = bool(subprocess.check_output(
+            ['git', 'status', '--porcelain']).decode().strip())
+    except Exception:
+        git_dirty = None
 
     exp = {
-        'id': f"exp-{datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')}",
-        'created_utc': datetime.utcnow().isoformat() + 'Z',
+        'id': f"exp-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}",
+        'created_utc': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
         'git_commit': git,
+        'git_dirty': git_dirty,
         'script': 'models/training/train_linear_baselines.py',
         'name': fullname,
         'mode': args.mode,

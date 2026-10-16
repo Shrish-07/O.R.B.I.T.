@@ -1,0 +1,203 @@
+{
+  "source_reverified": "results/causal/city_of_yes_did_results.json",
+  "n_checks": 29,
+  "n_matched": 29,
+  "all_match": true,
+  "checks": [
+    {
+      "field": "ev.yes_x_2016-17.coef",
+      "match": true,
+      "verified": -0.1445293429381987,
+      "pipeline": -0.1445293429381987
+    },
+    {
+      "field": "ev.yes_x_2016-17.se",
+      "match": true,
+      "verified": 0.08082806214036496,
+      "pipeline": 0.08082806214036496
+    },
+    {
+      "field": "ev.yes_x_2016-17.p",
+      "match": true,
+      "verified": 0.07375850853926565,
+      "pipeline": 0.07375850853926565
+    },
+    {
+      "field": "ev.yes_x_2018-19.coef",
+      "match": true,
+      "verified": -0.12208882577676257,
+      "pipeline": -0.12208882577676257
+    },
+    {
+      "field": "ev.yes_x_2018-19.se",
+      "match": true,
+      "verified": 0.06072192795477133,
+      "pipeline": 0.06072192795477133
+    },
+    {
+      "field": "ev.yes_x_2018-19.p",
+      "match": true,
+      "verified": 0.044365430599471026,
+      "pipeline": 0.044365430599471026
+    },
+    {
+      "field": "ev.yes_x_2020-21.coef",
+      "match": true,
+      "verified": -0.022482501671699434,
+      "pipeline": -0.022482501671699434
+    },
+    {
+      "field": "ev.yes_x_2020-21.se",
+      "match": true,
+      "verified": 0.0263012002938479,
+      "pipeline": 0.0263012002938479
+    },
+    {
+      "field": "ev.yes_x_2020-21.p",
+      "match": true,
+      "verified": 0.39265691704739414,
+      "pipeline": 0.39265691704739414
+    },
+    {
+      "field": "ev.yes_x_2024.coef",
+      "match": true,
+      "verified": -0.022821833835638957,
+      "pipeline": -0.022821833835638957
+    },
+    {
+      "field": "ev.yes_x_2024.se",
+      "match": true,
+      "verified": 0.013989994006625484,
+      "pipeline": 0.013989994006625484
+    },
+    {
+      "field": "ev.yes_x_2024.p",
+      "match": true,
+      "verified": 0.1028276874695763,
+      "pipeline": 0.1028276874695763
+    },
+    {
+      "field": "ev.yes_x_2025.coef",
+      "match": true,
+      "verified": -0.00551574882731054,
+      "pipeline": -0.00551574882731054
+    },
+    {
+      "field": "ev.yes_x_2025.se",
+      "match": true,
+      "verified": 0.022170458594508582,
+      "pipeline": 0.022170458594508582
+    },
+    {
+      "field": "ev.yes_x_2025.p",
+      "match": true,
+      "verified": 0.8035246073410579,
+      "pipeline": 0.8035246073410579
+    },
+    {
+      "field": "ev.n",
+      "match": true,
+      "verified": 355480,
+      "pipeline": 355480
+    },
+    {
+      "field": "ev.r_squared",
+      "match": true,
+      "verified": 0.29645414962571903,
+      "pipeline": 0.29645414962571903
+    },
+    {
+      "field": "ev.wald_f",
+      "match": true,
+      "verified": 4.405585464840547,
+      "pipeline": 4.405585464840547
+    },
+    {
+      "field": "ev.wald_p",
+      "match": true,
+      "verified": 0.22086804334742394,
+      "pipeline": 0.22086804334742394
+    },
+    {
+      "field": "main.n",
+      "match": true,
+      "verified": 333670,
+      "pipeline": 333670
+    },
+    {
+      "field": "main.r_squared",
+      "match": true,
+      "verified": 0.2902612878905667,
+      "pipeline": 0.2902612878905667
+    },
+    {
+      "field": "main.did_coef",
+      "match": true,
+      "verified": 0.07933126948619988,
+      "pipeline": 0.07933126948619988
+    },
+    {
+      "field": "main.did_se",
+      "match": true,
+      "verified": 0.0526458802098418,
+      "pipeline": 0.0526458802098418
+    },
+    {
+      "field": "main.did_p",
+      "match": true,
+      "verified": 0.13184022319334338,
+      "pipeline": 0.13184022319334338
+    },
+    {
+      "field": "sens.n",
+      "match": true,
+      "verified": 355480,
+      "pipeline": 355480
+    },
+    {
+      "field": "sens.r_squared",
+      "match": true,
+      "verified": 0.295692198896908,
+      "pipeline": 0.295692198896908
+    },
+    {
+      "field": "sens.did_coef",
+      "match": true,
+      "verified": 0.07402339561919669,
+      "pipeline": 0.07402339561919669
+    },
+    {
+      "field": "sens.did_se",
+      "match": true,
+      "verified": 0.049945507644344855,
+      "pipeline": 0.049945507644344855
+    },
+    {
+      "field": "sens.did_p",
+      "match": true,
+      "verified": 0.13831816995499563,
+      "pipeline": 0.13831816995499563
+    }
+  ],
+  "recomputed_main_did": {
+    "n": 333670,
+    "r_squared": 0.2902612878905667,
+    "did_coef": 0.07933126948619988,
+    "did_se": 0.0526458802098418,
+    "did_p": 0.13184022319334338
+  },
+  "recomputed_sensitivity_did": {
+    "n": 355480,
+    "r_squared": 0.295692198896908,
+    "did_coef": 0.07402339561919669,
+    "did_se": 0.049945507644344855,
+    "did_p": 0.13831816995499563
+  },
+  "recomputed_pre_trend_wald": {
+    "n": 355480,
+    "r_squared": 0.29645414962571903,
+    "pre_trend_joint_wald_f": 4.405585464840547,
+    "pre_trend_joint_wald_p": 0.22086804334742394
+  },
+  "note": "Matches are on the re-derived values, incl. all event-study terms, the joint pre-trend Wald test, and both DiD variants."
+}

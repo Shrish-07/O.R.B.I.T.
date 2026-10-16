@@ -184,3 +184,27 @@ if dfs:
     plt.close(fig)
 
 print('Figures saved to', FIGS)
+
+# ---------------------------------------------------------------------------
+# Round 9: per-model SHAP charts for EVERY eligible ranked model's freshly
+# regenerated summary (generate_shap_summary now covers all of them). Named
+# shap_top10_{model}.png so the paper/champion figures above keep their
+# filenames and are never overwritten. Rank ordering is resolved via
+# src/ops/champion_ranking.py; failures for one model never block the rest.
+# ---------------------------------------------------------------------------
+try:
+    import sys as _sys9
+    _sys9.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from src.ops.champion_ranking import get_all_models
+    _already = {PAPER_SHAP_MODEL, champ_name}
+    for _ent in get_all_models(write_audit=False):
+        if _ent['name'] in _already:
+            continue
+                # model-labeled chart (title carries the rank so a swapped rank-2 is
+        # visible at a glance)
+        _sp = Path('models/artifacts') / f"{_ent['name']}_shap_summary.json"
+        _plot_shap_topN(_sp, 10, FIGS / f"shap_top10_{_ent['name']}.png",
+                        f"rank {_ent['rank']} ({_ent['name']})")
+    print('  per-model SHAP figures written for all ranked models')
+except Exception as _e9:
+    print('  (per-model SHAP charts skipped:', _e9, ')')

@@ -228,7 +228,8 @@ def main():
             sales_file.stat().st_mtime, timezone.utc).isoformat(),
         'pluto_file': pluto_file.name,
         'canonical_output_rows': int(nrows),
-        'canonical_output_path': str(OUT),
+        # Round 11: repo-relative POSIX path (was an absolute C:\... path).
+        'canonical_output_path': OUT.relative_to(ROOT).as_posix(),
     }
     MANIFEST.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
     print(f'Wrote data manifest: {MANIFEST}')

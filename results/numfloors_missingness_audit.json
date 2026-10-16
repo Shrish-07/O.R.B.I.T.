@@ -1,0 +1,29 @@
+{
+  "claim": "numfloors contributes an additional N missing rows beyond the farf group (Section 4.3)",
+  "paper_published_value": 13277,
+  "recomputed_value": 13277,
+  "recomputed_value_rounded": 13277,
+  "match_paper": true,
+  "discrepancy_rows": 0,
+  "canonical_total_rows": 566956,
+  "canonical_total_rows__matches_paper": true,
+  "mask_farf_count": 32823,
+  "mask_farf_count__matches_paper": true,
+  "farf_fields": [
+    "yearbuilt",
+    "commfar",
+    "residfar",
+    "facilfar"
+  ],
+  "numfloors_total_missing": 46100,
+  "regression_dropna_union": 46591,
+  "regression_dropna_union__matches_paper": true,
+  "n_after_dropna": 520365,
+  "n_after_dropna__matches_paper": true,
+  "reconciliation": {
+    "numfloors_only_group_size": 13277,
+    "of_which_also_dem_share_missing": 53,
+    "of_which_only_numfloors_missing": 12774,
+    "note": "The 46,591 union (N=520,365) is independently locked and still holds: 32,823 (farf group) + 13,277 (numfloors beyond farf) + 137 (dem_share-unique) + 407 (other) - 53 overlap. Round 10 refreshed the targets to the manuscript's current values; the old Round-2 '11,918 vs 11,930' patch note is superseded."
+  }
+}

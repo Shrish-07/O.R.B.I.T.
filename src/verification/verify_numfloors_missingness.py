@@ -4,12 +4,11 @@ against the Table 1 missingness union.
 Reproduces the audit logic exactly:
 1. Load data/canonical/modeling_dataset_canonical_v2.parquet
 2. mask_farf = rows where yearbuilt, commfar, residfar, facilfar are ALL null
-   (paper says exactly 31,692 — this is locked upstream).
+   (paper's current value: 32,823 -- Round 10 refresh).
 3. Count rows where numfloors is null AND mask_farf is False.
-   Paper's Section 4.3 published value: 11,918.
-   Prior internal audit recomputed it as 11,930.
-4. Sanity-check the union across the regression dropna columns stays 44,083
-   (Table 1 N = 514,618 - 44,083 = 470,535; independently locked).
+   Paper's current Section 4.3 value: 13,277.
+4. Sanity-check the union across the regression dropna columns stays 46,591
+   (Table 1 N = 566,956 - 46,591 = 520,365; independently locked).
 
 Output: results/numfloors_missingness_audit.json  (persisted, reproducible)
 
@@ -17,6 +16,7 @@ This script does NOT adjust methodology or filters to hit a target number; it
 reports the honest count and flags whether the paper needs correcting.
 """
 import json
+import sys
 from pathlib import Path
 import pandas as pd
 
@@ -24,10 +24,13 @@ ROOT = Path(__file__).resolve().parents[2]
 CANON = ROOT / "data" / "canonical" / "modeling_dataset_canonical_v2.parquet"
 OUT = ROOT / "results" / "numfloors_missingness_audit.json"
 
-PAPER_TOTAL_ROWS = 514618
-PAPER_FARF = 31692
-PAPER_NUMFLOORS_ONLY = 11918  # paper's published Section 4.3 value
-PAPER_N_AFTER_DROPNA = 470535  # Table 1 N
+# Round 10: updated to the manuscript's current values (post data refresh +
+# 24/25-feature rebuild).
+PAPER_TOTAL_ROWS = 566956
+PAPER_FARF = 32823
+PAPER_NUMFLOORS_ONLY = 13277  # paper's Section 4.3 value
+PAPER_N_AFTER_DROPNA = 520365  # Table 1 N
+PAPER_DROPNA_UNION = 46591
 
 
 def main():
@@ -76,7 +79,7 @@ def main():
         "farf_fields": ["yearbuilt", "commfar", "residfar", "facilfar"],
         "numfloors_total_missing": int(mask_num.sum()),
         "regression_dropna_union": n_union,
-        "regression_dropna_union__matches_paper": (n_union == 44083),
+        "regression_dropna_union__matches_paper": (n_union == PAPER_DROPNA_UNION),
         "n_after_dropna": n_after,
         "n_after_dropna__matches_paper": (n_after == PAPER_N_AFTER_DROPNA),
         "reconciliation": {
@@ -84,23 +87,12 @@ def main():
             "of_which_also_dem_share_missing": also_dem,
             "of_which_only_numfloors_missing": only_num,
             "note": (
-                "The 44,083 union (N=470,535) is independently locked and still "
-                "holds. The farf group is locked at 31,692. The numfloors-only "
-                "(not-farf) group honestly counts to 11,930, which is 12 rows "
-                "MORE than the paper's published 11,918. The paper's prose "
-                "claim that numfloors adds '11,918 missing rows beyond the "
-                "join-failure group' is therefore off by 12 rows and must be "
-                "corrected to 11,930."
-            ),
-        },
-        "required_manuscript_patch": {
-            "old_text": (
-                "numfloors contributes an additional 11,918 missing rows beyond "
-                "this join-failure group"
-            ),
-            "new_text": (
-                "numfloors contributes an additional 11,930 missing rows beyond "
-                "this join-failure group"
+                "The 46,591 union (N=520,365) is independently locked and "
+                "still holds: 32,823 (farf group) + 13,277 (numfloors beyond "
+                "farf) + 137 (dem_share-unique) + 407 (other) - 53 overlap. "
+                "Round 10 refreshed the targets to the manuscript's current "
+                "values; the old Round-2 '11,918 vs 11,930' patch note is "
+                "superseded."
             ),
         },
     }
@@ -110,6 +102,18 @@ def main():
         json.dump(report, f, indent=2)
     print(json.dumps(report, indent=2))
     print(f"\nSaved audit to {OUT}")
+
+    # Round 11: machine-countable status
+    sys.path.insert(0, str(ROOT / 'src' / 'verification'))
+    from _shared import record_status, check_val  # noqa: E402
+    record_status('verify_numfloors_missingness', [
+        check_val('numfloors_only_count', PAPER_NUMFLOORS_ONLY, n_num_only),
+        check_val('farf_group_count', PAPER_FARF, n_farf),
+        check_val('canonical_total_rows', PAPER_TOTAL_ROWS, n_total),
+        check_val('regression_dropna_union', PAPER_DROPNA_UNION, n_union),
+        check_val('n_after_dropna', PAPER_N_AFTER_DROPNA, n_after),
+    ], note='numfloors-only group and the dropna-union reconciliation vs '
+            'manuscript targets (Round 10 refreshed).')
 
 
 if __name__ == "__main__":

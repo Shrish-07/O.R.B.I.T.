@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_iv_district_fe_rescue",
+  "generated_utc": "2026-10-16T17:23:03.777646Z",
+  "n_checks": 108,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Independent rescue-arm re-derivation vs results/causal/iv_district_fe_rescue_results.json."
+}

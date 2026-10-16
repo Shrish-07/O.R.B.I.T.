@@ -1,0 +1,115 @@
+{
+  "model": "rf_all_years_political_tuned",
+  "family": "sklearn",
+  "registry_test_mae": 0.40161417910660113,
+  "method": "shap",
+  "shap_fallback_tier": "a",
+  "shap_fallback_note": "exact TreeSHAP on the standard sampled test slice (n<=2000, seed 42, low-NA feature sampling).",
+  "shap_model_path": "models/rf_all_years_political_tuned.joblib",
+  "budget_minutes_per_tier": 90,
+  "computed_utc": "2026-10-16T16:27:10.211455Z",
+  "sample_n": 2000,
+  "tier_attempts": [],
+  "summary": [
+    {
+      "feature": "BOROUGH",
+      "mean_abs_shap": 0.17268624737622834
+    },
+    {
+      "feature": "RESIDENTIAL UNITS",
+      "mean_abs_shap": 0.1492625435795818
+    },
+    {
+      "feature": "ZIP CODE",
+      "mean_abs_shap": 0.11539534947815144
+    },
+    {
+      "feature": "TOTAL UNITS",
+      "mean_abs_shap": 0.11304660256586502
+    },
+    {
+      "feature": "Community Board",
+      "mean_abs_shap": 0.10752119763865088
+    },
+    {
+      "feature": "unitsres",
+      "mean_abs_shap": 0.07633796845074138
+    },
+    {
+      "feature": "COMMERCIAL UNITS",
+      "mean_abs_shap": 0.05872835615150372
+    },
+    {
+      "feature": "unitstotal",
+      "mean_abs_shap": 0.05592425562864273
+    },
+    {
+      "feature": "facilfar",
+      "mean_abs_shap": 0.045574252836792464
+    },
+    {
+      "feature": "numfloors",
+      "mean_abs_shap": 0.042216069049068126
+    },
+    {
+      "feature": "yearbuilt",
+      "mean_abs_shap": 0.03842396161573198
+    },
+    {
+      "feature": "Council District",
+      "mean_abs_shap": 0.038284764441373714
+    },
+    {
+      "feature": "Census Tract 2020",
+      "mean_abs_shap": 0.03513933238992164
+    },
+    {
+      "feature": "CounDist",
+      "mean_abs_shap": 0.035049268895312215
+    },
+    {
+      "feature": "dem_share",
+      "mean_abs_shap": 0.03189219830682873
+    },
+    {
+      "feature": "YEAR BUILT",
+      "mean_abs_shap": 0.028663631354904226
+    },
+    {
+      "feature": "commfar",
+      "mean_abs_shap": 0.014629361568292714
+    },
+    {
+      "feature": "TAX CLASS AT TIME OF SALE",
+      "mean_abs_shap": 0.013906189359799476
+    },
+    {
+      "feature": "landuse",
+      "mean_abs_shap": 0.012716979716925118
+    },
+    {
+      "feature": "residfar",
+      "mean_abs_shap": 0.01175476655580969
+    },
+    {
+      "feature": "GROSS SQUARE FEET",
+      "mean_abs_shap": 0.004264025442305693
+    },
+    {
+      "feature": "bldgarea",
+      "mean_abs_shap": 0.003998447178070891
+    },
+    {
+      "feature": "LAND SQUARE FEET",
+      "mean_abs_shap": 0.0008584800518466631
+    },
+    {
+      "feature": "lotarea",
+      "mean_abs_shap": 0.0008003019421253078
+    },
+    {
+      "feature": "election_year",
+      "mean_abs_shap": 0.0
+    }
+  ]
+}

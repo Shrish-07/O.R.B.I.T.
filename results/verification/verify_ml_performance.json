@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_ml_performance",
+  "generated_utc": "2026-10-16T17:14:57.674643Z",
+  "n_checks": 16,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "docs/model_comparison_table.csv vs live registry at 5dp; Tier-1 spot-check of the political MAE from raw predictions."
+}

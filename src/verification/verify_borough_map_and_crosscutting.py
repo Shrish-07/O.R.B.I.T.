@@ -3,7 +3,7 @@ import json
 import glob
 from pathlib import Path
 import pandas as pd
-from _shared import ROOT, write_json, load_canonical, parse_feature_names
+from _shared import ROOT, write_json, record_status, check_val, load_canonical, parse_feature_names
 
 L = {}
 boromap = pd.read_csv(ROOT / 'results' / 'council_district_borough_map.csv')
@@ -59,11 +59,11 @@ def _violations(names):
     return [f for f in names if f.lower() in _bl or f.replace('_', ' ').lower() in _bl]
 _base_bad = _violations(base_names)
 _pol_bad = _violations(pol_names)
-M['champion_base_feature_count'] = {'paper': 16, 'from_feature_names_line': len(base_names),
+M['champion_base_feature_count'] = {'paper': 24, 'from_feature_names_line': len(base_names),
                                     'max_feature_idx_plus_1': (base_mfi + 1) if base_mfi is not None else None,
                                     'blacklist_violations': _base_bad,
                                     'blacklist_clean': len(_base_bad) == 0}
-M['champion_political_feature_count'] = {'paper': 17, 'from_feature_names_line': len(pol_names),
+M['champion_political_feature_count'] = {'paper': 25, 'from_feature_names_line': len(pol_names),
                                           'max_feature_idx_plus_1': (pol_mfi + 1) if pol_mfi is not None else None,
                                           'blacklist_violations': _pol_bad,
                                           'blacklist_clean': len(_pol_bad) == 0}
@@ -92,11 +92,35 @@ tex = [t for t in tex if '.venv' not in t and 'venv' not in t]
 docx = [d for d in docx if '.venv' not in d and 'venv' not in d]
 M['tex_files'] = tex
 M['docx_files'] = docx
-M['tex_files_are_repo_tables_only'] = all(str(ROOT / 'tables') in t for t in tex)
+# Allowed .tex roots: tables/ (pre-existing drop-ins) and docs/paper_assets/
+# (Round 10: generate_paper_assets.py writes the paper's tables there).
+_allowed_tex_roots = [str(ROOT / 'tables'), str(ROOT / 'docs' / 'paper_assets')]
+M['tex_files_are_repo_tables_only'] = all(
+    any(r in t for r in _allowed_tex_roots) for t in tex)
 M['no_manuscript_docx_in_repo'] = (len(docx) == 0)
-M['note'] = ('tables/*.tex are pipeline-generated drop-in tables, not the manuscript '
-             '(the manuscript lives outside this repo), so their presence here is expected.')
+M['note'] = ('tables/*.tex and docs/paper_assets/*.tex are pipeline-generated '
+             'drop-in tables, not the manuscript (the manuscript lives outside '
+             'this repo), so their presence here is expected.')
 write_json(ROOT / 'results' / 'round5_part_M.json', {'section_M_cross_cutting': M})
 print('WROTE results/round5_part_M.json')
 print('shap_top10 opens', M['shap_top10_png_opens'], 'size', M.get('shap_top10_png_size'))
 print('tex', tex, 'docx', docx)
+print('blacklist base/political clean:', _base_bad, _pol_bad)
+
+# Round 11: machine-countable status
+_checks = [check_val(f'borough_map.{b}', True, v['match'])
+           for b, v in check.items()]
+_checks.append(check_val('borough_map.all_ranges', True,
+                         L['all_borough_ranges_match']))
+_checks.append(check_val('borough_map.canonical_consistent', True,
+                         all(canon_expected.get(b) == expected[b]
+                             for b in expected if b in canon_expected)))
+_checks.append(check_val('lgbm_base_blacklist_clean', True, len(_base_bad) == 0))
+_checks.append(check_val('lgbm_political_blacklist_clean', True, len(_pol_bad) == 0))
+_checks.append(check_val('shap_top10_png_opens', True, M['shap_top10_png_opens']))
+_checks.append(check_val('tex_files_allowed_roots_only', True, M['tex_files_are_repo_tables_only']))
+_checks.append(check_val('no_manuscript_docx_in_repo', True, M['no_manuscript_docx_in_repo']))
+record_status('verify_borough_map_and_crosscutting', _checks,
+              note='Borough-range mapping (CSV + canonical BOROUGH), blacklist '
+                   'live scan of the two paper LightGBM feature lists, '
+                   'PNG integrity, and tex/docx location hygiene.')

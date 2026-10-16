@@ -115,3 +115,42 @@ for _mname in ('lgbm_all_years_political', 'lgbm_all_years_base'):
     _out.to_parquet(_out_path)
     print(f'Saved {len(_out)}-row prediction intervals to', _out_path)
 
+
+# ---------------------------------------------------------------------------
+# Round 9 full-coverage pass: the same residual-bootstrap intervals for EVERY
+# eligible ranked model (src/ops/champion_ranking.py), each scored via
+# src/ops/predictors.py under the exact input convention its own trainer
+# used. Models already covered by the champion block or the two classic
+# LightGBM passes above are skipped by experiment id (never computed twice).
+# ---------------------------------------------------------------------------
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.ops.champion_ranking import get_all_models, PAPER_MODEL_NAMES
+from src.ops.predictors import build_predictor
+
+_covered_ids = {champ.get('selected_experiment')}
+_covered_ids |= {e.get('id') for e in registry if e.get('name') in PAPER_MODEL_NAMES}
+for _ent in get_all_models(write_audit=False):
+    if _ent['experiment_id'] in _covered_ids:
+        continue
+    _pf = build_predictor(_ent)
+    _preds_test = _pf(test)
+    _preds_train = _pf(train)
+    _resid = train[TARGET] - _preds_train
+    _simulated = np.zeros((n_boot, len(test)))
+    for i in range(n_boot):
+        _res_sample = _resid.sample(frac=0.8, replace=True, random_state=42 + i).values
+        _drawn = np.random.choice(_res_sample, size=len(test), replace=True)
+        _simulated[i, :] = _preds_test + _drawn
+    _lower = np.percentile(_simulated, 10, axis=0)
+    _upper = np.percentile(_simulated, 90, axis=0)
+    _out = pd.DataFrame({'pred': _preds_test, 'lower': _lower, 'upper': _upper},
+                        index=test.index)
+    assert len(_out) == len(test), ('rank ' + str(_ent['rank']) + ': '
+                                    + str(len(_out)) + ' rows vs ' + str(len(test))
+                                    + ' test rows')
+    _out_path = PRED_DIR / f"{_ent['name']}_prediction_intervals.parquet"
+    _out.to_parquet(_out_path)
+    print(f"Saved rank-{_ent['rank']} intervals ({_ent['name']}, {_ent['family']}) to", _out_path)
+print('Confidence intervals now cover all', len(get_all_models(write_audit=False)),
+      'eligible ranked models')

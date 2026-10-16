@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_regression_missingness",
+  "generated_utc": "2026-10-16T17:14:48.365051Z",
+  "n_checks": 11,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Missingness decomposition (566,956 -> 520,365, drop 46,591) vs manuscript targets, plus the 53-overlap reconciliation."
+}

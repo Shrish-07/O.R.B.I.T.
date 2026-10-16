@@ -1,0 +1,109 @@
+{
+  "generated_by": "src/figures/generate_paper_assets.py",
+  "outputs": [
+    {
+      "file": "docs/paper_assets/table2_model_performance.tex",
+      "kind": "tex"
+    },
+    {
+      "file": "docs/paper_assets/fig3_model_mae.png",
+      "kind": "png"
+    },
+    {
+      "file": "docs/paper_assets/table3_shap_political.tex",
+      "kind": "tex"
+    },
+    {
+      "file": "docs/paper_assets/fig4_shap_political.png",
+      "kind": "png"
+    },
+    {
+      "file": "docs/paper_assets/table_shap_cross_model.tex",
+      "kind": "tex"
+    },
+    {
+      "file": "docs/paper_assets/table_scenario_summary.tex",
+      "kind": "tex"
+    },
+    {
+      "file": "docs/paper_assets/appendix_a1_scenarios.tex",
+      "kind": "tex"
+    },
+    {
+      "file": "docs/paper_assets/fig5_scenario_impact.png",
+      "kind": "png"
+    },
+    {
+      "file": "docs/paper_assets/table_iv_spec_search.tex",
+      "kind": "tex"
+    },
+    {
+      "file": "docs/paper_assets/fig6_iv_spec_search.png",
+      "kind": "png"
+    },
+    {
+      "file": "docs/paper_assets/table_did_event_study.tex",
+      "kind": "tex"
+    },
+    {
+      "file": "docs/paper_assets/fig7_did_event_study.png",
+      "kind": "png"
+    },
+    {
+      "file": "docs/paper_assets/table1_ols_regression.tex",
+      "kind": "tex"
+    },
+    {
+      "file": "docs/paper_assets/table4_robustness.tex",
+      "kind": "tex"
+    },
+    {
+      "file": "docs/paper_assets/table5_spatial_regression.tex",
+      "kind": "tex"
+    }
+  ],
+  "models": [
+    {
+      "name": "rf_all_years_political_tuned",
+      "experiment_id": "exp-20261016T161155Z",
+      "family": "sklearn",
+      "test_mae": 0.40161417910660113
+    },
+    {
+      "name": "cat_all_years_political_lr0.05_d6",
+      "experiment_id": "exp-20261016T161314Z",
+      "family": "catboost",
+      "test_mae": 0.41736433913362825
+    },
+    {
+      "name": "xgb_all_years_political_lr0.05_md6",
+      "experiment_id": "exp-20261016T161337Z",
+      "family": "xgboost",
+      "test_mae": 0.41769515091835496
+    },
+    {
+      "name": "lgbm_all_years_political",
+      "experiment_id": "exp-20261016T154430Z",
+      "family": "lightgbm",
+      "test_mae": 0.43994123422895204
+    },
+    {
+      "name": "lgbm_all_years_base",
+      "experiment_id": "exp-20261016T154341Z",
+      "family": "lightgbm",
+      "test_mae": 0.44182670516761613
+    },
+    {
+      "name": "ridge_all_years_political",
+      "experiment_id": "exp-20261016T161232Z",
+      "family": "linear",
+      "test_mae": 0.629341791343628
+    },
+    {
+      "name": "elasticnet_all_years_political",
+      "experiment_id": "exp-20261016T161243Z",
+      "family": "linear",
+      "test_mae": 0.6312658045356286
+    }
+  ]
+}
