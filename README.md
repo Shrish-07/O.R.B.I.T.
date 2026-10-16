@@ -1,16 +1,41 @@
-# O.R.B.I.T. — Observational Real-estate Behavior & Intelligence Toolkit
+# O.R.B.I.T. — the reproducible pipeline behind "Political Ideology and Property Values in New York City"
 
-O.R.B.I.T. is a reproducible research platform and forecasting toolkit built
-to support the paper "Political Ideology and Property Values in New York
-City." It integrates public datasets (NYC property sales, PLUTO, mayoral and
-council election returns, district geography), canonicalizes and cleans
-features, trains the two paper-cited LightGBM models plus five comparison
-models (a complexity-constrained, validation-tuned Random Forest, CatBoost,
-XGBoost, Ridge, ElasticNet), independently re-verifies every number the paper
-reports, generates the paper's tables and figures straight from repo
-artifacts, and exposes an interactive Streamlit application for
-single-property exploration, batch scoring, and political scenario
-simulation.
+*(The O.R.B.I.T. name is kept for identity; the repository has outgrown its
+original "toolkit" framing — today it is a single-command, independently
+verified research pipeline.)*
+
+O.R.B.I.T. reproduces — end to end — every number, table, and figure in the
+paper "Political Ideology and Property Values in New York City," and then
+independently re-derives all of them:
+
+- **One command, 56 stages, ~100 min.** `python main.py` builds the canonical
+  dataset from public NYC sources (845,607 property sales, 2016–2025, merged
+  with PLUTO and Board-of-Elections returns → 566,956 canonical rows), trains
+  all **7 registered model experiments** (champion: the complexity-constrained,
+  validation-tuned Random Forest, test MAE 0.4016; plus LightGBM base &
+  political, CatBoost, XGBoost, Ridge, ElasticNet), runs the full analysis
+  suite (Moran's I, nested OLS, robustness, district-level spatial
+  regression, exact SHAP for every model, PDPs, counterfactual scenarios,
+  close-election IV, City of Yes DiD), regenerates every manuscript table and
+  figure from repo artifacts (`docs/paper_assets/`), and re-verifies all of
+  it. Provenance (`git_commit`/`git_dirty`) is recorded in the registry,
+  `champion.json`, and the run report.
+- **Verification is machine-countable and gated.** 19 independent verifiers
+  each write a per-check status file; the final `verification_summary` stage
+  aggregates them — last full run: **647 checks, 0 mismatches, 19/19
+  verifiers reporting** — and exits non-zero on any mismatch, so a drifted or
+  broken number fails the run instead of hiding in print output. The full
+  audit history lives in `VERIFICATION_REPORT.md` (Rounds 1–11c).
+- **Honest nulls stay honest.** The close-election IV instrument is not
+  identified at any bandwidth and the City of Yes DiD is a null under the
+  preference-proxy framing — both are reported as findings with every
+  attempted specification tabulated, never buried.
+- **Auditor-friendly by design.** The small paper-relevant artifacts (results
+  JSONs, per-model scenario tables, SHAP and feature manifests, the dated
+  full-run report) are git-tracked, so every reported number is inspectable
+  in-repo without a re-run.
+- A Streamlit app (`app/`) remains for single-property exploration, batch
+  scoring, and political-scenario simulation on top of the trained models.
 
 **New here?**
 
@@ -144,8 +169,12 @@ You can rerun every piece in isolation:
 | `python src/figures/generate_paper_assets.py` | regenerate every paper table/figure from repo artifacts (`docs/paper_assets/`) |
 
 These stages print comparisons to the manuscript's current values and write
-detailed JSON deltas under `results/`. The verification suite exits 0 on
-mismatch by design — it REPORTS instead of silently overwriting.
+detailed JSON deltas under `results/`, plus a machine-countable per-verifier
+status under `results/verification/`. Since Round 11 the suite is GATED: the
+final `verification_summary` stage aggregates all statuses and **exits
+non-zero on any mismatch beyond tolerance, any missing verifier report, or
+any stale status file** — mismatches fail the run instead of hiding in print
+output (last full run: 647 checks / 0 mismatches / 19-19 reporting).
 
 ## How the champion model is selected — and where interpretability comes from
 
@@ -382,7 +411,8 @@ into `docs/paper_assets/`. Known final state:
 
 ## License & Disclaimer
 
-This repository contains a research-grade forecasting and analysis toolkit.
+This repository contains a research-grade, independently verified analysis
+pipeline and its manuscript artifacts.
 It is not financial or investment advice. Forecasts and scenario outputs
 should be treated as research outputs and verified independently before
 operational use. Use at your own risk.
