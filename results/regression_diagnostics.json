@@ -9,19 +9,10 @@
   "residual_skew": 0.33121425751708017,
   "residual_kurtosis_fisher_excess": 4.146041457921704,
   "residual_kurtosis_pearson": 7.146041457921704,
-  "kurtosis_paper_reports": "Pearson convention (kurtosis = excess + 3)",
-  "kurtosis_matches_paper": false,
+  "kurtosis_convention": "Pearson (kurtosis = excess + 3)",
   "jarque_bera": 382209.021,
   "jarque_bera_pvalue": 0.0,
   "omnibus": 58003.584,
   "omnibus_pvalue": 0.0,
-  "paper_targets_appendix_a2": {
-    "durbin_watson": 1.517,
-    "omnibus": 50100.014,
-    "jarque_bera": 352014.397,
-    "skew": 0.264,
-    "kurtosis": 7.204,
-    "condition_number": 36400.0
-  },
-  "note": "residual_skew uses scipy.stats.skew(bias=False) on m3.resid. Two kurtosis conventions are saved to resolve a labeling ambiguity: residual_kurtosis_fisher_excess is the Fisher excess kurtosis (normal => 0), and residual_kurtosis_pearson is the Pearson (non-excess) kurtosis = excess + 3 (normal => 3). The paper's Appendix A.2 kurtosis field (7.204) is the Pearson convention, so it equals residual_kurtosis_fisher_excess + 3 exactly. All diagnostics computed from the same m3 fit as regression_table.csv."
+  "note": "residual_skew uses scipy.stats.skew(bias=False) on m3.resid. Two kurtosis conventions are saved to resolve a labeling ambiguity: residual_kurtosis_fisher_excess is the Fisher excess kurtosis (normal => 0), and residual_kurtosis_pearson is the Pearson (non-excess) kurtosis = excess + 3 (normal => 3). Round 12: the stale pre-rewrite manuscript targets (paper_targets_appendix_a2 / kurtosis_matches_paper, quoting the old draft's 7.204 kurtosis) were removed; the paper is being rewritten from the current recomputed diagnostics, and the v2 regression reports live in results/robustness_checks_v2.json. All diagnostics computed from the same m3 fit as regression_table.csv."
 }

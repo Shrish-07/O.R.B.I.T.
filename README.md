@@ -1,6 +1,8 @@
-# O.R.B.I.T., the reproducible pipeline for the paper "Political Ideology and Property Values in New York City"
+# Political Ideology and Property Values in New York City — the O.R.B.I.T. reproducible pipeline
 
-The O.R.B.I.T. name is kept for identity. The repository is a single command
+This repository is the single-command pipeline that reproduces the paper
+"Political Ideology and Property Values in New York City". The O.R.B.I.T.
+name is kept for identity. The repository is a single command
 research pipeline that reproduces every number, table and figure in the
 paper, and then re-derives all of them independently.
 

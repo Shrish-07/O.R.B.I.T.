@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
-main.py — O.R.B.I.T. single-command pipeline orchestrator.
+main.py â€” O.R.B.I.T. single-command pipeline orchestrator.
 
 Runs the full research pipeline behind "Political Ideology and Property Values
 in New York City" end to end: builds the canonical dataset from raw sources,
@@ -46,7 +46,7 @@ PY = sys.executable
 # Each stage is one existing script, run as `python <script> <args>` with
 # cwd=ROOT (every script in this repo resolves its paths relative to the repo
 # root, exactly as documented in each subfolder). "paper_ref" is the section
-# of orbit_paper_CER.tex the stage's output feeds — see PAPER_TO_CODE_MAP.md.
+# of orbit_paper_CER.tex the stage's output feeds â€” see PAPER_TO_CODE_MAP.md.
 
 STAGES = [
     # ---- 0. Pre-flight -----------------------------------------------
@@ -115,7 +115,7 @@ STAGES = [
     # models/training/train_linear_baselines.py, NOT the standalone
     # train_ridge.py / train_elasticnet.py scripts below (confirmed by
     # matching experiments/results/ridge_all_years_political.json's exact
-    # filename and metrics — the standalone scripts write differently-named
+    # filename and metrics â€” the standalone scripts write differently-named
     # files with a different, blacklist-incomplete feature set; see
     # README.md ("Where the paper stands") and the independent verification report
     # for how this was caught). One stage trains both models.
@@ -137,7 +137,7 @@ STAGES = [
     # appends its run to experiments/registry.json, and this stage then
     # re-selects the champion (lowest MAE among untainted, post-2026-05-18
     # runs) and rewrites experiments/champion.json. Running a training stage
-    # via --stage alone does NOT refresh the champion — either run the full
+    # via --stage alone does NOT refresh the champion â€” either run the full
     # pipeline or pass refresh_champion alongside.
     dict(id="refresh_champion", category="training",
          script="src/ops/experiment_runner.py", args=[],
@@ -155,7 +155,7 @@ STAGES = [
          paper_ref="3.3 Canonical Dataset (sample construction)"),
     dict(id="robustness_checks_v2", category="analysis",
          script="src/analysis/robustness_checks_v2.py", args=[],
-         desc="v2 robustness suite: Models 3/4/5 recomputed with t(G-1) and wild-cluster-bootstrap inference (Webb weights, 9,999 reps, seed 42) PLUS Models 6 (district+year FE), 7 (borough x year FE), 8 (district-specific trends) and an upgraded hedonic spec — every spec x every ideology measure (legacy/allcand/pres + vintage variants) x full and restricted samples -> results/robustness_checks_v2.json.",
+         desc="v2 robustness suite: Models 3/4/5 recomputed with t(G-1) and wild-cluster-bootstrap inference (Webb weights, 9,999 reps, seed 42) PLUS Models 6 (district+year FE), 7 (borough x year FE), 8 (district-specific trends) and an upgraded hedonic spec â€” every spec x every ideology measure (legacy/allcand/pres + vintage variants) x full and restricted samples -> results/robustness_checks_v2.json.",
          paper_ref="4.3 Regression + robustness (rewritten-paper results)"),
     dict(id="compute_morans_i_v2", category="analysis",
          script="src/analysis/compute_morans_i_v2.py", args=[],
@@ -197,19 +197,19 @@ STAGES = [
     dict(id="generate_pdp", category="analysis",
          script="src/analysis/generate_pdp.py", args=[],
          desc='Partial dependence plots for top features of EVERY eligible ranked model (top-5 by per-family importance (gain or |coef|); predictions via src/ops/predictors.py). Round 11: after writing this run\'s summaries, DELETES any stale models/artifacts/pdp_*.png (model/feature not in the run\'s summaries -- the pre-blacklist BBL_pluto leftover class). NOT currently cited in the paper - see PAPER_TO_CODE_MAP.md. Regenerated on every full run.',
-         paper_ref="(unused — candidate addition, see action plan)"),
+         paper_ref="(unused â€” candidate addition, see action plan)"),
     dict(id="confidence_intervals", category="analysis",
          script="src/analysis/confidence_intervals.py", args=[],
          desc='Per-property prediction intervals (residual bootstrap) for EVERY eligible ranked model on the full test split (family-optimized prediction conventions via src/ops/predictors.py). NOT currently cited in the paper - see PAPER_TO_CODE_MAP.md.',
-         paper_ref="(unused — candidate addition, see action plan)"),
+         paper_ref="(unused â€” candidate addition, see action plan)"),
     dict(id="sensitivity_analysis", category="analysis",
          script="src/analysis/sensitivity_analysis.py", args=[],
          desc='Feature-perturbation sensitivity for EVERY eligible ranked model (top features from the models own freshly regenerated SHAP summary). NOT currently cited in the paper - see PAPER_TO_CODE_MAP.md.',
-         paper_ref="(unused — candidate addition, see action plan)"),
+         paper_ref="(unused â€” candidate addition, see action plan)"),
     dict(id="champion_confidence_and_sensitivity", category="analysis",
          script="src/analysis/champion_confidence_and_sensitivity.py", args=[],
          desc='Combined confidence+sensitivity pass for EVERY eligible ranked model; writes test_preds.parquet and intervals.csv at full test-split coverage for all of them (rank 1 = champion).',
-         paper_ref="(unused — candidate addition, see action plan)"),
+         paper_ref="(unused â€” candidate addition, see action plan)"),
     dict(id="compare_models", category="analysis",
          script="src/analysis/compare_models.py", args=[],
          desc="Tabulates every experiments/results/*.json entry side by side.",
@@ -219,23 +219,23 @@ STAGES = [
          desc="Honest coverage diagnostic for the close-election instrument: counts close "
               "council-race cells by bandwidth (5/10/15/20pp), cycle, and winner party, with a "
               "plain-language thin-coverage warning. Writes results/causal/close_election_coverage.json.",
-         paper_ref="(candidate causal-identification design — see README.md §Causal identification and VERIFICATION_REPORT.md Round 5; not yet adopted into the manuscript)"),
+         paper_ref="(candidate causal-identification design â€” see README.md Â§Causal identification and VERIFICATION_REPORT.md Round 5; numbers feed the rewritten paper; see results/NEW_RESULTS_INDEX.md)"),
     dict(id="iv_district_fe_regression", category="analysis",
          script="src/causal/iv_district_fe_regression.py", args=[],
          desc="IV / instrumented district-FE 2SLS: prior-cycle close-council-race indicator "
               "instruments dem_share; first-stage F + per-bandwidth verdicts vs the existing "
               "non-instrumented Model 4 benchmark. Writes results/causal/iv_district_fe_results.json.",
-         paper_ref="(candidate causal-identification design — see README.md §Causal identification and VERIFICATION_REPORT.md Round 5; not yet adopted into the manuscript)"),
+         paper_ref="(candidate causal-identification design â€” see README.md Â§Causal identification and VERIFICATION_REPORT.md Round 5; numbers feed the rewritten paper; see results/NEW_RESULTS_INDEX.md)"),
     dict(id="iv_district_fe_rescue", category="analysis",
          script="src/causal/iv_district_fe_rescue.py", args=[],
          desc="Round-6 rescue spec search: (1a) borough-FE variant of the close-race IV; "
               "(1b) wider bandwidths on the original district-FE IV. Every attempt recorded, "
               "identified or not, each with a credibility note. Writes "
               "results/causal/iv_district_fe_rescue_results.json.",
-         paper_ref="(candidate causal-identification design, Round 6 — see README.md §Causal identification and VERIFICATION_REPORT.md Round 6; not yet adopted into the manuscript)"),
+         paper_ref="(candidate causal-identification design, Round 6 â€” see README.md Â§Causal identification and VERIFICATION_REPORT.md Round 6; numbers feed the rewritten paper; see results/NEW_RESULTS_INDEX.md)"),
     dict(id="city_of_yes_did", category="analysis",
          script="src/causal/city_of_yes_did.py", args=[],
-         desc="City of Yes preference-proxy DiD: event study + main + sensitivity DiD, clustered by district. Round 12: the pre-trend Wald field previously mislabeled a chi-square(3) as an F — now stored as pre_trend_wald_chi2/_p with the implied F(3,G-1) added; the run also writes the v2 specs (wild-bootstrap main estimate, 2022-25 window, district trends, continuous dem_share_pres x post, leave-one-borough-out) to results/causal/city_of_yes_did_results_v2.json.",
+         desc="City of Yes preference-proxy DiD: event study + main + sensitivity DiD, clustered by district. Round 12: the pre-trend Wald field previously mislabeled a chi-square(3) as an F â€” now stored as pre_trend_wald_chi2/_p with the implied F(3,G-1) added; the run also writes the v2 specs (wild-bootstrap main estimate, 2022-25 window, district trends, continuous dem_share_pres x post, leave-one-borough-out) to results/causal/city_of_yes_did_results_v2.json.",
          paper_ref="(candidate causal-identification design, Round 6; v2 outputs feed the rewritten paper)"),
 
     # ---- 4. Figures & tables --------------------------------------------
@@ -252,10 +252,10 @@ STAGES = [
     dict(id="generate_scenario_map", category="figures",
          script="src/figures/generate_scenario_map.py", args=[],
          desc="Choropleth of scenario impact by council district (writes scenario_impact_all_three_FIXED.png).",
-         paper_ref="(unused — this choropleth does not appear in the current manuscript; see PAPER_TO_CODE_MAP.md)"),
+         paper_ref="(unused â€” this choropleth does not appear in the current manuscript; see PAPER_TO_CODE_MAP.md)"),
     dict(id="generate_fig5_scenario_impact", category="figures",
          script="src/figures/generate_fig5_scenario_impact.py", args=[],
-         desc="Three-panel mean-scenario-impact figure by council district; writes docs/figures/scenario_impact_all_three.png under the exact filename the manuscript includes for Figure 5 (added 2026-09-06 — previously no script produced Fig 5).",
+         desc="Three-panel mean-scenario-impact figure by council district; writes docs/figures/scenario_impact_all_three.png under the exact filename the manuscript includes for Figure 5 (added 2026-09-06 â€” previously no script produced Fig 5).",
          paper_ref="Figure 5 (Section 4.7)"),
     dict(id="generate_research_summary", category="figures",
          script="src/figures/generate_research_summary.py", args=[],
@@ -336,24 +336,24 @@ STAGES = [
     dict(id="verify_followup_resolution", category="verification",
          script="src/verification/verify_followup_resolution.py", args=[],
          desc="Resolves the two known loose ends (additive-vs-union missingness gap; prediction-interval row-count parity). Round 11: the hard-coded 44,136/44,083 narrative and 'needs_patch_sentence' flag are removed; all values computed live.",
-         paper_ref="results/FULL_PAPER_FACT_CHECK.md ('NEW findings' section)"),
+         paper_ref="archive/FULL_PAPER_FACT_CHECK.md (superseded; loose ends resolved live)"),
     dict(id="verify_iv_district_fe", category="verification",
          script="src/verification/verify_iv_district_fe.py", args=[],
          desc="Independently re-derives the close-election IV instrument, sample counts, and "
               "identification verdicts (and, only where identified, re-fits the 2SLS) from the "
               "canonical parquet + margins parquet against results/causal/iv_district_fe_results.json.",
-         paper_ref="(candidate causal-identification design — see README.md §Causal identification and VERIFICATION_REPORT.md Round 5; not yet adopted into the manuscript)"),
+         paper_ref="(candidate causal-identification design â€” see README.md Â§Causal identification and VERIFICATION_REPORT.md Round 5; numbers feed the rewritten paper; see results/NEW_RESULTS_INDEX.md)"),
     dict(id="verify_iv_district_fe_rescue", category="verification",
          script="src/verification/verify_iv_district_fe_rescue.py", args=[],
          desc="Independently re-derives both Round-6 IV rescue arms and compares every field to "
               "results/causal/iv_district_fe_rescue_results.json to 4dp.",
-         paper_ref="(candidate causal-identification design, Round 6 — see README.md §Causal identification and VERIFICATION_REPORT.md Round 6; not yet adopted into the manuscript)"),
+         paper_ref="(candidate causal-identification design, Round 6 â€” see README.md Â§Causal identification and VERIFICATION_REPORT.md Round 6; numbers feed the rewritten paper; see results/NEW_RESULTS_INDEX.md)"),
     dict(id="verify_city_of_yes_did", category="verification",
          script="src/verification/verify_city_of_yes_did.py", args=[],
          desc="Independently re-fits the City of Yes DiD event study + main spec + sensitivity "
               "from the canonical parquet + roll-call parquet and compares every field to "
               "results/causal/city_of_yes_did_results.json to 4dp.",
-         paper_ref="(candidate causal-identification design, Round 6 — see README.md §Causal identification and VERIFICATION_REPORT.md Round 6; not yet adopted into the manuscript)"),
+         paper_ref="(candidate causal-identification design, Round 6 â€” see README.md Â§Causal identification and VERIFICATION_REPORT.md Round 6; numbers feed the rewritten paper; see results/NEW_RESULTS_INDEX.md)"),
     dict(id="verify_analysis_v2", category="verification",
          script="src/verification/verify_analysis_v2.py", args=[],
          desc="Independently re-derives the sample funnel counts, the v2 robustness suite (statsmodels cross-check of Model 4 vs the file AND the paper's recorded values, deterministic wild-bootstrap p, hedonic R2) and the ML collinearity diagnostics.",
@@ -366,6 +366,10 @@ STAGES = [
          script="src/verification/verify_ideology_v2.py", args=[],
          desc="Independently re-derives every v2 ideology number (allcand/pres and their vintage variants, canonical merge mappings incl. election_year_pres, ballot-line audit, crosswalk-audit vintage resolution, Task-D flags, building-class normalization) WITHOUT importing the v2 builder, and compares to the written artifacts.",
          paper_ref="3.2 Ideology Construction (v2 measures for the rewritten paper)"),
+    dict(id="verify_repo_hygiene", category="verification",
+         script="src/verification/verify_repo_hygiene.py", args=[],
+         desc="Task-K/L hygiene gate: LICENSE (MIT), requirements pinned to the installed venv versions, the superseded Round-5 fact-check archived with a SUPERSEDED header, regression_diagnostics.json free of stale pre-rewrite manuscript targets, no 'not yet adopted' stage labels, anonymous-release machinery present and clean.",
+         paper_ref="N/A (repository hygiene governance)"),
     dict(id="verification_summary", category="verification",
          script="src/ops/verification_summary.py", args=[],
          desc="Round 11: aggregates every verifier's machine-countable status (results/verification/<verifier>.json, written via src/verification/_shared.record_status) into results/verification_summary.json, prints the per-verifier table, and EXITS NON-ZERO if any verifier reports a mismatch beyond its tolerance or failed to report at all. This is the gate that keeps verifiers from hiding mismatches.",
@@ -516,7 +520,7 @@ def main():
                          help="Resume the full pipeline starting at this stage id.")
     parser.add_argument("--fast", action="store_true",
                          help="Skip 'heavy' comparison-model training stages (random forest, ridge, "
-                              "elasticnet, catboost, xgboost) — keeps the two LightGBM models the "
+                              "elasticnet, catboost, xgboost) â€” keeps the two LightGBM models the "
                               "paper's headline numbers depend on.")
     parser.add_argument("--stop-on-error", action="store_true",
                          help="Abort immediately on the first failing stage (default: keep going and "
@@ -569,12 +573,12 @@ def main():
     # their own if a specific file is missing, but this gives a fast summary
     # up front for a first-time clone).
     print("=" * 100)
-    print("O.R.B.I.T. pipeline — data prerequisite check")
+    print("O.R.B.I.T. pipeline â€” data prerequisite check")
     print("=" * 100)
     data_ok = check_data()
     print()
     if not data_ok:
-        print("Continuing anyway — stages needing missing data will fail individually and be "
+        print("Continuing anyway â€” stages needing missing data will fail individually and be "
               "reported at the end. Ctrl-C now if you'd rather populate data/ first.\n")
 
     log_dir = ROOT / "results" / "logs" / "pipeline"
@@ -590,7 +594,7 @@ def main():
     results = []
     t_start = time.time()
     for i, stage in enumerate(run_list, 1):
-        print(f"\n[{i}/{len(run_list)}] {stage['id']}  —  {stage['desc']}")
+        print(f"\n[{i}/{len(run_list)}] {stage['id']}  â€”  {stage['desc']}")
         res = run_stage(stage, log_dir)
         results.append(dict(stage=stage, result=res))
         symbol = {"PASS": "OK", "FAIL": "FAILED", "MISSING_SCRIPT": "MISSING"}.get(res["status"], res["status"])
@@ -626,7 +630,7 @@ def main():
     if dated_report is not None:
         print(f"Full-run snapshot: {dated_report.relative_to(ROOT)}")
     if n_fail:
-        print(f"{n_fail} stage(s) failed — see the report and results/logs/pipeline/*.log for details.")
+        print(f"{n_fail} stage(s) failed â€” see the report and results/logs/pipeline/*.log for details.")
     print("=" * 100)
 
     sys.exit(0 if n_fail == 0 else 1)

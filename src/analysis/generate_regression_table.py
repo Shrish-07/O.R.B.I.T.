@@ -194,27 +194,21 @@ diagnostics = {
     'residual_skew': skew_val,
     'residual_kurtosis_fisher_excess': kurt_fisher,
     'residual_kurtosis_pearson': kurt_pearson,
-    'kurtosis_paper_reports': 'Pearson convention (kurtosis = excess + 3)',
-    'kurtosis_matches_paper': bool(abs(kurt_pearson - 7.204) < 0.001),
+    'kurtosis_convention': 'Pearson (kurtosis = excess + 3)',
     'jarque_bera': jb_val,
     'jarque_bera_pvalue': jb_p,
     'omnibus': omni_val,
     'omnibus_pvalue': omni_p,
-    'paper_targets_appendix_a2': {
-        'durbin_watson': 1.517,
-        'omnibus': 50100.014,
-        'jarque_bera': 352014.397,
-        'skew': 0.264,
-        'kurtosis': 7.204,
-        'condition_number': 3.64e4,
-    },
     'note': (
         "residual_skew uses scipy.stats.skew(bias=False) on m3.resid. "
         "Two kurtosis conventions are saved to resolve a labeling ambiguity: "
         "residual_kurtosis_fisher_excess is the Fisher excess kurtosis (normal => 0), "
         "and residual_kurtosis_pearson is the Pearson (non-excess) kurtosis = excess + 3 "
-        "(normal => 3). The paper's Appendix A.2 kurtosis field (7.204) is the Pearson "
-        "convention, so it equals residual_kurtosis_fisher_excess + 3 exactly. "
+        "(normal => 3). Round 12: the stale pre-rewrite manuscript targets "
+        "(paper_targets_appendix_a2 / kurtosis_matches_paper, quoting the old "
+        "draft's 7.204 kurtosis) were removed; the paper is being rewritten "
+        "from the current recomputed diagnostics, and the v2 regression "
+        "reports live in results/robustness_checks_v2.json. "
         "All diagnostics computed from the same m3 fit as regression_table.csv."
     ),
 }
@@ -226,6 +220,5 @@ print()
 print('=== MODEL 3 DIAGNOSTICS ===')
 for k in ['durbin_watson', 'condition_number', 'residual_skew',
           'residual_kurtosis_fisher_excess', 'residual_kurtosis_pearson',
-          'jarque_bera', 'jarque_bera_pvalue',
-          'kurtosis_paper_reports', 'kurtosis_matches_paper']:
+          'jarque_bera', 'jarque_bera_pvalue', 'kurtosis_convention']:
     print(f'  {k}: {diagnostics[k]}')
