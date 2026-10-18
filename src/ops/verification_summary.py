@@ -47,6 +47,10 @@ EXPECTED = [
     'verify_scenario_mechanics',
     'verify_followup_resolution',
     'verify_blacklist_fully',
+    'verify_ideology_v2',
+    'verify_analysis_v2',
+    'verify_causal_spatial_v2',
+    'verify_repo_hygiene',
 ]
 
 
