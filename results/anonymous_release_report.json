@@ -1,0 +1,97 @@
+{
+  "release_dir": "anonymous_release",
+  "zip": "anonymous_release.zip",
+  "n_files_copied": 352,
+  "scrub_terms": [
+    "Shrish-07",
+    "Shrishvenugopal11@gmail.com",
+    "Shrishvenugopal",
+    "Shris",
+    "C:\\Users\\Shris"
+  ],
+  "n_scrubbed_hits": 16,
+  "scrubbed_hits": [
+    {
+      "file": "LICENSE",
+      "term": "Shrish-07",
+      "occurrences": 1
+    },
+    {
+      "file": "LICENSE",
+      "term": "Shris",
+      "occurrences": 1
+    },
+    {
+      "file": "VERIFICATION_REPORT.md",
+      "term": "Shris",
+      "occurrences": 1
+    },
+    {
+      "file": "VERIFICATION_REPORT.md",
+      "term": "C:\\Users\\Shris",
+      "occurrences": 1
+    },
+    {
+      "file": "archive/_truth_assemble_data.json",
+      "term": "Shris",
+      "occurrences": 1
+    },
+    {
+      "file": "archive/_truth_write.py",
+      "term": "Shrish-07",
+      "occurrences": 2
+    },
+    {
+      "file": "archive/_truth_write.py",
+      "term": "Shris",
+      "occurrences": 2
+    },
+    {
+      "file": "config/scrub_terms.txt",
+      "term": "Shrish-07",
+      "occurrences": 1
+    },
+    {
+      "file": "config/scrub_terms.txt",
+      "term": "Shrishvenugopal11@gmail.com",
+      "occurrences": 1
+    },
+    {
+      "file": "config/scrub_terms.txt",
+      "term": "Shrishvenugopal",
+      "occurrences": 2
+    },
+    {
+      "file": "config/scrub_terms.txt",
+      "term": "Shris",
+      "occurrences": 5
+    },
+    {
+      "file": "config/scrub_terms.txt",
+      "term": "C:\\Users\\Shris",
+      "occurrences": 1
+    },
+    {
+      "file": "legacy/orbit.py",
+      "term": "Shrishvenugopal11@gmail.com",
+      "occurrences": 1
+    },
+    {
+      "file": "legacy/orbit.py",
+      "term": "Shrishvenugopal",
+      "occurrences": 1
+    },
+    {
+      "file": "legacy/orbit.py",
+      "term": "Shris",
+      "occurrences": 4
+    },
+    {
+      "file": "results/round5_part_M.json",
+      "term": "Shris",
+      "occurrences": 12
+    }
+  ],
+  "remaining_matches": [],
+  "git_history": "not touched \u2014 the working tree is never modified"
+}

@@ -90,6 +90,8 @@ data/**/*.csv
 .github.zip
 Read Everything.zip
 READ ALL.zip
+anonymous_release/
+anonymous_release.zip
 
 # Transient truth-harness scratch files (write gitignored results/TRUTH.md; not source)
 src/_truth_*.py

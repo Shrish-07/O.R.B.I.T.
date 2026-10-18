@@ -1,0 +1,9 @@
+# Identifying strings to scrub from the anonymous release copy.
+# One term per line (case-insensitive substring match). Lines starting
+# with # are comments. Add your institution/affiliation and any other
+# identifying strings before running scripts/make_anonymous_release.py.
+Shrish-07
+Shrishvenugopal11@gmail.com
+Shrishvenugopal
+Shris
+C:\Users\Shris
