@@ -1,0 +1,310 @@
+{
+  "audit": "mayoral ballot-line classification, 2017/2021/2025",
+  "reader": "src/data_pipeline/boe_ed_reader.py (shared with build_ideology_scores_v2.py and normalize_ed_results.py)",
+  "classification": {
+    "Dem": "Democratic + Working Families lines",
+    "Rep": "Republican + Conservative lines",
+    "Other": "all other candidate ballot lines",
+    "excluded_non_candidate_rows": [
+      "Public Counter",
+      "Manually Counted Emergency",
+      "Absentee / Military",
+      "Affidavit",
+      "Federal",
+      "Special Presidential",
+      "Scattered",
+      "Scattering",
+      "Blank",
+      "Void",
+      "Total Ballots"
+    ]
+  },
+  "by_year": {
+    "2017": {
+      "candidate_line_votes": 1143321,
+      "non_candidate_counter_votes": 1171656,
+      "class_votes": {
+        "Dem": 760112,
+        "Rep": 311620,
+        "Other": 71589
+      },
+      "other_share_of_candidate_votes": 0.062615,
+      "legacy_dem_share_dem_over_dem_plus_rep": 0.709237,
+      "dem_share_mayor_allcand": 0.664828,
+      "n_candidate_lines": 10,
+      "other_share_flag": false,
+      "flag_note": null
+    },
+    "2021": {
+      "candidate_line_votes": 1118245,
+      "non_candidate_counter_votes": 1156185,
+      "class_votes": {
+        "Dem": 753801,
+        "Rep": 315255,
+        "Other": 49189
+      },
+      "other_share_of_candidate_votes": 0.043988,
+      "legacy_dem_share_dem_over_dem_plus_rep": 0.705109,
+      "dem_share_mayor_allcand": 0.674093,
+      "n_candidate_lines": 10,
+      "other_share_flag": false,
+      "flag_note": null
+    },
+    "2025": {
+      "candidate_line_votes": 2182637,
+      "non_candidate_counter_votes": 2177335,
+      "class_votes": {
+        "Dem": 1114184,
+        "Rep": 146161,
+        "Other": 922292
+      },
+      "other_share_of_candidate_votes": 0.422559,
+      "legacy_dem_share_dem_over_dem_plus_rep": 0.884031,
+      "dem_share_mayor_allcand": 0.510476,
+      "n_candidate_lines": 9,
+      "other_share_flag": true,
+      "flag_note": "Other-class ballot lines hold more than 30% of candidate votes; the legacy Dem/(Dem+Rep) ratio drops all of them."
+    }
+  },
+  "by_line": [
+    {
+      "year": 2017,
+      "unit_name": "Bill de Blasio (Democratic)",
+      "ballot_line": "Democratic",
+      "class": "Dem",
+      "votes": 713634,
+      "share_of_candidate_votes": 0.624176
+    },
+    {
+      "year": 2017,
+      "unit_name": "Nicole Malliotakis (Republican)",
+      "ballot_line": "Republican",
+      "class": "Rep",
+      "votes": 274423,
+      "share_of_candidate_votes": 0.240023
+    },
+    {
+      "year": 2017,
+      "unit_name": "Bill de Blasio (Working Families)",
+      "ballot_line": "Working Families",
+      "class": "Dem",
+      "votes": 46478,
+      "share_of_candidate_votes": 0.040652
+    },
+    {
+      "year": 2017,
+      "unit_name": "Nicole Malliotakis (Conservative)",
+      "ballot_line": "Conservative",
+      "class": "Rep",
+      "votes": 37197,
+      "share_of_candidate_votes": 0.032534
+    },
+    {
+      "year": 2017,
+      "unit_name": "Sal F. Albanese (Reform)",
+      "ballot_line": "Reform",
+      "class": "Other",
+      "votes": 24484,
+      "share_of_candidate_votes": 0.021415
+    },
+    {
+      "year": 2017,
+      "unit_name": "Akeem Browder (Green)",
+      "ballot_line": "Green",
+      "class": "Other",
+      "votes": 16536,
+      "share_of_candidate_votes": 0.014463
+    },
+    {
+      "year": 2017,
+      "unit_name": "Michael Tolkin (Smart Cities)",
+      "ballot_line": "Smart Cities",
+      "class": "Other",
+      "votes": 11309,
+      "share_of_candidate_votes": 0.009891
+    },
+    {
+      "year": 2017,
+      "unit_name": "Bo Dietl (Dump the Mayor)",
+      "ballot_line": "Dump the Mayor",
+      "class": "Other",
+      "votes": 11163,
+      "share_of_candidate_votes": 0.009764
+    },
+    {
+      "year": 2017,
+      "unit_name": "Nicole Malliotakis (Stop de Blasio)",
+      "ballot_line": "Stop de Blasio",
+      "class": "Other",
+      "votes": 5327,
+      "share_of_candidate_votes": 0.004659
+    },
+    {
+      "year": 2017,
+      "unit_name": "Aaron Commey (Libertarian)",
+      "ballot_line": "Libertarian",
+      "class": "Other",
+      "votes": 2770,
+      "share_of_candidate_votes": 0.002423
+    },
+    {
+      "year": 2021,
+      "unit_name": "Eric L. Adams (Democratic)",
+      "ballot_line": "Democratic",
+      "class": "Dem",
+      "votes": 753801,
+      "share_of_candidate_votes": 0.674093
+    },
+    {
+      "year": 2021,
+      "unit_name": "Curtis A. Sliwa (Republican)",
+      "ballot_line": "Republican",
+      "class": "Rep",
+      "votes": 302680,
+      "share_of_candidate_votes": 0.270674
+    },
+    {
+      "year": 2021,
+      "unit_name": "Catherine Rojas (Socialism & Lib)",
+      "ballot_line": "Socialism & Lib",
+      "class": "Other",
+      "votes": 27982,
+      "share_of_candidate_votes": 0.025023
+    },
+    {
+      "year": 2021,
+      "unit_name": "William A. Pepitone (Conservative)",
+      "ballot_line": "Conservative",
+      "class": "Rep",
+      "votes": 12575,
+      "share_of_candidate_votes": 0.011245
+    },
+    {
+      "year": 2021,
+      "unit_name": "Curtis A. Sliwa (Independent)",
+      "ballot_line": "Independent",
+      "class": "Other",
+      "votes": 9705,
+      "share_of_candidate_votes": 0.008679
+    },
+    {
+      "year": 2021,
+      "unit_name": "Quanda S. Francis (Empowerment)",
+      "ballot_line": "Empowerment",
+      "class": "Other",
+      "votes": 3792,
+      "share_of_candidate_votes": 0.003391
+    },
+    {
+      "year": 2021,
+      "unit_name": "Stacey H. Prussman (Libertarian)",
+      "ballot_line": "Libertarian",
+      "class": "Other",
+      "votes": 3189,
+      "share_of_candidate_votes": 0.002852
+    },
+    {
+      "year": 2021,
+      "unit_name": "Raja Michael Flores (Humanity United)",
+      "ballot_line": "Humanity United",
+      "class": "Other",
+      "votes": 2387,
+      "share_of_candidate_votes": 0.002135
+    },
+    {
+      "year": 2021,
+      "unit_name": "Fernando Mateo (Save Our City)",
+      "ballot_line": "Save Our City",
+      "class": "Other",
+      "votes": 1870,
+      "share_of_candidate_votes": 0.001672
+    },
+    {
+      "year": 2021,
+      "unit_name": "Skiboky Stora (Out Lawbreaker)",
+      "ballot_line": "Out Lawbreaker",
+      "class": "Other",
+      "votes": 264,
+      "share_of_candidate_votes": 0.000236
+    },
+    {
+      "year": 2025,
+      "unit_name": "Zohran Kwame Mamdani (Democratic)",
+      "ballot_line": "Democratic",
+      "class": "Dem",
+      "votes": 944950,
+      "share_of_candidate_votes": 0.43294
+    },
+    {
+      "year": 2025,
+      "unit_name": "Andrew M. Cuomo (Fight and Deliver)",
+      "ballot_line": "Fight and Deliver",
+      "class": "Other",
+      "votes": 901253,
+      "share_of_candidate_votes": 0.412919
+    },
+    {
+      "year": 2025,
+      "unit_name": "Zohran Kwame Mamdani (Working Families)",
+      "ballot_line": "Working Families",
+      "class": "Dem",
+      "votes": 169234,
+      "share_of_candidate_votes": 0.077536
+    },
+    {
+      "year": 2025,
+      "unit_name": "Curtis A. Sliwa (Republican)",
+      "ballot_line": "Republican",
+      "class": "Rep",
+      "votes": 143305,
+      "share_of_candidate_votes": 0.065657
+    },
+    {
+      "year": 2025,
+      "unit_name": "Curtis A. Sliwa (Protect Animals)",
+      "ballot_line": "Protect Animals",
+      "class": "Other",
+      "votes": 10444,
+      "share_of_candidate_votes": 0.004785
+    },
+    {
+      "year": 2025,
+      "unit_name": "Eric L. Adams (Safe&Affordable/EndAntiSemitism)",
+      "ballot_line": "Safe&Affordable/EndAntiSemitism",
+      "class": "Other",
+      "votes": 6897,
+      "share_of_candidate_votes": 0.00316
+    },
+    {
+      "year": 2025,
+      "unit_name": "Irene Estrada (Conservative)",
+      "ballot_line": "Conservative",
+      "class": "Rep",
+      "votes": 2856,
+      "share_of_candidate_votes": 0.001309
+    },
+    {
+      "year": 2025,
+      "unit_name": "Jim Walden (Integrity)",
+      "ballot_line": "Integrity",
+      "class": "Other",
+      "votes": 2319,
+      "share_of_candidate_votes": 0.001062
+    },
+    {
+      "year": 2025,
+      "unit_name": "Joseph Hernandez (Quality of Life)",
+      "ballot_line": "Quality of Life",
+      "class": "Other",
+      "votes": 1379,
+      "share_of_candidate_votes": 0.000632
+    }
+  ],
+  "expected_2025_flag": {
+    "expected": true,
+    "observed": true,
+    "match": true,
+    "note": "2025 shows the expected very large Other share: Andrew M. Cuomo ran citywide on the \"Fight and Deliver\" line (~40% of candidate votes), which the legacy dem_share = Dem/(Dem+Rep) silently drops."
+  },
+  "headline_warning": "2025: Other-class lines hold 42.3% of mayoral candidate votes. The legacy dem_share (Dem/(Dem+Rep)) excludes these votes by construction; use dem_share_mayor_allcand (Dem / all candidate-line votes) for a denominator that counts every candidate line."
+}

@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_ideology_v2",
+  "generated_utc": "2026-10-18T16:17:20.759633Z",
+  "n_checks": 25,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Independent re-derivation of the v2 ideology measures (allcand, pres, vintage variants), the canonical merge mappings, the ballot-line audit, the crosswalk-audit vintage resolution, and the Task-D sample flags."
+}

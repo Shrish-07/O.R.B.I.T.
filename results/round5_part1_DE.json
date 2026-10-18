@@ -10,8 +10,20 @@
     },
     "dataset_cols": {
       "paper": 53,
-      "recomputed": 53,
-      "actual_loaded": 53
+      "recomputed": 64,
+      "actual_loaded": 64
+    },
+    "dataset_cols_legacy_present": {
+      "paper": 53,
+      "recomputed": 53
+    },
+    "dataset_cols_v2_new": {
+      "expected": 11,
+      "recomputed": 11
+    },
+    "dataset_cols_v2_blacklisted_from_models": {
+      "expected": true,
+      "recomputed": true
     },
     "base_feature_count": {
       "paper": 24,

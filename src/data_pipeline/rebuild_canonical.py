@@ -27,10 +27,28 @@ SALES_GLOB = 'NYC_Citywide_Annualized_Calendar_Sales_Update_*.csv'
 PLUTO_DIR = ROOT / 'data' / 'raw' / 'pluto'
 PLUTO_GLOB = 'Primary_Land_Use_Tax_Lot_Output_(PLUTO)_*.csv'
 IDEO = ROOT / 'data' / 'processed' / 'ideology_by_council.parquet'
+IDEO_V2 = ROOT / 'data' / 'processed' / 'ideology_by_council_v2.parquet'
+IDEO_PRES = ROOT / 'data' / 'processed' / 'ideology_pres_by_council.parquet'
 OUT_DIR = ROOT / 'data' / 'canonical'
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 DEFAULT_OUT = OUT_DIR / 'modeling_dataset_canonical_v2.parquet'
 MANIFEST = ROOT / 'data' / 'DATA_MANIFEST.json'
+
+# sale_year -> presidential election providing dem_share_pres (explicit,
+# documented mapping from the task brief). Out-of-range years fall back to
+# the nearest covered election and are recorded in the manifest note below.
+PRES_MAP = {
+    2016: 2016, 2017: 2016,
+    2018: 2020, 2019: 2020, 2020: 2020, 2021: 2020,
+    2022: 2024, 2023: 2024, 2024: 2024, 2025: 2024,
+}
+PRES_MAP_NOTE = (
+    'dem_share_pres mapping (sale_year -> presidential election): '
+    '{2016:2016, 2017:2016, 2018:2020, 2019:2020, 2020:2020, 2021:2020, '
+    '2022:2024, 2023:2024, 2024:2024, 2025:2024}. sale_year < 2016 falls '
+    'back to 2016 and sale_year > 2025 to 2024 (nearest covered election); '
+    'the canonical build contains sale years 2016-2025 only.'
+)
 
 BAN_COLUMNS = {'assesstot','exempttot','assessland','appbbl','taxmap','plutomapid'}
 
@@ -182,6 +200,38 @@ def main():
     # Do NOT fill missing dem_share from 2017 here — keep missing to surface parsing issues
     # (previous behavior silently masked missing ideology for 2021/2025).
 
+    # ---- v2 ideology measures (NEW columns; legacy dem_share untouched) --
+    # The two v2 files are required inputs for the v2 analysis suite; a
+    # missing file is a hard stop (never silently skipped).
+    if not IDEO_V2.exists():
+        raise SystemExit(
+            f'MISSING INPUT: {IDEO_V2} — run '
+            'src/data_pipeline/build_ideology_scores_v2.py first.')
+    if not IDEO_PRES.exists():
+        raise SystemExit(
+            f'MISSING INPUT: {IDEO_PRES} — run '
+            'src/data_pipeline/build_ideology_scores_v2.py first.')
+    ideo_v2 = pd.read_parquet(IDEO_V2)
+    ideo_v2 = ideo_v2[['CounDist', 'election_year',
+                       'dem_share_mayor_allcand', 'dem_share_vintage',
+                       'dem_share_mayor_allcand_vintage']]
+    merged = merged.merge(ideo_v2, how='left',
+                          left_on=['CounDist', 'election_year'],
+                          right_on=['CounDist', 'election_year'])
+    ideo_pres = pd.read_parquet(IDEO_PRES)
+    ideo_pres = ideo_pres[['CounDist', 'pres_election_year',
+                           'dem_share_pres', 'dem_share_pres_vintage']]
+    ideo_pres = ideo_pres.rename(columns={'pres_election_year': 'election_year_pres'})
+    merged['election_year_pres'] = merged['sale_year'].map(
+        lambda y: PRES_MAP.get(int(y), 2016 if int(y) < 2016 else 2024))
+    merged = merged.merge(ideo_pres, how='left',
+                          left_on=['CounDist', 'election_year_pres'],
+                          right_on=['CounDist', 'election_year_pres'])
+
+    # ---- sample flags (Task D) are computed AFTER the dedup step below, so
+    # multi_parcel_flag reflects genuine multi-parcel transactions rather
+    # than exact duplicate rows that dedup removes. ----
+
     # drop banned columns again and remove PLUTO-only unneeded fields
     for bad in BAN_COLUMNS:
         if bad in merged.columns:
@@ -198,6 +248,42 @@ def main():
     _n_before_dedup = len(out)
     out = out.drop_duplicates()
     print(f'Dedup: dropped {_n_before_dedup - len(out)} exact duplicate rows ({_n_before_dedup} -> {len(out)})')
+
+    # ---- v2 sample flags (Task D; computed on the post-dedup canonical
+    # rows). NEW columns; nothing pre-existing is modified. ----------------
+    out['sample_pre2024'] = (out['sale_year'] <= 2023).astype(bool)
+    _tc_col = 'TAX CLASS AT TIME OF SALE'
+    if _tc_col in out.columns:
+        _tc = pd.to_numeric(out[_tc_col], errors='coerce')
+        out['is_resid_tc12'] = _tc.isin([1, 2]).astype(bool)
+    else:
+        out['is_resid_tc12'] = False
+    out['price_ge_100k'] = (out['sale_price'] >= 100000).astype(bool)
+    _mp_key = ['BOROUGH', 'BLOCK', 'sale_date', 'sale_price']
+    _mp_size = out.groupby(_mp_key, dropna=False)[_mp_key[0]].transform('size')
+    out['multi_parcel_flag'] = (_mp_size > 1).astype(bool)
+    # BUILDING CLASS CATEGORY whitespace normalization ("01 ONE FAMILY" vs
+    # "01  ONE FAMILY" are split today): NEW column; original untouched.
+    if 'BUILDING CLASS CATEGORY' in out.columns:
+        out['building_class_category'] = (
+            out['BUILDING CLASS CATEGORY'].astype(str)
+            .str.strip().str.replace(r'\s+', ' ', regex=True))
+    else:
+        out['building_class_category'] = ''
+    for _c in ['dem_share_mayor_allcand', 'dem_share_pres',
+               'dem_share_vintage', 'dem_share_mayor_allcand_vintage',
+               'dem_share_pres_vintage']:
+        if _c not in out.columns:
+            raise SystemExit(f'INTERNAL ERROR: expected new column {_c} missing')
+    print('v2 column coverage:',
+          {c: round(float(out[c].notna().mean()), 4)
+           for c in ['dem_share_mayor_allcand', 'dem_share_pres',
+                     'dem_share_vintage', 'dem_share_mayor_allcand_vintage',
+                     'dem_share_pres_vintage']})
+    print('flag shares:',
+          {c: round(float(out[c].mean()), 4)
+           for c in ['sample_pre2024', 'is_resid_tc12', 'price_ge_100k',
+                     'multi_parcel_flag']})
 
     out.to_parquet(OUT, index=False)
 
@@ -230,6 +316,17 @@ def main():
         'canonical_output_rows': int(nrows),
         # Round 11: repo-relative POSIX path (was an absolute C:\... path).
         'canonical_output_path': OUT.relative_to(ROOT).as_posix(),
+        # v2 additions (new ideology measures + sample flags):
+        'ideology_v2_file': IDEO_V2.relative_to(ROOT).as_posix(),
+        'ideology_pres_file': IDEO_PRES.relative_to(ROOT).as_posix(),
+        'pres_map_note': PRES_MAP_NOTE,
+        'new_v2_columns': [
+            'dem_share_mayor_allcand', 'dem_share_vintage',
+            'dem_share_mayor_allcand_vintage',
+            'dem_share_pres', 'dem_share_pres_vintage',
+            'election_year_pres', 'sample_pre2024', 'is_resid_tc12',
+            'price_ge_100k', 'multi_parcel_flag', 'building_class_category'],
+        'new_columns_blacklisted_from_models': True,
     }
     MANIFEST.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
     print(f'Wrote data manifest: {MANIFEST}')
