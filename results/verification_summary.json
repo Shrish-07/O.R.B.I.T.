@@ -1,27 +1,22 @@
 {
-  "generated_utc": "2026-10-18T18:16:22.703120+00:00Z",
-  "n_verifiers_expected": 19,
-  "n_verifiers_reported": 19,
-  "total_checks": 651,
-  "total_mismatches": 1,
-  "n_problem_verifiers": 1,
-  "stale_status_files_ignored": [
-    "verify_analysis_v2",
-    "verify_causal_spatial_v2",
-    "verify_ideology_v2",
-    "verify_repo_hygiene"
-  ],
+  "generated_utc": "2026-10-18T18:21:01.045608+00:00Z",
+  "n_verifiers_expected": 23,
+  "n_verifiers_reported": 23,
+  "total_checks": 726,
+  "total_mismatches": 0,
+  "n_problem_verifiers": 0,
+  "stale_status_files_ignored": [],
   "verifiers": [
-    {
-      "verifier": "verify_borough_map_and_crosscutting",
-      "status": "MISMATCH",
-      "n_checks": 12,
-      "n_mismatches": 1
-    },
     {
       "verifier": "verify_abstract_and_intro",
       "status": "PASS",
       "n_checks": 11,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_analysis_v2",
+      "status": "PASS",
+      "n_checks": 17,
       "n_mismatches": 0
     },
     {
@@ -37,9 +32,21 @@
       "n_mismatches": 0
     },
     {
+      "verifier": "verify_borough_map_and_crosscutting",
+      "status": "PASS",
+      "n_checks": 12,
+      "n_mismatches": 0
+    },
+    {
       "verifier": "verify_canonical_dataset_and_split",
       "status": "PASS",
       "n_checks": 17,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_causal_spatial_v2",
+      "status": "PASS",
+      "n_checks": 21,
       "n_mismatches": 0
     },
     {
@@ -64,6 +71,12 @@
       "verifier": "verify_ideology_construction",
       "status": "PASS",
       "n_checks": 9,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_ideology_v2",
+      "status": "PASS",
+      "n_checks": 25,
       "n_mismatches": 0
     },
     {
@@ -100,6 +113,12 @@
       "verifier": "verify_regression_ols",
       "status": "PASS",
       "n_checks": 44,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_repo_hygiene",
+      "status": "PASS",
+      "n_checks": 12,
       "n_mismatches": 0
     },
     {
