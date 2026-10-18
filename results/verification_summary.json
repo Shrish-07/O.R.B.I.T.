@@ -1,12 +1,23 @@
 {
-  "generated_utc": "2026-10-16T17:23:22.486178+00:00Z",
+  "generated_utc": "2026-10-18T18:16:22.703120+00:00Z",
   "n_verifiers_expected": 19,
   "n_verifiers_reported": 19,
-  "total_checks": 647,
-  "total_mismatches": 0,
-  "n_problem_verifiers": 0,
-  "stale_status_files_ignored": [],
+  "total_checks": 651,
+  "total_mismatches": 1,
+  "n_problem_verifiers": 1,
+  "stale_status_files_ignored": [
+    "verify_analysis_v2",
+    "verify_causal_spatial_v2",
+    "verify_ideology_v2",
+    "verify_repo_hygiene"
+  ],
   "verifiers": [
+    {
+      "verifier": "verify_borough_map_and_crosscutting",
+      "status": "MISMATCH",
+      "n_checks": 12,
+      "n_mismatches": 1
+    },
     {
       "verifier": "verify_abstract_and_intro",
       "status": "PASS",
@@ -26,15 +37,9 @@
       "n_mismatches": 0
     },
     {
-      "verifier": "verify_borough_map_and_crosscutting",
-      "status": "PASS",
-      "n_checks": 12,
-      "n_mismatches": 0
-    },
-    {
       "verifier": "verify_canonical_dataset_and_split",
       "status": "PASS",
-      "n_checks": 15,
+      "n_checks": 17,
       "n_mismatches": 0
     },
     {
@@ -46,7 +51,7 @@
     {
       "verifier": "verify_city_of_yes_did",
       "status": "PASS",
-      "n_checks": 29,
+      "n_checks": 31,
       "n_mismatches": 0
     },
     {

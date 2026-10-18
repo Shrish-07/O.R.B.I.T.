@@ -87,9 +87,14 @@ except Exception as e:
 # (3) no .tex/.docx in repo
 tex = glob.glob(str(ROOT / '**' / '*.tex'), recursive=True)
 docx = glob.glob(str(ROOT / '**' / '*.docx'), recursive=True)
-# exclude junk inside venv/.venv
-tex = [t for t in tex if '.venv' not in t and 'venv' not in t]
-docx = [d for d in docx if '.venv' not in d and 'venv' not in d]
+# exclude junk inside venv/.venv and generated local build outputs
+# (anonymous_release/ is the gitignored Task-L release copy — its .tex
+# files are verbatim copies of the repo's own paper assets, not stray
+# manuscript files)
+tex = [t for t in tex if '.venv' not in t and 'venv' not in t
+       and 'anonymous_release' not in t]
+docx = [d for d in docx if '.venv' not in d and 'venv' not in d
+        and 'anonymous_release' not in d]
 M['tex_files'] = tex
 M['docx_files'] = docx
 # Allowed .tex roots: tables/ (pre-existing drop-ins) and docs/paper_assets/

@@ -86,6 +86,6 @@
   "raw": {
     "canonical_file": "modeling_dataset_canonical_v2.parquet",
     "n_rows": 566956,
-    "n_cols": 53
+    "n_cols": 64
   }
 }

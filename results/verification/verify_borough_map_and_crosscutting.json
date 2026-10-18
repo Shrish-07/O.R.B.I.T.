@@ -1,8 +1,16 @@
 {
   "verifier": "verify_borough_map_and_crosscutting",
-  "generated_utc": "2026-10-16T17:21:49.693303Z",
+  "generated_utc": "2026-10-18T18:15:20.060890Z",
   "n_checks": 12,
-  "n_mismatches": 0,
-  "mismatches": [],
+  "n_mismatches": 1,
+  "mismatches": [
+    {
+      "check": "tex_files_allowed_roots_only",
+      "expected": true,
+      "actual": false,
+      "tolerance": 0.0,
+      "match": false
+    }
+  ],
   "note": "Borough-range mapping (CSV + canonical BOROUGH), blacklist live scan of the two paper LightGBM feature lists, PNG integrity, and tex/docx location hygiene."
 }
