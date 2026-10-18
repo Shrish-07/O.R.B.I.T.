@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_repo_hygiene",
+  "generated_utc": "2026-10-18T18:04:18.863840Z",
+  "n_checks": 12,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Task-K/L hygiene: LICENSE, pinned requirements, archived superseded fact-check, cleaned diagnostics/labels, anonymous-release machinery."
+}

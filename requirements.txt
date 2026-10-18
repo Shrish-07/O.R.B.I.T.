@@ -1,4 +1,4 @@
-﻿# Pinned to the exact versions in the project virtualenv (pip freeze, Round 12).
+# Pinned to the exact versions in the project virtualenv (pip freeze, Round 12).
 # pywin32 omitted: Windows-only package; pinning it breaks Linux/Docker installs. (Windows users: pip install pywin32)
 
 altair==6.2.2
