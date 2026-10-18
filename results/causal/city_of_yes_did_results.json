@@ -19,6 +19,7 @@
   "clustering": "SEs clustered by council district (51 clusters)",
   "event_study_pre_trends": {
     "n": 355480,
+    "n_clusters_G": 51,
     "period_terms": {
       "yes_x_2016-17": {
         "coef": -0.1445293429381987,
@@ -52,8 +53,11 @@
       "2018-19",
       "2020-21"
     ],
-    "pre_trend_joint_wald_f": 4.405585464840547,
-    "pre_trend_joint_wald_p": 0.22086804334742394,
+    "pre_trend_wald_chi2": 4.405585464840547,
+    "pre_trend_wald_chi2_p": 0.22086804334742394,
+    "pre_trend_wald_q": 3,
+    "pre_trend_wald_f": 1.4685284882801823,
+    "pre_trend_wald_f_p": 0.23435460065747163,
     "r_squared": 0.29645414962571903,
     "estimator": "statsmodels OLS, cluster-robust SE by council district"
   },
@@ -77,6 +81,6 @@
     "did_p": 0.13831816995499563,
     "estimator": "statsmodels OLS, cluster-robust SE by council district"
   },
-  "pre_trend_verdict": "pre-trends consistent with parallel trends (joint Wald p=0.2209 > 0.05)",
+  "pre_trend_verdict": "pre-trends consistent with parallel trends (joint Wald chi2(3) p=0.2209 > 0.05)",
   "main_verdict": "pre-trend check: PASS; did coef 0.0793 (SE 0.0526, p=0.1318) \u2014 reported under the ideology/preference-proxy framing (not a policy-application effect); treat the causal reading with that gravity"
 }

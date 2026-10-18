@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_analysis_v2",
+  "generated_utc": "2026-10-18T17:48:03.764221Z",
+  "n_checks": 17,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Independent re-derivation of the sample funnel, the v2 robustness suite (statsmodels cross-check + deterministic wild bootstrap), and the ML collinearity diagnostics."
+}

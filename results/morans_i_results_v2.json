@@ -1,0 +1,137 @@
+{
+  "methodology": {
+    "weights": "libpysal KNN k=5, row-standardized",
+    "permutations": 999,
+    "seed": 42,
+    "aggregation": "median target_log_price / mean measure per council district (same as compute_morans_i.py)",
+    "residual_spec": "district-level OLS: median_log_price ~ measure + mean numfloors + mean yearbuilt + mean commfar (+ borough FE in the borough-FE variant)"
+  },
+  "median_log_price": {
+    "I": 0.5942031799360221,
+    "z": 7.426429079200627,
+    "p_sim": 0.001,
+    "n_districts": 51
+  },
+  "by_measure": {
+    "dem_share": {
+      "moran_i": 0.5704774339620367,
+      "z": 7.862478512326063,
+      "p_sim": 0.001,
+      "n_districts": 51,
+      "residual_morans": {
+        "I": 0.3825412368906753,
+        "z": 5.072979445573763,
+        "p_sim": 0.001,
+        "r_squared": 0.45956171849002025,
+        "borough_fe": false
+      },
+      "residual_morans_boro_fe": {
+        "I": 0.0970835472019032,
+        "z": 1.4519891613765978,
+        "p_sim": 0.089,
+        "r_squared": 0.7247923300259124,
+        "borough_fe": true
+      }
+    },
+    "dem_share_mayor_allcand": {
+      "moran_i": 0.5707069160501765,
+      "z": 7.877615724785323,
+      "p_sim": 0.001,
+      "n_districts": 51,
+      "residual_morans": {
+        "I": 0.3825412368906753,
+        "z": 5.072979445573763,
+        "p_sim": 0.001,
+        "r_squared": 0.45956171849002025,
+        "borough_fe": false
+      },
+      "residual_morans_boro_fe": {
+        "I": 0.0970835472019032,
+        "z": 1.4519891613765978,
+        "p_sim": 0.089,
+        "r_squared": 0.7247923300259124,
+        "borough_fe": true
+      }
+    },
+    "dem_share_pres": {
+      "moran_i": 0.5826405784318615,
+      "z": 8.172147888869123,
+      "p_sim": 0.001,
+      "n_districts": 51,
+      "residual_morans": {
+        "I": 0.3825412368906753,
+        "z": 5.072979445573763,
+        "p_sim": 0.001,
+        "r_squared": 0.45956171849002025,
+        "borough_fe": false
+      },
+      "residual_morans_boro_fe": {
+        "I": 0.0970835472019032,
+        "z": 1.4519891613765978,
+        "p_sim": 0.089,
+        "r_squared": 0.7247923300259124,
+        "borough_fe": true
+      }
+    },
+    "dem_share_vintage": {
+      "moran_i": 0.47903942486712836,
+      "z": 6.5720728183939,
+      "p_sim": 0.001,
+      "n_districts": 51,
+      "residual_morans": {
+        "I": 0.3825412368906753,
+        "z": 5.072979445573763,
+        "p_sim": 0.001,
+        "r_squared": 0.45956171849002025,
+        "borough_fe": false
+      },
+      "residual_morans_boro_fe": {
+        "I": 0.0970835472019032,
+        "z": 1.4519891613765978,
+        "p_sim": 0.089,
+        "r_squared": 0.7247923300259124,
+        "borough_fe": true
+      }
+    },
+    "dem_share_mayor_allcand_vintage": {
+      "moran_i": 0.47905735547181766,
+      "z": 6.57964860235579,
+      "p_sim": 0.001,
+      "n_districts": 51,
+      "residual_morans": {
+        "I": 0.3825412368906753,
+        "z": 5.072979445573763,
+        "p_sim": 0.001,
+        "r_squared": 0.45956171849002025,
+        "borough_fe": false
+      },
+      "residual_morans_boro_fe": {
+        "I": 0.0970835472019032,
+        "z": 1.4519891613765978,
+        "p_sim": 0.089,
+        "r_squared": 0.7247923300259124,
+        "borough_fe": true
+      }
+    },
+    "dem_share_pres_vintage": {
+      "moran_i": 0.5210847639405254,
+      "z": 7.300583717189725,
+      "p_sim": 0.001,
+      "n_districts": 51,
+      "residual_morans": {
+        "I": 0.3825412368906753,
+        "z": 5.072979445573763,
+        "p_sim": 0.001,
+        "r_squared": 0.45956171849002025,
+        "borough_fe": false
+      },
+      "residual_morans_boro_fe": {
+        "I": 0.0970835472019032,
+        "z": 1.4519891613765978,
+        "p_sim": 0.089,
+        "r_squared": 0.7247923300259124,
+        "borough_fe": true
+      }
+    }
+  }
+}

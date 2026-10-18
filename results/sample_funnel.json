@@ -1,0 +1,103 @@
+{
+  "funnel": [
+    {
+      "step": "raw_sales_rows",
+      "description": "Raw citywide annualized sales CSV",
+      "rows": 845607,
+      "rows_lost_from_previous": 0
+    },
+    {
+      "step": "valid_sale_price",
+      "description": "SALE PRICE parses to a number",
+      "rows": 845607,
+      "rows_lost_from_previous": 0
+    },
+    {
+      "step": "price_gt_10k",
+      "description": "sale_price > $10,000 (rebuild_canonical filter)",
+      "rows": 567997,
+      "rows_lost_from_previous": 277610
+    },
+    {
+      "step": "after_pluto_merge",
+      "description": "left-join PLUTO on BBL (no row loss by design)",
+      "rows": 567997,
+      "rows_lost_from_previous": 0
+    },
+    {
+      "step": "after_ideology_merge",
+      "description": "left-join ideology on (CounDist, election_year) (no row loss by design)",
+      "rows": 567997,
+      "rows_lost_from_previous": 0
+    },
+    {
+      "step": "canonical_rows",
+      "description": "exact-duplicate rows dropped (rebuild_canonical final step; = canonical parquet rows)",
+      "rows": 566956,
+      "rows_lost_from_previous": 1041
+    },
+    {
+      "step": "analysis_base_sample",
+      "description": "non-missing outcome + core controls (yearbuilt, numfloors, landuse, commfar) + district/year",
+      "rows": 520365,
+      "rows_lost_from_previous": 46591
+    },
+    {
+      "step": "restricted_analysis_sample",
+      "description": "base + is_resid_tc12 + price_ge_100k + NOT multi_parcel_flag",
+      "rows": 469697,
+      "rows_lost_from_previous": 50668
+    }
+  ],
+  "flags_on_canonical": {
+    "sample_pre2024": 463015,
+    "is_resid_tc12": 532228,
+    "price_ge_100k": 557086,
+    "multi_parcel_flag": 39235
+  },
+  "flag_shares_on_canonical": {
+    "sample_pre2024": 0.816668,
+    "is_resid_tc12": 0.938747,
+    "price_ge_100k": 0.982591,
+    "multi_parcel_flag": 0.069203
+  },
+  "building_class_category": {
+    "distinct_raw": 91,
+    "distinct_normalized": 47,
+    "note": "Whitespace normalization collapses e.g. \"01  TWO-FAMILY\" style double-space variants; the raw column is untouched, the normalized column is building_class_category."
+  },
+  "restricted_analysis_sample_definition": "canonical rows with non-missing outcome + core controls, AND is_resid_tc12, AND price_ge_100k, AND NOT multi_parcel_flag",
+  "per_measure_sample_sizes": {
+    "dem_share": {
+      "nonmissing_canonical": 553585,
+      "full_analysis_sample": 520365,
+      "restricted_analysis_sample": 469697
+    },
+    "dem_share_mayor_allcand": {
+      "nonmissing_canonical": 553585,
+      "full_analysis_sample": 520365,
+      "restricted_analysis_sample": 469697
+    },
+    "dem_share_pres": {
+      "nonmissing_canonical": 553585,
+      "full_analysis_sample": 520365,
+      "restricted_analysis_sample": 469697
+    },
+    "dem_share_vintage": {
+      "nonmissing_canonical": 553585,
+      "full_analysis_sample": 520365,
+      "restricted_analysis_sample": 469697
+    },
+    "dem_share_mayor_allcand_vintage": {
+      "nonmissing_canonical": 553585,
+      "full_analysis_sample": 520365,
+      "restricted_analysis_sample": 469697
+    },
+    "dem_share_pres_vintage": {
+      "nonmissing_canonical": 553585,
+      "full_analysis_sample": 520365,
+      "restricted_analysis_sample": 469697
+    }
+  },
+  "canonical_rows": 566956
+}

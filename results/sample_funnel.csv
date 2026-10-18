@@ -1,0 +1,9 @@
+step,description,rows,rows_lost_from_previous
+raw_sales_rows,Raw citywide annualized sales CSV,845607,0
+valid_sale_price,SALE PRICE parses to a number,845607,0
+price_gt_10k,"sale_price > $10,000 (rebuild_canonical filter)",567997,277610
+after_pluto_merge,left-join PLUTO on BBL (no row loss by design),567997,0
+after_ideology_merge,"left-join ideology on (CounDist, election_year) (no row loss by design)",567997,0
+canonical_rows,exact-duplicate rows dropped (rebuild_canonical final step; = canonical parquet rows),566956,1041
+analysis_base_sample,"non-missing outcome + core controls (yearbuilt, numfloors, landuse, commfar) + district/year",520365,46591
+restricted_analysis_sample,base + is_resid_tc12 + price_ge_100k + NOT multi_parcel_flag,469697,50668

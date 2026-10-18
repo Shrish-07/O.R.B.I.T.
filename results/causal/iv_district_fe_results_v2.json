@@ -1,0 +1,363 @@
+{
+  "purpose": "Task G additions: spec-matched OLS benchmark per ideology measure, cluster/cell bookkeeping, and a local-linear RD-style specification. The original results/causal/iv_district_fe_results.json and its 12 recorded specification arms are unchanged.",
+  "benchmark_pointer": "matched_ols_benchmark",
+  "superseded_benchmark_note": "The original file's model4_benchmark (Table 2 Model 4: district FE only, no unit controls, no sale-year FE, N=520,365 full-sample OLS) does NOT match the 2SLS second stage (district FE + sale-year FE + RESIDENTIAL/COMMERCIAL UNITS on the close-race sample). Compare the 2SLS estimates to matched_ols_benchmark instead.",
+  "controls": [
+    "yearbuilt",
+    "numfloors",
+    "landuse",
+    "commfar",
+    "RESIDENTIAL UNITS",
+    "COMMERCIAL UNITS"
+  ],
+  "fixed_effects": [
+    "CounDist",
+    "sale_year"
+  ],
+  "g_min_threshold": 30,
+  "bandwidths": {
+    "bw_5pp": {
+      "n_obs": 10424,
+      "n_clusters_G": 3,
+      "treated_cells_Z1": 2,
+      "control_cells_Z0": 2,
+      "g_below_30_flag": true,
+      "matched_ols_by_measure": {
+        "dem_share": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 2.831657100207163,
+          "se": 0.10070336532643943,
+          "p": 5.7721896045667105e-174,
+          "n": 10424,
+          "n_clusters_G": 3
+        },
+        "dem_share_mayor_allcand": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 3.78579737509821,
+          "se": 0.13291938339494155,
+          "p": 1.9628045567346825e-178,
+          "n": 10424,
+          "n_clusters_G": 3
+        },
+        "dem_share_pres": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 1.5241015238125293,
+          "se": 3.7550032587997824,
+          "p": 0.6848267034767082,
+          "n": 10424,
+          "n_clusters_G": 3
+        },
+        "dem_share_vintage": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 2.9663731502399733,
+          "se": 0.10412201198735026,
+          "p": 1.5853022570498521e-178,
+          "n": 10424,
+          "n_clusters_G": 3
+        },
+        "dem_share_mayor_allcand_vintage": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 3.905701261683112,
+          "se": 0.13573801272356442,
+          "p": 4.561456680926837e-182,
+          "n": 10424,
+          "n_clusters_G": 3
+        },
+        "dem_share_pres_vintage": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": -0.047351648985606856,
+          "se": 0.11666256707376989,
+          "p": 0.6848267034742206,
+          "n": 10424,
+          "n_clusters_G": 3
+        }
+      }
+    },
+    "bw_10pp": {
+      "n_obs": 15313,
+      "n_clusters_G": 5,
+      "treated_cells_Z1": 3,
+      "control_cells_Z0": 3,
+      "g_below_30_flag": true,
+      "matched_ols_by_measure": {
+        "dem_share": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 3.4474399712989343,
+          "se": 0.09153225412512467,
+          "p": 1.9550844646107e-310,
+          "n": 15313,
+          "n_clusters_G": 5
+        },
+        "dem_share_mayor_allcand": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 3.382128382619031,
+          "se": 0.09262350312175553,
+          "p": 6.458531685027664e-292,
+          "n": 15313,
+          "n_clusters_G": 5
+        },
+        "dem_share_pres": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": -2.475030894925208,
+          "se": 1.9742116473710785,
+          "p": 0.20995811242889884,
+          "n": 15313,
+          "n_clusters_G": 5
+        },
+        "dem_share_vintage": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 3.589866412029203,
+          "se": 0.09208208615173208,
+          "p": 0.0,
+          "n": 15313,
+          "n_clusters_G": 5
+        },
+        "dem_share_mayor_allcand_vintage": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 3.488759850991914,
+          "se": 0.09188349478682743,
+          "p": 0.0,
+          "n": 15313,
+          "n_clusters_G": 5
+        },
+        "dem_share_pres_vintage": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 0.0768956610401578,
+          "se": 0.06133592511662785,
+          "p": 0.20995811235291117,
+          "n": 15313,
+          "n_clusters_G": 5
+        }
+      }
+    },
+    "bw_15pp": {
+      "n_obs": 26514,
+      "n_clusters_G": 7,
+      "treated_cells_Z1": 6,
+      "control_cells_Z0": 3,
+      "g_below_30_flag": true,
+      "matched_ols_by_measure": {
+        "dem_share": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 4.534790715415965,
+          "se": 0.07948526987381622,
+          "p": 0.0,
+          "n": 26514,
+          "n_clusters_G": 7
+        },
+        "dem_share_mayor_allcand": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 4.554392021256577,
+          "se": 0.0843212688164,
+          "p": 0.0,
+          "n": 26514,
+          "n_clusters_G": 7
+        },
+        "dem_share_pres": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 6.207142672899569,
+          "se": 2.495868887477135,
+          "p": 0.01288374779861892,
+          "n": 26514,
+          "n_clusters_G": 7
+        },
+        "dem_share_vintage": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 4.334765273076941,
+          "se": 0.07191236641175576,
+          "p": 0.0,
+          "n": 26514,
+          "n_clusters_G": 7
+        },
+        "dem_share_mayor_allcand_vintage": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 4.461075733371996,
+          "se": 0.0791450824370644,
+          "p": 0.0,
+          "n": 26514,
+          "n_clusters_G": 7
+        },
+        "dem_share_pres_vintage": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": -0.20476107740224683,
+          "se": 0.1848832750174986,
+          "p": 0.26807115053263975,
+          "n": 26514,
+          "n_clusters_G": 7
+        }
+      }
+    },
+    "bw_20pp": {
+      "n_obs": 37555,
+      "n_clusters_G": 9,
+      "treated_cells_Z1": 10,
+      "control_cells_Z0": 3,
+      "g_below_30_flag": true,
+      "matched_ols_by_measure": {
+        "dem_share": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": -0.15038258883183891,
+          "se": 0.26764171465904923,
+          "p": 0.5741976227212598,
+          "n": 37555,
+          "n_clusters_G": 9
+        },
+        "dem_share_mayor_allcand": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": -0.8339538978277934,
+          "se": 0.4282405057012647,
+          "p": 0.05148726326889674,
+          "n": 37555,
+          "n_clusters_G": 9
+        },
+        "dem_share_pres": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": -0.35540129609433474,
+          "se": 1.9572719431081989,
+          "p": 0.8559124030710406,
+          "n": 37555,
+          "n_clusters_G": 9
+        },
+        "dem_share_vintage": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 0.2616426565892271,
+          "se": 0.4748602422186478,
+          "p": 0.5816413789218744,
+          "n": 37555,
+          "n_clusters_G": 9
+        },
+        "dem_share_mayor_allcand_vintage": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": 3.49618084901995,
+          "se": 1.3506531636121701,
+          "p": 0.0096391810736676,
+          "n": 37555,
+          "n_clusters_G": 9
+        },
+        "dem_share_pres_vintage": {
+          "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+          "coef": -0.06482742870359001,
+          "se": 0.5157894018344745,
+          "p": 0.8999806041555871,
+          "n": 37555,
+          "n_clusters_G": 9
+        }
+      }
+    }
+  },
+  "rd_local_linear": {
+    "bw_10pp": {
+      "identified": false,
+      "error": "regressors [exog endog] do not have full column rank",
+      "n": 15313,
+      "n_clusters_G": 5
+    },
+    "bw_15pp": {
+      "identified": false,
+      "error": "regressors [exog endog] do not have full column rank",
+      "n": 26514,
+      "n_clusters_G": 7
+    },
+    "bw_20pp": {
+      "identified": false,
+      "error": "instruments [exog instruments]  do not have full column rank",
+      "n": 37555,
+      "n_clusters_G": 9
+    },
+    "bw_25pp": {
+      "identified": true,
+      "first_stage_joint_f_excluded_instruments": 3304.08657796988,
+      "first_stage_joint_f_pvalue": 0.0,
+      "dem_share_coef": -1.3626771596027538,
+      "dem_share_se": 0.6825376015428927,
+      "dem_share_p": 0.04588098541857666,
+      "n": 44283,
+      "n_clusters_G": 11,
+      "spec": "instruments: Z, Z x margin_pct (linear each side); exog: margin_pct + controls + district FE + sale-year FE; sample: close-race cells within the bandwidth"
+    },
+    "bw_30pp": {
+      "identified": true,
+      "first_stage_joint_f_excluded_instruments": 28165.40321261423,
+      "first_stage_joint_f_pvalue": 0.0,
+      "dem_share_coef": -0.5254125143255806,
+      "dem_share_se": 0.23165728781058426,
+      "dem_share_p": 0.023325579886876557,
+      "n": 74390,
+      "n_clusters_G": 17,
+      "spec": "instruments: Z, Z x margin_pct (linear each side); exog: margin_pct + controls + district FE + sale-year FE; sample: close-race cells within the bandwidth"
+    },
+    "bw_35pp": {
+      "identified": true,
+      "first_stage_joint_f_excluded_instruments": 77480.25849616356,
+      "first_stage_joint_f_pvalue": 0.0,
+      "dem_share_coef": -0.3299729587670299,
+      "dem_share_se": 0.20451320527408595,
+      "dem_share_p": 0.10664558065520624,
+      "n": 85923,
+      "n_clusters_G": 18,
+      "spec": "instruments: Z, Z x margin_pct (linear each side); exog: margin_pct + controls + district FE + sale-year FE; sample: close-race cells within the bandwidth"
+    },
+    "bw_40pp": {
+      "identified": true,
+      "first_stage_joint_f_excluded_instruments": 63249.532826421404,
+      "first_stage_joint_f_pvalue": 0.0,
+      "dem_share_coef": -0.5256661667954177,
+      "dem_share_se": 0.16526993908974427,
+      "dem_share_p": 0.0014694401587560524,
+      "n": 92873,
+      "n_clusters_G": 19,
+      "spec": "instruments: Z, Z x margin_pct (linear each side); exog: margin_pct + controls + district FE + sale-year FE; sample: close-race cells within the bandwidth"
+    }
+  },
+  "matched_ols_benchmark": {
+    "dem_share": {
+      "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+      "coef": -0.15038258883183891,
+      "se": 0.26764171465904923,
+      "p": 0.5741976227212598,
+      "n": 37555,
+      "n_clusters_G": 9
+    },
+    "dem_share_mayor_allcand": {
+      "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+      "coef": -0.8339538978277934,
+      "se": 0.4282405057012647,
+      "p": 0.05148726326889674,
+      "n": 37555,
+      "n_clusters_G": 9
+    },
+    "dem_share_pres": {
+      "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+      "coef": -0.35540129609433474,
+      "se": 1.9572719431081989,
+      "p": 0.8559124030710406,
+      "n": 37555,
+      "n_clusters_G": 9
+    },
+    "dem_share_vintage": {
+      "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+      "coef": 0.2616426565892271,
+      "se": 0.4748602422186478,
+      "p": 0.5816413789218744,
+      "n": 37555,
+      "n_clusters_G": 9
+    },
+    "dem_share_mayor_allcand_vintage": {
+      "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+      "coef": 3.49618084901995,
+      "se": 1.3506531636121701,
+      "p": 0.0096391810736676,
+      "n": 37555,
+      "n_clusters_G": 9
+    },
+    "dem_share_pres_vintage": {
+      "spec": "target_log_price ~ measure + controls + district FE + sale-year FE, clustered by council district",
+      "coef": -0.06482742870359001,
+      "se": 0.5157894018344745,
+      "p": 0.8999806041555871,
+      "n": 37555,
+      "n_clusters_G": 9
+    }
+  },
+  "matched_ols_benchmark_note": "Shown at the widest primary bandwidth (\u00b120pp); per-bandwidth matched OLS for every measure is under bandwidths.bw_*pp..matched_ols_by_measure."
+}

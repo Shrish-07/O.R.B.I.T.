@@ -112,9 +112,15 @@ def recompute_all(df, roll):
     ev = {c: {"coef": float(rese.params[c]), "se": float(rese.bse[c]),
               "p": float(rese.pvalues[c])} for c in vins}
     ev_meta = {"n": int(rese.nobs), "r_squared": float(rese.rsquared),
-               "pre_trend_joint_wald_f": float(w.statistic),
-
-               "pre_trend_joint_wald_p": float(w.pvalue)}
+               "pre_trend_wald_chi2": float(w.statistic),
+               "pre_trend_wald_chi2_p": float(w.pvalue)}
+    # Round 12: implied F = chi2/q with its F(q, G-1) p-value
+    q = 3
+    G = int(pd.Series(ge).nunique())
+    from scipy import stats as _sps
+    ev_meta["pre_trend_wald_f"] = ev_meta["pre_trend_wald_chi2"] / q
+    ev_meta["pre_trend_wald_f_p"] = float(
+        _sps.f.sf(ev_meta["pre_trend_wald_f"], q, G - 1))
 
     dm = d[d["sale_year"] != 2024].copy()
     dm["yes_x_post"] = (dm["yes_district"] * (dm["sale_year"] >= 2025)).astype(float)
@@ -162,10 +168,14 @@ def main():
         cmp(f"ev.{c}.p", ev[c]["p"], rec_ev["period_terms"][c]["p"])
     cmp("ev.n", ev_meta["n"], rec_ev["n"])
     cmp("ev.r_squared", ev_meta["r_squared"], rec_ev["r_squared"])
-    cmp("ev.wald_f", ev_meta["pre_trend_joint_wald_f"],
-        rec_ev["pre_trend_joint_wald_f"])
-    cmp("ev.wald_p", ev_meta["pre_trend_joint_wald_p"],
-        rec_ev["pre_trend_joint_wald_p"])
+    cmp("ev.wald_chi2", ev_meta["pre_trend_wald_chi2"],
+        rec_ev["pre_trend_wald_chi2"])
+    cmp("ev.wald_chi2_p", ev_meta["pre_trend_wald_chi2_p"],
+        rec_ev["pre_trend_wald_chi2_p"])
+    cmp("ev.wald_f_implied", ev_meta["pre_trend_wald_f"],
+        rec_ev["pre_trend_wald_f"])
+    cmp("ev.wald_f_p", ev_meta["pre_trend_wald_f_p"],
+        rec_ev["pre_trend_wald_f_p"])
 
     for tag, mine, rec in [("main", main_r, pipeline["did_main"]),
                            ("sens", sens_r,

@@ -1,0 +1,120 @@
+{
+  "outcome": "target_log_price",
+  "controls": [
+    "yearbuilt",
+    "numfloors",
+    "landuse",
+    "commfar",
+    "RESIDENTIAL UNITS",
+    "COMMERCIAL UNITS",
+    "TOTAL UNITS"
+  ],
+  "fixed_effects": [
+    "council district FE",
+    "sale year FE"
+  ],
+  "clustering": "SEs clustered by council district",
+  "wild_bootstrap": {
+    "weights": "webb6",
+    "reps": 9999,
+    "seed": 42
+  },
+  "main_wild_inference": {
+    "coef": 0.07933126948535658,
+    "se_classical": 0.011389094123128697,
+    "se_cluster": 0.05264588020984467,
+    "p_t_G_minus_1": 0.13813273219275768,
+    "p_wild_cluster_bootstrap_t": 0.1428,
+    "ci95_low_t": -0.026411092924692056,
+    "ci95_high_t": 0.1850736318954052,
+    "ci95_low_wild": -0.02456636803711651,
+    "ci95_high_wild": 0.18456820527217754,
+    "n": 333670,
+    "n_clusters_G": 51,
+    "r_squared": 0.29026128789056704,
+    "wild_bootstrap": {
+      "weights": "webb6",
+      "reps": 9999,
+      "seed": 42
+    }
+  },
+  "window_2022_2025_incl_2024_as_pre": {
+    "post_definition": "sale_year == 2025 (pre = 2022-23 and 2024)",
+    "n": 93234,
+    "n_clusters_G": 51,
+    "did_coef": -0.0003722120509787154,
+    "did_se": 0.018235667235966035,
+    "did_p": 0.9837153406600716,
+    "note": "2024 is pre-adoption for ~11 of 12 months; the incl variant bins it with the pre-period, the excl variant drops it like the main spec."
+  },
+  "window_2022_2025_excl_2024": {
+    "post_definition": "sale_year == 2025 (pre = 2022-23)",
+    "n": 71424,
+    "n_clusters_G": 51,
+    "did_coef": -0.00916969057582162,
+    "did_se": 0.018320180931990716,
+    "did_p": 0.6167061484635925,
+    "note": "2024 is pre-adoption for ~11 of 12 months; the incl variant bins it with the pre-period, the excl variant drops it like the main spec."
+  },
+  "district_specific_linear_trends": {
+    "did_coef": -0.015257303593372254,
+    "did_se": 0.039008223465686595,
+    "did_p": 0.695700821689428,
+    "n": 333670,
+    "n_clusters_G": 51,
+    "note": "main design + district FE x (sale_year - 2016) linear trends + sale-year FE"
+  },
+  "continuous_treatment_dem_share_pres_x_post": {
+    "treatment": "dem_share_pres (continuous) x post(2025)",
+    "dem_share_pres_coef": -0.4670890018010814,
+    "dem_share_pres_p": 0.24858996745023743,
+    "interaction_coef": 0.19201029208021084,
+    "interaction_se": 0.09945349199775898,
+    "interaction_p": 0.053525842739027586,
+    "n": 333670,
+    "n_clusters_G": 51,
+    "note": "rows with missing dem_share_pres dropped; district FE + sale-year FE + controls"
+  },
+  "leave_one_borough_out": {
+    "Manhattan": {
+      "excluded_borough": "Manhattan",
+      "did_coef": 0.01882845892885156,
+      "did_se": 0.03200494142027483,
+      "did_p": 0.5563319543705094,
+      "n": 277646,
+      "n_clusters_G": 42
+    },
+    "Bronx": {
+      "excluded_borough": "Bronx",
+      "did_coef": 0.09692097839723053,
+      "did_se": 0.05833055974793845,
+      "did_p": 0.09659671718347354,
+      "n": 301735,
+      "n_clusters_G": 43
+    },
+    "Brooklyn": {
+      "excluded_borough": "Brooklyn",
+      "did_coef": 0.07126019480792352,
+      "did_se": 0.07393059475930021,
+      "did_p": 0.3351062742711287,
+      "n": 243343,
+      "n_clusters_G": 36
+    },
+    "Queens": {
+      "excluded_borough": "Queens",
+      "did_coef": 0.1753367745079559,
+      "did_se": 0.07518625167655345,
+      "did_p": 0.019698987057471324,
+      "n": 223339,
+      "n_clusters_G": 37
+    },
+    "Staten Island": {
+      "excluded_borough": "Staten Island",
+      "did_coef": 0.059375706857351856,
+      "did_se": 0.053500586430484894,
+      "did_p": 0.26707912857279514,
+      "n": 288617,
+      "n_clusters_G": 49
+    }
+  }
+}
