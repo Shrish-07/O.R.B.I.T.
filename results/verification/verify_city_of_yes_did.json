@@ -1,7 +1,7 @@
 {
   "verifier": "verify_city_of_yes_did",
-  "generated_utc": "2026-10-16T17:23:22.063833Z",
-  "n_checks": 29,
+  "generated_utc": "2026-10-18T17:22:00.746999Z",
+  "n_checks": 31,
   "n_mismatches": 0,
   "mismatches": [],
   "note": "Independent DiD/event-study re-derivation vs results/causal/city_of_yes_did_results.json."

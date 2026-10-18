@@ -664,8 +664,13 @@ def did_assets():
         'City of Yes Housing Opportunity difference-in-differences: '
         'event-study period terms (reference: '
         f"{esc(ref)}), joint pre-trend Wald test "
-        f"($F={fmt(ev.get('pre_trend_joint_wald_f'), 2)}$, "
-        f"$p={_fmt_p(ev.get('pre_trend_joint_wald_p'))}$), and the main / "
+        f"($\\chi^2({int(ev.get('pre_trend_wald_q') or 3)})="
+        f"{fmt(ev.get('pre_trend_wald_chi2'), 2)}$, "
+        f"$p={_fmt_p(ev.get('pre_trend_wald_chi2_p'))}$; implied "
+        f"$F({int(ev.get('pre_trend_wald_q') or 3)},"
+        f"{int(ev.get('n_clusters_G') or 51) - 1})="
+        f"{fmt(ev.get('pre_trend_wald_f'), 2)}$, "
+        f"$p={_fmt_p(ev.get('pre_trend_wald_f_p'))}$), and the main / "
         'sensitivity DiD estimates. District FE + sale-year FE + controls; '
         'cluster-robust SE by council district.',
         'tab:did',
@@ -695,8 +700,11 @@ def did_assets():
     ax.set_ylabel('Yes-district period coefficient (log price)')
     ax.set_title('City of Yes event study — Yes-district price effects')
     ax.text(0.01, 0.02,
-            f"pre-trend joint Wald F={ev.get('pre_trend_joint_wald_f'):.2f}, "
-            f"p={_fmt_p(ev.get('pre_trend_joint_wald_p'))}; "
+            f"pre-trend joint Wald $\\chi^2(3)$={ev.get('pre_trend_wald_chi2'):.2f}, "
+            f"p={_fmt_p(ev.get('pre_trend_wald_chi2_p'))}; "
+            f"implied F(3,{int(ev.get('n_clusters_G') or 51) - 1})="
+            f"{ev.get('pre_trend_wald_f'):.2f}, "
+            f"p={_fmt_p(ev.get('pre_trend_wald_f_p'))}; "
             f"main DiD = {main['did_coef']:.4f} (p={_fmt_p(main['did_p'])})",
             transform=ax.transAxes, fontsize=8)
     save_fig(fig, 'fig7_did_event_study.png')

@@ -1,0 +1,90 @@
+{
+  "scope": "diagnostics only \u2014 no model retrained, no artifact touched",
+  "train_rows": 121052,
+  "test_rows": 56723,
+  "dem_share_deterministic_by_district": {
+    "max_nunique_per_district_train": 1,
+    "max_nunique_per_district_test": 1,
+    "max_nunique_per_district_train_plus_test": 1,
+    "districts_with_single_dem_share_value_train_plus_test": 51,
+    "n_districts": 51,
+    "r2_dem_share_on_district_dummies": 1.0,
+    "why": "all_years train = sale years 2016-17, test = 2018; every sale year 2016-2018 maps to election_year 2017, so dem_share is one constant per council district in the whole train/test sample \u2014 collinear with the district indicators, not an independent signal."
+  },
+  "duplicated_feature_pairs": [
+    {
+      "feature_a": "RESIDENTIAL UNITS",
+      "feature_b": "unitsres",
+      "pearson_r": 0.00262791788353395,
+      "note": "same underlying quantity recorded twice (sales file vs PLUTO/geography identifiers)"
+    },
+    {
+      "feature_a": "TOTAL UNITS",
+      "feature_b": "unitstotal",
+      "pearson_r": -0.0015108279533046017,
+      "note": "same underlying quantity recorded twice (sales file vs PLUTO/geography identifiers)"
+    },
+    {
+      "feature_a": "GROSS SQUARE FEET",
+      "feature_b": "bldgarea",
+      "pearson_r": 0.6526775908813932,
+      "note": "same underlying quantity recorded twice (sales file vs PLUTO/geography identifiers)"
+    },
+    {
+      "feature_a": "LAND SQUARE FEET",
+      "feature_b": "lotarea",
+      "pearson_r": 0.22219744930404114,
+      "note": "same underlying quantity recorded twice (sales file vs PLUTO/geography identifiers)"
+    },
+    {
+      "feature_a": "YEAR BUILT",
+      "feature_b": "yearbuilt",
+      "pearson_r": 0.1916415091420905,
+      "note": "same underlying quantity recorded twice (sales file vs PLUTO/geography identifiers)"
+    },
+    {
+      "feature_a": "Community Board",
+      "feature_b": "Census Tract 2020",
+      "pearson_r": 0.23043991197845934,
+      "note": "same underlying quantity recorded twice (sales file vs PLUTO/geography identifiers)"
+    }
+  ],
+  "top6_abs_correlations_overall": [
+    {
+      "feature_a": "Council District",
+      "feature_b": "CounDist",
+      "pearson_r": 1.0
+    },
+    {
+      "feature_a": "BOROUGH",
+      "feature_b": "Community Board",
+      "pearson_r": 0.9994040465444897
+    },
+    {
+      "feature_a": "unitsres",
+      "feature_b": "unitstotal",
+      "pearson_r": 0.9911624232570687
+    },
+    {
+      "feature_a": "residfar",
+      "feature_b": "facilfar",
+      "pearson_r": 0.9443112941544056
+    },
+    {
+      "feature_a": "landuse",
+      "feature_b": "bldgarea",
+      "pearson_r": -0.9412681442538866
+    },
+    {
+      "feature_a": "RESIDENTIAL UNITS",
+      "feature_b": "TOTAL UNITS",
+      "pearson_r": 0.9069863111395596
+    }
+  ],
+  "champion_selection": {
+    "champion": null,
+    "test_mae": null,
+    "selection_basis": "test MAE (see experiments/champion.json selection_note); a validation-MAE champion is not part of the recorded governance",
+    "validation_artifacts": "validation artifacts found: ['cat_all_years_political_lr0.05_d6_intervals.csv', 'cat_all_years_political_lr0.05_d6_prediction_intervals.parquet', 'elasticnet_all_years_political_intervals.csv', 'elasticnet_all_years_political_prediction_intervals.parquet', 'lgbm_all_years_base_intervals.csv', 'lgbm_all_years_base_prediction_intervals.parquet', 'lgbm_all_years_political_intervals.csv', 'lgbm_all_years_political_prediction_intervals.parquet', 'rf_all_years_political_tuned_intervals.csv', 'rf_all_years_political_tuned_prediction_intervals.parquet', 'ridge_all_years_political_intervals.csv', 'ridge_all_years_political_prediction_intervals.parquet', 'xgb_all_years_political_lr0.05_md6_intervals.csv', 'xgb_all_years_political_lr0.05_md6_prediction_intervals.parquet']"
+  }
+}

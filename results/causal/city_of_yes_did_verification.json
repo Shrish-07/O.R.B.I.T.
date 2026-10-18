@@ -1,7 +1,7 @@
 {
   "source_reverified": "results/causal/city_of_yes_did_results.json",
-  "n_checks": 29,
-  "n_matched": 29,
+  "n_checks": 31,
+  "n_matched": 31,
   "all_match": true,
   "checks": [
     {
@@ -107,16 +107,28 @@
       "pipeline": 0.29645414962571903
     },
     {
-      "field": "ev.wald_f",
+      "field": "ev.wald_chi2",
       "match": true,
       "verified": 4.405585464840547,
       "pipeline": 4.405585464840547
     },
     {
-      "field": "ev.wald_p",
+      "field": "ev.wald_chi2_p",
       "match": true,
       "verified": 0.22086804334742394,
       "pipeline": 0.22086804334742394
+    },
+    {
+      "field": "ev.wald_f_implied",
+      "match": true,
+      "verified": 1.4685284882801823,
+      "pipeline": 1.4685284882801823
+    },
+    {
+      "field": "ev.wald_f_p",
+      "match": true,
+      "verified": 0.23435460065747163,
+      "pipeline": 0.23435460065747163
     },
     {
       "field": "main.n",
@@ -196,8 +208,10 @@
   "recomputed_pre_trend_wald": {
     "n": 355480,
     "r_squared": 0.29645414962571903,
-    "pre_trend_joint_wald_f": 4.405585464840547,
-    "pre_trend_joint_wald_p": 0.22086804334742394
+    "pre_trend_wald_chi2": 4.405585464840547,
+    "pre_trend_wald_chi2_p": 0.22086804334742394,
+    "pre_trend_wald_f": 1.4685284882801823,
+    "pre_trend_wald_f_p": 0.23435460065747163
   },
   "note": "Matches are on the re-derived values, incl. all event-study terms, the joint pre-trend Wald test, and both DiD variants."
 }

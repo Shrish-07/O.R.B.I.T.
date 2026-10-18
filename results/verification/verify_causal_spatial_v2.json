@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_causal_spatial_v2",
+  "generated_utc": "2026-10-18T17:48:18.128517Z",
+  "n_checks": 21,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Independent re-derivation of the DiD v2 specs and Wald-field bug fix, the IV matched OLS benchmark and cluster counts, and the per-measure spatial statistics (Moran I re-derived with esda)."
+}
