@@ -21,18 +21,6 @@
       1200
     ],
     "tex_files": [
-      "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\anonymous_release\\docs\\paper_assets\\appendix_a1_scenarios.tex",
-      "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\anonymous_release\\docs\\paper_assets\\table1_ols_regression.tex",
-      "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\anonymous_release\\docs\\paper_assets\\table2_model_performance.tex",
-      "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\anonymous_release\\docs\\paper_assets\\table3_shap_political.tex",
-      "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\anonymous_release\\docs\\paper_assets\\table4_robustness.tex",
-      "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\anonymous_release\\docs\\paper_assets\\table5_spatial_regression.tex",
-      "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\anonymous_release\\docs\\paper_assets\\table_did_event_study.tex",
-      "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\anonymous_release\\docs\\paper_assets\\table_iv_spec_search.tex",
-      "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\anonymous_release\\docs\\paper_assets\\table_scenario_summary.tex",
-      "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\anonymous_release\\docs\\paper_assets\\table_shap_cross_model.tex",
-      "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\anonymous_release\\tables\\table_robustness.tex",
-      "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\anonymous_release\\tables\\table_spatial_regression.tex",
       "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\docs\\paper_assets\\appendix_a1_scenarios.tex",
       "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\docs\\paper_assets\\table1_ols_regression.tex",
       "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\docs\\paper_assets\\table2_model_performance.tex",
@@ -47,7 +35,7 @@
       "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\ORBIT_reorganized\\tables\\table_spatial_regression.tex"
     ],
     "docx_files": [],
-    "tex_files_are_repo_tables_only": false,
+    "tex_files_are_repo_tables_only": true,
     "no_manuscript_docx_in_repo": true,
     "note": "tables/*.tex and docs/paper_assets/*.tex are pipeline-generated drop-in tables, not the manuscript (the manuscript lives outside this repo), so their presence here is expected."
   }
