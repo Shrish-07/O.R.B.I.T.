@@ -13,8 +13,50 @@ D = {}
 schema = json.loads((ROOT / 'models' / 'artifacts' / 'canonical_schema.json').read_text())
 # Round 10: 'paper' targets = the manuscript's current values (post refresh
 # + dedup rebuild; 24-feature base / 25-feature political specification).
+# Round 12: the canonical dataset gains 11 analysis-side v2 columns (new
+# ideology measures + sample flags, all blacklisted in
+# config/feature_blacklist.yaml so no model trains on them). The legacy
+# 53-column contract is verified as "all 53 legacy columns still present";
+# the schema shape itself now legitimately exceeds 53.
+LEGACY_53_COLUMNS = [
+    'BOROUGH', 'NEIGHBORHOOD', 'BUILDING CLASS CATEGORY',
+    'TAX CLASS AS OF FINAL ROLL', 'BLOCK', 'LOT', 'EASE-MENT',
+    'BUILDING CLASS AS OF FINAL ROLL', 'ADDRESS', 'APARTMENT NUMBER',
+    'ZIP CODE', 'RESIDENTIAL UNITS', 'COMMERCIAL UNITS', 'TOTAL UNITS',
+    'LAND SQUARE FEET', 'GROSS SQUARE FEET', 'YEAR BUILT',
+    'TAX CLASS AT TIME OF SALE', 'BUILDING CLASS AT TIME OF SALE',
+    'SALE PRICE', 'SALE DATE', 'Latitude', 'Longitude', 'Community Board',
+    'Council District', 'BIN', 'BBL', 'Census Tract 2020',
+    'Neighborhood Tabulation Area (NTA) (2020)', 'sale_price', 'sale_date',
+    'target_log_price', 'zonedist1', 'bldgclass', 'landuse', 'lotarea',
+    'bldgarea', 'numfloors', 'unitsres', 'unitstotal', 'yearbuilt',
+    'residfar', 'commfar', 'facilfar', 'BBL_pluto', 'zonedist1_cat',
+    'is_R3', 'is_R7', 'is_commercial', 'sale_year', 'election_year',
+    'CounDist', 'dem_share']
+V2_NEW_COLUMNS = [
+    'dem_share_mayor_allcand', 'dem_share_pres', 'dem_share_vintage',
+    'dem_share_mayor_allcand_vintage', 'dem_share_pres_vintage',
+    'election_year_pres', 'sample_pre2024', 'is_resid_tc12',
+    'price_ge_100k', 'multi_parcel_flag', 'building_class_category']
 D['dataset_rows'] = {'paper': 566956, 'recomputed': int(schema['shape'][0]), 'actual_loaded': int(len(df))}
 D['dataset_cols'] = {'paper': 53, 'recomputed': int(schema['shape'][1]), 'actual_loaded': int(df.shape[1])}
+D['dataset_cols_legacy_present'] = {
+    'paper': 53,
+    'recomputed': int(sum(c in df.columns for c in LEGACY_53_COLUMNS))}
+D['dataset_cols_v2_new'] = {
+    'expected': len(V2_NEW_COLUMNS),
+    'recomputed': int(sum(c in df.columns for c in V2_NEW_COLUMNS))}
+D['dataset_cols_v2_blacklisted_from_models'] = {
+    'expected': True,
+    'recomputed': None}  # filled below
+import yaml as _yaml  # noqa: E402
+try:
+    _bl = _yaml.safe_load((ROOT / 'config' / 'feature_blacklist.yaml').read_text())
+    _blset = {str(x).lower() for x in (_bl.get('leakage_features') or [])}
+    D['dataset_cols_v2_blacklisted_from_models']['recomputed'] = bool(
+        all(c.lower() in _blset for c in V2_NEW_COLUMNS))
+except Exception:
+    D['dataset_cols_v2_blacklisted_from_models']['recomputed'] = False
 base_names, base_mfi = parse_feature_names(ROOT / 'models' / 'lgbm_all_years_base.txt')
 pol_names, pol_mfi = parse_feature_names(ROOT / 'models' / 'lgbm_all_years_political.txt')
 D['base_feature_count'] = {'paper': 24, 'from_feature_names_line': len(base_names),
@@ -74,7 +116,10 @@ print('E train', E['train_rows'], 'test', E['test_rows'], 'identity', E['identit
 _yb = D['yearbuilt_vs_YEARBUILT']
 record_status('verify_canonical_dataset_and_split', [
     check_val('dataset_rows', 566956, D['dataset_rows']['recomputed']),
-    check_val('dataset_cols', 53, D['dataset_cols']['recomputed']),
+    check_val('dataset_cols_legacy_present', 53, D['dataset_cols_legacy_present']['recomputed']),
+    check_val('dataset_cols_v2_new', len(V2_NEW_COLUMNS), D['dataset_cols_v2_new']['recomputed']),
+    check_val('dataset_cols_v2_blacklisted_from_models', True,
+              D['dataset_cols_v2_blacklisted_from_models']['recomputed']),
     check_val('base_feature_count', 24, D['base_feature_count']['from_feature_names_line']),
     check_val('political_feature_count', 25, D['political_feature_count']['from_feature_names_line']),
     check_val('yearbuilt_both_populated', 512349, _yb['recomputed_both_populated']),

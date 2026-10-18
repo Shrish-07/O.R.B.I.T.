@@ -48,6 +48,8 @@ results/*
 # every reported number without re-running (~well under 1 MB total; parquet,
 # joblib and PNG stay out via the global ignores below and non-whitelisting).
 !results/*.json
+!results/ideology_line_audit.csv
+!results/sample_funnel.csv
 !results/causal/
 !results/political_scenarios/
 results/political_scenarios/*

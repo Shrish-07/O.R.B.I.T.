@@ -52,3 +52,14 @@ sale_year,int64
 election_year,int64
 CounDist,float64
 dem_share,float64
+dem_share_mayor_allcand,float64
+dem_share_vintage,float64
+dem_share_mayor_allcand_vintage,float64
+election_year_pres,int64
+dem_share_pres,float64
+dem_share_pres_vintage,float64
+sample_pre2024,bool
+is_resid_tc12,bool
+price_ge_100k,bool
+multi_parcel_flag,bool
+building_class_category,object

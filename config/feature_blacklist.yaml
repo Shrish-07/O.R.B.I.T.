@@ -91,3 +91,22 @@ leakage_features:
 
   # 100% null features — contribute zero signal, waste model capacity
   - EASE-MENT
+
+  # ============================
+  # v2 ideology measures & sample flags (Round 12)
+  # Analysis-side additions merged into the canonical dataset by
+  # rebuild_canonical.py. The trained models (whose metrics the paper
+  # reports) never saw these columns; blacklisting them keeps every
+  # future training run on the exact legacy feature set.
+  # ============================
+  - dem_share_mayor_allcand
+  - dem_share_pres
+  - dem_share_vintage
+  - dem_share_mayor_allcand_vintage
+  - dem_share_pres_vintage
+  - election_year_pres
+  - sample_pre2024
+  - is_resid_tc12
+  - price_ge_100k
+  - multi_parcel_flag
+  - building_class_category

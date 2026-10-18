@@ -1,7 +1,7 @@
 {
   "verifier": "verify_canonical_dataset_and_split",
-  "generated_utc": "2026-10-16T17:14:45.536610Z",
-  "n_checks": 15,
+  "generated_utc": "2026-10-18T16:07:11.382093Z",
+  "n_checks": 17,
   "n_mismatches": 0,
   "mismatches": [],
   "note": "Canonical schema shape, feature counts, YEAR BUILT reconciliation, split sizes and election-year counts vs manuscript targets."

@@ -1,0 +1,1798 @@
+{
+  "audit": "ED/crosswalk vintage audit, all raw ED-level files",
+  "crosswalk": {
+    "file": "data/processed/ed_to_council_crosswalk.parquet",
+    "vintage": "built from the 2026 election-district file (data/raw/election_districts/Election_Districts_20260105.csv)",
+    "n_rows": 5783,
+    "n_distinct_electdist": 4264
+  },
+  "stop_rules": {
+    "year_missing_share_threshold": 0.01,
+    "cd_deviation_threshold": 0.03,
+    "violations": [
+      "2016 (president): missing-crosswalk-key candidate votes = 17.757% > 1% STOP threshold",
+      "2016 (president): 51 council districts deviate >3% from the area-weighted benchmark (worst +62.20%) under the legacy full-votes-to-each-CD assignment (split-ED double counting inherent to the production crosswalk; see sum_cd_legacy_assigned_vs_raw)",
+      "2017 (mayor): missing-crosswalk-key candidate votes = 23.678% > 1% STOP threshold",
+      "2017 (mayor): 51 council districts deviate >3% from the area-weighted benchmark (worst +62.92%) under the legacy full-votes-to-each-CD assignment (split-ED double counting inherent to the production crosswalk; see sum_cd_legacy_assigned_vs_raw)",
+      "2020 (president): missing-crosswalk-key candidate votes = 24.056% > 1% STOP threshold",
+      "2020 (president): 51 council districts deviate >3% from the area-weighted benchmark (worst +62.54%) under the legacy full-votes-to-each-CD assignment (split-ED double counting inherent to the production crosswalk; see sum_cd_legacy_assigned_vs_raw)",
+      "2021 (mayor): missing-crosswalk-key candidate votes = 23.836% > 1% STOP threshold",
+      "2021 (mayor): 51 council districts deviate >3% from the area-weighted benchmark (worst +63.72%) under the legacy full-votes-to-each-CD assignment (split-ED double counting inherent to the production crosswalk; see sum_cd_legacy_assigned_vs_raw)",
+      "2024 (president): 51 council districts deviate >3% from the area-weighted benchmark (worst +62.65%) under the legacy full-votes-to-each-CD assignment (split-ED double counting inherent to the production crosswalk; see sum_cd_legacy_assigned_vs_raw)",
+      "2025 (mayor): 51 council districts deviate >3% from the area-weighted benchmark (worst +65.31%) under the legacy full-votes-to-each-CD assignment (split-ED double counting inherent to the production crosswalk; see sum_cd_legacy_assigned_vs_raw)"
+    ],
+    "violations_resolved_by_vintage_crosswalk": [
+      "2016 (president): recovered by the vintage-matched crosswalk (missing after vintage xwalk = 0.0000%)",
+      "2017 (mayor): recovered by the vintage-matched crosswalk (missing after vintage xwalk = 0.0000%)",
+      "2020 (president): recovered by the vintage-matched crosswalk (missing after vintage xwalk = 0.0000%)",
+      "2021 (mayor): recovered by the vintage-matched crosswalk (missing after vintage xwalk = 0.0000%)"
+    ],
+    "stop": true,
+    "exit_behavior": "Base-crosswalk violations are recorded for the record. Year-level vote-loss violations that the vintage-matched crosswalk (data/processed/ed_to_council_crosswalk_legacy.parquet, built by build_legacy_ed_crosswalk.py from the pre-2022 DCP ED boundary files) recovers to <=1% do not fail the stage: the vintage columns dem_share_*_vintage carry the corrected measures while the legacy dem_share and the as-designed v2 columns stay untouched and documented. CD-level >3% deviations are the split-ED double-counting inherent to the production crosswalk (an inflation of CD totals, never a loss of raw votes) and are documented per district rather than fatal."
+  },
+  "by_year": {
+    "2016": {
+      "office": "president",
+      "total_candidate_votes_raw": 2720629,
+      "n_election_districts_with_candidate_votes": 5346,
+      "missing_key_eds": 1131,
+      "missing_key_candidate_votes": 483103,
+      "missing_key_share": 0.17757,
+      "missing_key_share_pct": 17.757,
+      "missing_after_vintage_xwalk_votes": 0,
+      "missing_after_vintage_xwalk_share_pct": 0.0,
+      "combined_into_eds": 0,
+      "combined_into_candidate_votes": 0,
+      "combined_into_votes_with_live_crosswalk_key": 0,
+      "combined_into_handling": "Votes in \"COMBINED INTO\" EDs are looked up under the OLD ED's own AD-ED key and are NEVER reassigned to the successor ED named in the status. If the old key still exists in the 2026 crosswalk the votes are assigned normally; otherwise they are dropped together with all other missing-key EDs.",
+      "votes_lost_by_borough": {
+        "Bronx": 106935,
+        "Brooklyn": 138323,
+        "Manhattan": 162181,
+        "Queens": 62607,
+        "Staten Island": 13057
+      },
+      "candidate_votes_by_borough": {
+        "Bronx": 398096,
+        "Brooklyn": 799350,
+        "Manhattan": 661737,
+        "Queens": 681548,
+        "Staten Island": 179898
+      },
+      "cd_assignment": {
+        "1": {
+          "legacy_assigned_votes": 53776,
+          "area_weighted_votes": 43158.0,
+          "deviation_pct": 24.603
+        },
+        "2": {
+          "legacy_assigned_votes": 70163,
+          "area_weighted_votes": 54716.0,
+          "deviation_pct": 28.231
+        },
+        "3": {
+          "legacy_assigned_votes": 58536,
+          "area_weighted_votes": 53403.99,
+          "deviation_pct": 9.61
+        },
+        "4": {
+          "legacy_assigned_votes": 77056,
+          "area_weighted_votes": 52030.0,
+          "deviation_pct": 48.099
+        },
+        "5": {
+          "legacy_assigned_votes": 68670,
+          "area_weighted_votes": 54309.0,
+          "deviation_pct": 26.443
+        },
+        "6": {
+          "legacy_assigned_votes": 84367,
+          "area_weighted_votes": 61706.01,
+          "deviation_pct": 36.724
+        },
+        "7": {
+          "legacy_assigned_votes": 69864,
+          "area_weighted_votes": 56760.04,
+          "deviation_pct": 23.087
+        },
+        "8": {
+          "legacy_assigned_votes": 58865,
+          "area_weighted_votes": 40436.0,
+          "deviation_pct": 45.576
+        },
+        "9": {
+          "legacy_assigned_votes": 61215,
+          "area_weighted_votes": 49273.89,
+          "deviation_pct": 24.234
+        },
+        "10": {
+          "legacy_assigned_votes": 59996,
+          "area_weighted_votes": 51183.06,
+          "deviation_pct": 17.218
+        },
+        "11": {
+          "legacy_assigned_votes": 47222,
+          "area_weighted_votes": 35521.2,
+          "deviation_pct": 32.94
+        },
+        "12": {
+          "legacy_assigned_votes": 43292,
+          "area_weighted_votes": 36033.99,
+          "deviation_pct": 20.142
+        },
+        "13": {
+          "legacy_assigned_votes": 53028,
+          "area_weighted_votes": 38957.03,
+          "deviation_pct": 36.119
+        },
+        "14": {
+          "legacy_assigned_votes": 44994,
+          "area_weighted_votes": 33284.52,
+          "deviation_pct": 35.18
+        },
+        "15": {
+          "legacy_assigned_votes": 49829,
+          "area_weighted_votes": 31628.94,
+          "deviation_pct": 57.542
+        },
+        "16": {
+          "legacy_assigned_votes": 45646,
+          "area_weighted_votes": 34718.27,
+          "deviation_pct": 31.475
+        },
+        "17": {
+          "legacy_assigned_votes": 52346,
+          "area_weighted_votes": 37154.05,
+          "deviation_pct": 40.889
+        },
+        "18": {
+          "legacy_assigned_votes": 33737,
+          "area_weighted_votes": 29014.0,
+          "deviation_pct": 16.278
+        },
+        "19": {
+          "legacy_assigned_votes": 49661,
+          "area_weighted_votes": 41423.0,
+          "deviation_pct": 19.888
+        },
+        "20": {
+          "legacy_assigned_votes": 41956,
+          "area_weighted_votes": 28632.04,
+          "deviation_pct": 46.535
+        },
+        "21": {
+          "legacy_assigned_votes": 42012,
+          "area_weighted_votes": 30437.96,
+          "deviation_pct": 38.025
+        },
+        "22": {
+          "legacy_assigned_votes": 57726,
+          "area_weighted_votes": 49972.0,
+          "deviation_pct": 15.517
+        },
+        "23": {
+          "legacy_assigned_votes": 63013,
+          "area_weighted_votes": 50731.0,
+          "deviation_pct": 24.21
+        },
+        "24": {
+          "legacy_assigned_votes": 62084,
+          "area_weighted_votes": 44599.8,
+          "deviation_pct": 39.202
+        },
+        "25": {
+          "legacy_assigned_votes": 49804,
+          "area_weighted_votes": 35028.0,
+          "deviation_pct": 42.183
+        },
+        "26": {
+          "legacy_assigned_votes": 67653,
+          "area_weighted_votes": 49461.01,
+          "deviation_pct": 36.78
+        },
+        "27": {
+          "legacy_assigned_votes": 72344,
+          "area_weighted_votes": 49480.97,
+          "deviation_pct": 46.206
+        },
+        "28": {
+          "legacy_assigned_votes": 61526,
+          "area_weighted_votes": 49478.02,
+          "deviation_pct": 24.35
+        },
+        "29": {
+          "legacy_assigned_votes": 64950,
+          "area_weighted_votes": 48538.18,
+          "deviation_pct": 33.812
+        },
+        "30": {
+          "legacy_assigned_votes": 61414,
+          "area_weighted_votes": 43017.98,
+          "deviation_pct": 42.764
+        },
+        "31": {
+          "legacy_assigned_votes": 55975,
+          "area_weighted_votes": 43531.0,
+          "deviation_pct": 28.587
+        },
+        "32": {
+          "legacy_assigned_votes": 75658,
+          "area_weighted_votes": 48360.04,
+          "deviation_pct": 56.447
+        },
+        "33": {
+          "legacy_assigned_votes": 80744,
+          "area_weighted_votes": 56222.33,
+          "deviation_pct": 43.616
+        },
+        "34": {
+          "legacy_assigned_votes": 61153,
+          "area_weighted_votes": 41747.73,
+          "deviation_pct": 46.482
+        },
+        "35": {
+          "legacy_assigned_votes": 75985,
+          "area_weighted_votes": 59210.96,
+          "deviation_pct": 28.329
+        },
+        "36": {
+          "legacy_assigned_votes": 64599,
+          "area_weighted_votes": 48348.0,
+          "deviation_pct": 33.613
+        },
+        "37": {
+          "legacy_assigned_votes": 58567,
+          "area_weighted_votes": 38862.0,
+          "deviation_pct": 50.705
+        },
+        "38": {
+          "legacy_assigned_votes": 40880,
+          "area_weighted_votes": 25202.93,
+          "deviation_pct": 62.203
+        },
+        "39": {
+          "legacy_assigned_votes": 78732,
+          "area_weighted_votes": 56978.16,
+          "deviation_pct": 38.179
+        },
+        "40": {
+          "legacy_assigned_votes": 64885,
+          "area_weighted_votes": 46831.83,
+          "deviation_pct": 38.549
+        },
+        "41": {
+          "legacy_assigned_votes": 49219,
+          "area_weighted_votes": 31334.0,
+          "deviation_pct": 57.079
+        },
+        "42": {
+          "legacy_assigned_votes": 57257,
+          "area_weighted_votes": 39879.0,
+          "deviation_pct": 43.577
+        },
+        "43": {
+          "legacy_assigned_votes": 35470,
+          "area_weighted_votes": 22251.0,
+          "deviation_pct": 59.409
+        },
+        "44": {
+          "legacy_assigned_votes": 40545,
+          "area_weighted_votes": 26129.0,
+          "deviation_pct": 55.172
+        },
+        "45": {
+          "legacy_assigned_votes": 67731,
+          "area_weighted_votes": 47682.0,
+          "deviation_pct": 42.047
+        },
+        "46": {
+          "legacy_assigned_votes": 59178,
+          "area_weighted_votes": 45944.0,
+          "deviation_pct": 28.805
+        },
+        "47": {
+          "legacy_assigned_votes": 59830,
+          "area_weighted_votes": 43998.13,
+          "deviation_pct": 35.983
+        },
+        "48": {
+          "legacy_assigned_votes": 47961,
+          "area_weighted_votes": 33346.93,
+          "deviation_pct": 43.824
+        },
+        "49": {
+          "legacy_assigned_votes": 60519,
+          "area_weighted_votes": 50111.94,
+          "deviation_pct": 20.768
+        },
+        "50": {
+          "legacy_assigned_votes": 84252,
+          "area_weighted_votes": 57748.12,
+          "deviation_pct": 45.896
+        },
+        "51": {
+          "legacy_assigned_votes": 68672,
+          "area_weighted_votes": 59718.94,
+          "deviation_pct": 14.992
+        }
+      },
+      "sum_cd_legacy_assigned_vs_raw": {
+        "sum_cd_legacy_assigned": 3014557,
+        "raw_candidate_votes": 2720629,
+        "ratio": 1.108037,
+        "note": "Legacy assignment sends each ED's FULL votes to every council district the ED touches, so split EDs are counted once per overlapping district; the sum over districts therefore exceeds the raw candidate total by the split-ED overlap. The area-weighted benchmark allocates ED votes by the crosswalk's area shares."
+      }
+    },
+    "2017": {
+      "office": "mayor",
+      "total_candidate_votes_raw": 1143321,
+      "n_election_districts_with_candidate_votes": 5759,
+      "missing_key_eds": 1543,
+      "missing_key_candidate_votes": 270718,
+      "missing_key_share": 0.236782,
+      "missing_key_share_pct": 23.6782,
+      "missing_after_vintage_xwalk_votes": 0,
+      "missing_after_vintage_xwalk_share_pct": 0.0,
+      "combined_into_eds": 0,
+      "combined_into_candidate_votes": 0,
+      "combined_into_votes_with_live_crosswalk_key": 0,
+      "combined_into_handling": "Votes in \"COMBINED INTO\" EDs are looked up under the OLD ED's own AD-ED key and are NEVER reassigned to the successor ED named in the status. If the old key still exists in the 2026 crosswalk the votes are assigned normally; otherwise they are dropped together with all other missing-key EDs.",
+      "votes_lost_by_borough": {
+        "Bronx": 45811,
+        "Brooklyn": 77279,
+        "Manhattan": 81611,
+        "Queens": 50297,
+        "Staten Island": 15720
+      },
+      "candidate_votes_by_borough": {
+        "Bronx": 147376,
+        "Brooklyn": 350599,
+        "Manhattan": 264150,
+        "Queens": 281823,
+        "Staten Island": 99373
+      },
+      "cd_assignment": {
+        "1": {
+          "legacy_assigned_votes": 23334,
+          "area_weighted_votes": 19338.0,
+          "deviation_pct": 20.664
+        },
+        "2": {
+          "legacy_assigned_votes": 24584,
+          "area_weighted_votes": 19884.0,
+          "deviation_pct": 23.637
+        },
+        "3": {
+          "legacy_assigned_votes": 19137,
+          "area_weighted_votes": 17391.0,
+          "deviation_pct": 10.04
+        },
+        "4": {
+          "legacy_assigned_votes": 26350,
+          "area_weighted_votes": 17665.0,
+          "deviation_pct": 49.165
+        },
+        "5": {
+          "legacy_assigned_votes": 25800,
+          "area_weighted_votes": 20222.0,
+          "deviation_pct": 27.584
+        },
+        "6": {
+          "legacy_assigned_votes": 32287,
+          "area_weighted_votes": 23259.0,
+          "deviation_pct": 38.815
+        },
+        "7": {
+          "legacy_assigned_votes": 28416,
+          "area_weighted_votes": 23345.02,
+          "deviation_pct": 21.722
+        },
+        "8": {
+          "legacy_assigned_votes": 19631,
+          "area_weighted_votes": 13398.0,
+          "deviation_pct": 46.522
+        },
+        "9": {
+          "legacy_assigned_votes": 22843,
+          "area_weighted_votes": 18485.96,
+          "deviation_pct": 23.569
+        },
+        "10": {
+          "legacy_assigned_votes": 20127,
+          "area_weighted_votes": 16626.03,
+          "deviation_pct": 21.057
+        },
+        "11": {
+          "legacy_assigned_votes": 18487,
+          "area_weighted_votes": 14371.08,
+          "deviation_pct": 28.64
+        },
+        "12": {
+          "legacy_assigned_votes": 18721,
+          "area_weighted_votes": 15774.99,
+          "deviation_pct": 18.675
+        },
+        "13": {
+          "legacy_assigned_votes": 22492,
+          "area_weighted_votes": 16888.01,
+          "deviation_pct": 33.183
+        },
+        "14": {
+          "legacy_assigned_votes": 13054,
+          "area_weighted_votes": 9474.87,
+          "deviation_pct": 37.775
+        },
+        "15": {
+          "legacy_assigned_votes": 14821,
+          "area_weighted_votes": 9096.97,
+          "deviation_pct": 62.922
+        },
+        "16": {
+          "legacy_assigned_votes": 13270,
+          "area_weighted_votes": 9936.05,
+          "deviation_pct": 33.554
+        },
+        "17": {
+          "legacy_assigned_votes": 16756,
+          "area_weighted_votes": 12125.02,
+          "deviation_pct": 38.194
+        },
+        "18": {
+          "legacy_assigned_votes": 11373,
+          "area_weighted_votes": 9700.0,
+          "deviation_pct": 17.247
+        },
+        "19": {
+          "legacy_assigned_votes": 20956,
+          "area_weighted_votes": 17515.0,
+          "deviation_pct": 19.646
+        },
+        "20": {
+          "legacy_assigned_votes": 15653,
+          "area_weighted_votes": 10663.01,
+          "deviation_pct": 46.797
+        },
+        "21": {
+          "legacy_assigned_votes": 13248,
+          "area_weighted_votes": 9690.99,
+          "deviation_pct": 36.704
+        },
+        "22": {
+          "legacy_assigned_votes": 18888,
+          "area_weighted_votes": 16375.0,
+          "deviation_pct": 15.347
+        },
+        "23": {
+          "legacy_assigned_votes": 25847,
+          "area_weighted_votes": 20566.0,
+          "deviation_pct": 25.678
+        },
+        "24": {
+          "legacy_assigned_votes": 22113,
+          "area_weighted_votes": 15754.42,
+          "deviation_pct": 40.361
+        },
+        "25": {
+          "legacy_assigned_votes": 15490,
+          "area_weighted_votes": 11066.0,
+          "deviation_pct": 39.978
+        },
+        "26": {
+          "legacy_assigned_votes": 25652,
+          "area_weighted_votes": 18814.0,
+          "deviation_pct": 36.345
+        },
+        "27": {
+          "legacy_assigned_votes": 28179,
+          "area_weighted_votes": 19820.99,
+          "deviation_pct": 42.167
+        },
+        "28": {
+          "legacy_assigned_votes": 24217,
+          "area_weighted_votes": 19671.01,
+          "deviation_pct": 23.11
+        },
+        "29": {
+          "legacy_assigned_votes": 24079,
+          "area_weighted_votes": 18336.57,
+          "deviation_pct": 31.317
+        },
+        "30": {
+          "legacy_assigned_votes": 22657,
+          "area_weighted_votes": 15861.99,
+          "deviation_pct": 42.838
+        },
+        "31": {
+          "legacy_assigned_votes": 19328,
+          "area_weighted_votes": 13952.0,
+          "deviation_pct": 38.532
+        },
+        "32": {
+          "legacy_assigned_votes": 32270,
+          "area_weighted_votes": 21507.01,
+          "deviation_pct": 50.044
+        },
+        "33": {
+          "legacy_assigned_votes": 32033,
+          "area_weighted_votes": 22766.12,
+          "deviation_pct": 40.705
+        },
+        "34": {
+          "legacy_assigned_votes": 19346,
+          "area_weighted_votes": 13432.91,
+          "deviation_pct": 44.019
+        },
+        "35": {
+          "legacy_assigned_votes": 33478,
+          "area_weighted_votes": 25799.98,
+          "deviation_pct": 29.76
+        },
+        "36": {
+          "legacy_assigned_votes": 25578,
+          "area_weighted_votes": 19029.0,
+          "deviation_pct": 34.416
+        },
+        "37": {
+          "legacy_assigned_votes": 18117,
+          "area_weighted_votes": 11753.0,
+          "deviation_pct": 54.148
+        },
+        "38": {
+          "legacy_assigned_votes": 16964,
+          "area_weighted_votes": 10451.98,
+          "deviation_pct": 62.304
+        },
+        "39": {
+          "legacy_assigned_votes": 36566,
+          "area_weighted_votes": 25731.06,
+          "deviation_pct": 42.108
+        },
+        "40": {
+          "legacy_assigned_votes": 29896,
+          "area_weighted_votes": 21106.92,
+          "deviation_pct": 41.641
+        },
+        "41": {
+          "legacy_assigned_votes": 19426,
+          "area_weighted_votes": 12192.0,
+          "deviation_pct": 59.334
+        },
+        "42": {
+          "legacy_assigned_votes": 22860,
+          "area_weighted_votes": 15603.0,
+          "deviation_pct": 46.51
+        },
+        "43": {
+          "legacy_assigned_votes": 13129,
+          "area_weighted_votes": 8311.0,
+          "deviation_pct": 57.971
+        },
+        "44": {
+          "legacy_assigned_votes": 18929,
+          "area_weighted_votes": 12652.0,
+          "deviation_pct": 49.613
+        },
+        "45": {
+          "legacy_assigned_votes": 29540,
+          "area_weighted_votes": 20315.0,
+          "deviation_pct": 45.41
+        },
+        "46": {
+          "legacy_assigned_votes": 26389,
+          "area_weighted_votes": 21022.0,
+          "deviation_pct": 25.53
+        },
+        "47": {
+          "legacy_assigned_votes": 25745,
+          "area_weighted_votes": 18878.01,
+          "deviation_pct": 36.376
+        },
+        "48": {
+          "legacy_assigned_votes": 21187,
+          "area_weighted_votes": 14706.95,
+          "deviation_pct": 44.061
+        },
+        "49": {
+          "legacy_assigned_votes": 28954,
+          "area_weighted_votes": 24048.97,
+          "deviation_pct": 20.396
+        },
+        "50": {
+          "legacy_assigned_votes": 40997,
+          "area_weighted_votes": 28674.11,
+          "deviation_pct": 42.976
+        },
+        "51": {
+          "legacy_assigned_votes": 34551,
+          "area_weighted_votes": 29553.97,
+          "deviation_pct": 16.908
+        }
+      },
+      "sum_cd_legacy_assigned_vs_raw": {
+        "sum_cd_legacy_assigned": 1173745,
+        "raw_candidate_votes": 1143321,
+        "ratio": 1.02661,
+        "note": "Legacy assignment sends each ED's FULL votes to every council district the ED touches, so split EDs are counted once per overlapping district; the sum over districts therefore exceeds the raw candidate total by the split-ED overlap. The area-weighted benchmark allocates ED votes by the crosswalk's area shares."
+      }
+    },
+    "2020": {
+      "office": "president",
+      "total_candidate_votes_raw": 3034405,
+      "n_election_districts_with_candidate_votes": 5760,
+      "missing_key_eds": 1541,
+      "missing_key_candidate_votes": 729951,
+      "missing_key_share": 0.240558,
+      "missing_key_share_pct": 24.0558,
+      "missing_after_vintage_xwalk_votes": 1,
+      "missing_after_vintage_xwalk_share_pct": 0.0,
+      "combined_into_eds": 0,
+      "combined_into_candidate_votes": 0,
+      "combined_into_votes_with_live_crosswalk_key": 0,
+      "combined_into_handling": "Votes in \"COMBINED INTO\" EDs are looked up under the OLD ED's own AD-ED key and are NEVER reassigned to the successor ED named in the status. If the old key still exists in the 2026 crosswalk the votes are assigned normally; otherwise they are dropped together with all other missing-key EDs.",
+      "votes_lost_by_borough": {
+        "Bronx": 126480,
+        "Brooklyn": 211783,
+        "Manhattan": 213666,
+        "Queens": 142343,
+        "Staten Island": 35679
+      },
+      "candidate_votes_by_borough": {
+        "Bronx": 425715,
+        "Brooklyn": 911381,
+        "Manhattan": 694904,
+        "Queens": 786252,
+        "Staten Island": 216153
+      },
+      "cd_assignment": {
+        "1": {
+          "legacy_assigned_votes": 59541,
+          "area_weighted_votes": 48798.0,
+          "deviation_pct": 22.015
+        },
+        "2": {
+          "legacy_assigned_votes": 63824,
+          "area_weighted_votes": 51022.0,
+          "deviation_pct": 25.091
+        },
+        "3": {
+          "legacy_assigned_votes": 56299,
+          "area_weighted_votes": 51193.99,
+          "deviation_pct": 9.972
+        },
+        "4": {
+          "legacy_assigned_votes": 73331,
+          "area_weighted_votes": 49916.0,
+          "deviation_pct": 46.909
+        },
+        "5": {
+          "legacy_assigned_votes": 70019,
+          "area_weighted_votes": 55110.0,
+          "deviation_pct": 27.053
+        },
+        "6": {
+          "legacy_assigned_votes": 81681,
+          "area_weighted_votes": 59919.01,
+          "deviation_pct": 36.319
+        },
+        "7": {
+          "legacy_assigned_votes": 66224,
+          "area_weighted_votes": 54091.04,
+          "deviation_pct": 22.431
+        },
+        "8": {
+          "legacy_assigned_votes": 57766,
+          "area_weighted_votes": 39648.0,
+          "deviation_pct": 45.697
+        },
+        "9": {
+          "legacy_assigned_votes": 58514,
+          "area_weighted_votes": 47112.89,
+          "deviation_pct": 24.2
+        },
+        "10": {
+          "legacy_assigned_votes": 54074,
+          "area_weighted_votes": 45320.07,
+          "deviation_pct": 19.316
+        },
+        "11": {
+          "legacy_assigned_votes": 50544,
+          "area_weighted_votes": 38323.25,
+          "deviation_pct": 31.889
+        },
+        "12": {
+          "legacy_assigned_votes": 47212,
+          "area_weighted_votes": 39053.99,
+          "deviation_pct": 20.889
+        },
+        "13": {
+          "legacy_assigned_votes": 56609,
+          "area_weighted_votes": 42033.02,
+          "deviation_pct": 34.677
+        },
+        "14": {
+          "legacy_assigned_votes": 44027,
+          "area_weighted_votes": 31937.51,
+          "deviation_pct": 37.854
+        },
+        "15": {
+          "legacy_assigned_votes": 50560,
+          "area_weighted_votes": 31913.94,
+          "deviation_pct": 58.426
+        },
+        "16": {
+          "legacy_assigned_votes": 44394,
+          "area_weighted_votes": 33627.24,
+          "deviation_pct": 32.018
+        },
+        "17": {
+          "legacy_assigned_votes": 53469,
+          "area_weighted_votes": 37834.06,
+          "deviation_pct": 41.325
+        },
+        "18": {
+          "legacy_assigned_votes": 35024,
+          "area_weighted_votes": 30261.0,
+          "deviation_pct": 15.74
+        },
+        "19": {
+          "legacy_assigned_votes": 54745,
+          "area_weighted_votes": 45811.0,
+          "deviation_pct": 19.502
+        },
+        "20": {
+          "legacy_assigned_votes": 44172,
+          "area_weighted_votes": 30151.07,
+          "deviation_pct": 46.502
+        },
+        "21": {
+          "legacy_assigned_votes": 45740,
+          "area_weighted_votes": 33178.93,
+          "deviation_pct": 37.859
+        },
+        "22": {
+          "legacy_assigned_votes": 56383,
+          "area_weighted_votes": 48123.0,
+          "deviation_pct": 17.164
+        },
+        "23": {
+          "legacy_assigned_votes": 66710,
+          "area_weighted_votes": 53233.0,
+          "deviation_pct": 25.317
+        },
+        "24": {
+          "legacy_assigned_votes": 64469,
+          "area_weighted_votes": 47340.87,
+          "deviation_pct": 36.18
+        },
+        "25": {
+          "legacy_assigned_votes": 51826,
+          "area_weighted_votes": 36585.0,
+          "deviation_pct": 41.659
+        },
+        "26": {
+          "legacy_assigned_votes": 69628,
+          "area_weighted_votes": 50829.01,
+          "deviation_pct": 36.985
+        },
+        "27": {
+          "legacy_assigned_votes": 72593,
+          "area_weighted_votes": 50572.97,
+          "deviation_pct": 43.541
+        },
+        "28": {
+          "legacy_assigned_votes": 62499,
+          "area_weighted_votes": 50556.02,
+          "deviation_pct": 23.623
+        },
+        "29": {
+          "legacy_assigned_votes": 66208,
+          "area_weighted_votes": 50214.12,
+          "deviation_pct": 31.851
+        },
+        "30": {
+          "legacy_assigned_votes": 64552,
+          "area_weighted_votes": 44890.98,
+          "deviation_pct": 43.797
+        },
+        "31": {
+          "legacy_assigned_votes": 56749,
+          "area_weighted_votes": 43392.0,
+          "deviation_pct": 30.782
+        },
+        "32": {
+          "legacy_assigned_votes": 81078,
+          "area_weighted_votes": 52038.04,
+          "deviation_pct": 55.805
+        },
+        "33": {
+          "legacy_assigned_votes": 87202,
+          "area_weighted_votes": 61642.34,
+          "deviation_pct": 41.464
+        },
+        "34": {
+          "legacy_assigned_votes": 63784,
+          "area_weighted_votes": 44652.74,
+          "deviation_pct": 42.845
+        },
+        "35": {
+          "legacy_assigned_votes": 80742,
+          "area_weighted_votes": 62639.94,
+          "deviation_pct": 28.899
+        },
+        "36": {
+          "legacy_assigned_votes": 64344,
+          "area_weighted_votes": 47663.0,
+          "deviation_pct": 34.998
+        },
+        "37": {
+          "legacy_assigned_votes": 57377,
+          "area_weighted_votes": 37672.0,
+          "deviation_pct": 52.307
+        },
+        "38": {
+          "legacy_assigned_votes": 45481,
+          "area_weighted_votes": 27981.95,
+          "deviation_pct": 62.537
+        },
+        "39": {
+          "legacy_assigned_votes": 81336,
+          "area_weighted_votes": 57418.12,
+          "deviation_pct": 41.656
+        },
+        "40": {
+          "legacy_assigned_votes": 69127,
+          "area_weighted_votes": 49760.85,
+          "deviation_pct": 38.918
+        },
+        "41": {
+          "legacy_assigned_votes": 49641,
+          "area_weighted_votes": 30881.0,
+          "deviation_pct": 60.749
+        },
+        "42": {
+          "legacy_assigned_votes": 59383,
+          "area_weighted_votes": 40985.0,
+          "deviation_pct": 44.89
+        },
+        "43": {
+          "legacy_assigned_votes": 39816,
+          "area_weighted_votes": 25622.0,
+          "deviation_pct": 55.398
+        },
+        "44": {
+          "legacy_assigned_votes": 48510,
+          "area_weighted_votes": 32116.0,
+          "deviation_pct": 51.046
+        },
+        "45": {
+          "legacy_assigned_votes": 70345,
+          "area_weighted_votes": 49286.0,
+          "deviation_pct": 42.728
+        },
+        "46": {
+          "legacy_assigned_votes": 62200,
+          "area_weighted_votes": 48288.0,
+          "deviation_pct": 28.81
+        },
+        "47": {
+          "legacy_assigned_votes": 66681,
+          "area_weighted_votes": 48136.98,
+          "deviation_pct": 38.523
+        },
+        "48": {
+          "legacy_assigned_votes": 54036,
+          "area_weighted_votes": 38250.9,
+          "deviation_pct": 41.267
+        },
+        "49": {
+          "legacy_assigned_votes": 64328,
+          "area_weighted_votes": 53282.95,
+          "deviation_pct": 20.729
+        },
+        "50": {
+          "legacy_assigned_votes": 90614,
+          "area_weighted_votes": 62974.29,
+          "deviation_pct": 43.89
+        },
+        "51": {
+          "legacy_assigned_votes": 71163,
+          "area_weighted_votes": 61168.94,
+          "deviation_pct": 16.338
+        }
+      },
+      "sum_cd_legacy_assigned_vs_raw": {
+        "sum_cd_legacy_assigned": 3106574,
+        "raw_candidate_votes": 3034405,
+        "ratio": 1.023784,
+        "note": "Legacy assignment sends each ED's FULL votes to every council district the ED touches, so split EDs are counted once per overlapping district; the sum over districts therefore exceeds the raw candidate total by the split-ED overlap. The area-weighted benchmark allocates ED votes by the crosswalk's area shares."
+      }
+    },
+    "2021": {
+      "office": "mayor",
+      "total_candidate_votes_raw": 1118245,
+      "n_election_districts_with_candidate_votes": 5725,
+      "missing_key_eds": 1520,
+      "missing_key_candidate_votes": 266548,
+      "missing_key_share": 0.238363,
+      "missing_key_share_pct": 23.8363,
+      "missing_after_vintage_xwalk_votes": 0,
+      "missing_after_vintage_xwalk_share_pct": 0.0,
+      "combined_into_eds": 0,
+      "combined_into_candidate_votes": 0,
+      "combined_into_votes_with_live_crosswalk_key": 0,
+      "combined_into_handling": "Votes in \"COMBINED INTO\" EDs are looked up under the OLD ED's own AD-ED key and are NEVER reassigned to the successor ED named in the status. If the old key still exists in the 2026 crosswalk the votes are assigned normally; otherwise they are dropped together with all other missing-key EDs.",
+      "votes_lost_by_borough": {
+        "Bronx": 40173,
+        "Brooklyn": 75263,
+        "Manhattan": 84271,
+        "Queens": 49883,
+        "Staten Island": 16958
+      },
+      "candidate_votes_by_borough": {
+        "Bronx": 126044,
+        "Brooklyn": 336410,
+        "Manhattan": 270091,
+        "Queens": 280610,
+        "Staten Island": 105090
+      },
+      "cd_assignment": {
+        "1": {
+          "legacy_assigned_votes": 23296,
+          "area_weighted_votes": 19193.0,
+          "deviation_pct": 21.378
+        },
+        "2": {
+          "legacy_assigned_votes": 24576,
+          "area_weighted_votes": 19933.0,
+          "deviation_pct": 23.293
+        },
+        "3": {
+          "legacy_assigned_votes": 20601,
+          "area_weighted_votes": 18531.0,
+          "deviation_pct": 11.17
+        },
+        "4": {
+          "legacy_assigned_votes": 27732,
+          "area_weighted_votes": 18811.0,
+          "deviation_pct": 47.424
+        },
+        "5": {
+          "legacy_assigned_votes": 28131,
+          "area_weighted_votes": 22471.0,
+          "deviation_pct": 25.188
+        },
+        "6": {
+          "legacy_assigned_votes": 34525,
+          "area_weighted_votes": 25205.0,
+          "deviation_pct": 36.977
+        },
+        "7": {
+          "legacy_assigned_votes": 28214,
+          "area_weighted_votes": 23541.01,
+          "deviation_pct": 19.85
+        },
+        "8": {
+          "legacy_assigned_votes": 17832,
+          "area_weighted_votes": 12107.0,
+          "deviation_pct": 47.287
+        },
+        "9": {
+          "legacy_assigned_votes": 21670,
+          "area_weighted_votes": 17682.96,
+          "deviation_pct": 22.547
+        },
+        "10": {
+          "legacy_assigned_votes": 18143,
+          "area_weighted_votes": 14908.02,
+          "deviation_pct": 21.7
+        },
+        "11": {
+          "legacy_assigned_votes": 15737,
+          "area_weighted_votes": 12491.07,
+          "deviation_pct": 25.986
+        },
+        "12": {
+          "legacy_assigned_votes": 15756,
+          "area_weighted_votes": 13214.0,
+          "deviation_pct": 19.237
+        },
+        "13": {
+          "legacy_assigned_votes": 18877,
+          "area_weighted_votes": 14305.01,
+          "deviation_pct": 31.961
+        },
+        "14": {
+          "legacy_assigned_votes": 11046,
+          "area_weighted_votes": 8056.88,
+          "deviation_pct": 37.1
+        },
+        "15": {
+          "legacy_assigned_votes": 12223,
+          "area_weighted_votes": 7503.98,
+          "deviation_pct": 62.887
+        },
+        "16": {
+          "legacy_assigned_votes": 11622,
+          "area_weighted_votes": 8795.05,
+          "deviation_pct": 32.143
+        },
+        "17": {
+          "legacy_assigned_votes": 13961,
+          "area_weighted_votes": 9977.02,
+          "deviation_pct": 39.932
+        },
+        "18": {
+          "legacy_assigned_votes": 9189,
+          "area_weighted_votes": 7821.0,
+          "deviation_pct": 17.491
+        },
+        "19": {
+          "legacy_assigned_votes": 22099,
+          "area_weighted_votes": 18496.0,
+          "deviation_pct": 19.48
+        },
+        "20": {
+          "legacy_assigned_votes": 16196,
+          "area_weighted_votes": 11029.02,
+          "deviation_pct": 46.849
+        },
+        "21": {
+          "legacy_assigned_votes": 13350,
+          "area_weighted_votes": 9773.98,
+          "deviation_pct": 36.587
+        },
+        "22": {
+          "legacy_assigned_votes": 18966,
+          "area_weighted_votes": 16369.0,
+          "deviation_pct": 15.865
+        },
+        "23": {
+          "legacy_assigned_votes": 25101,
+          "area_weighted_votes": 19809.0,
+          "deviation_pct": 26.715
+        },
+        "24": {
+          "legacy_assigned_votes": 22265,
+          "area_weighted_votes": 16336.42,
+          "deviation_pct": 36.291
+        },
+        "25": {
+          "legacy_assigned_votes": 15346,
+          "area_weighted_votes": 10784.0,
+          "deviation_pct": 42.303
+        },
+        "26": {
+          "legacy_assigned_votes": 25622,
+          "area_weighted_votes": 18662.0,
+          "deviation_pct": 37.295
+        },
+        "27": {
+          "legacy_assigned_votes": 24981,
+          "area_weighted_votes": 17465.99,
+          "deviation_pct": 43.027
+        },
+        "28": {
+          "legacy_assigned_votes": 21720,
+          "area_weighted_votes": 17731.01,
+          "deviation_pct": 22.497
+        },
+        "29": {
+          "legacy_assigned_votes": 25230,
+          "area_weighted_votes": 19366.57,
+          "deviation_pct": 30.276
+        },
+        "30": {
+          "legacy_assigned_votes": 24141,
+          "area_weighted_votes": 17077.99,
+          "deviation_pct": 41.357
+        },
+        "31": {
+          "legacy_assigned_votes": 18236,
+          "area_weighted_votes": 13229.0,
+          "deviation_pct": 37.849
+        },
+        "32": {
+          "legacy_assigned_votes": 33625,
+          "area_weighted_votes": 22658.02,
+          "deviation_pct": 48.402
+        },
+        "33": {
+          "legacy_assigned_votes": 33291,
+          "area_weighted_votes": 23991.12,
+          "deviation_pct": 38.764
+        },
+        "34": {
+          "legacy_assigned_votes": 18379,
+          "area_weighted_votes": 12384.91,
+          "deviation_pct": 48.398
+        },
+        "35": {
+          "legacy_assigned_votes": 32079,
+          "area_weighted_votes": 24670.98,
+          "deviation_pct": 30.027
+        },
+        "36": {
+          "legacy_assigned_votes": 23555,
+          "area_weighted_votes": 17367.0,
+          "deviation_pct": 35.631
+        },
+        "37": {
+          "legacy_assigned_votes": 16278,
+          "area_weighted_votes": 10253.0,
+          "deviation_pct": 58.763
+        },
+        "38": {
+          "legacy_assigned_votes": 16775,
+          "area_weighted_votes": 10245.99,
+          "deviation_pct": 63.723
+        },
+        "39": {
+          "legacy_assigned_votes": 35950,
+          "area_weighted_votes": 25530.05,
+          "deviation_pct": 40.814
+        },
+        "40": {
+          "legacy_assigned_votes": 27252,
+          "area_weighted_votes": 18878.93,
+          "deviation_pct": 44.351
+        },
+        "41": {
+          "legacy_assigned_votes": 17191,
+          "area_weighted_votes": 10749.0,
+          "deviation_pct": 59.931
+        },
+        "42": {
+          "legacy_assigned_votes": 20014,
+          "area_weighted_votes": 13377.0,
+          "deviation_pct": 49.615
+        },
+        "43": {
+          "legacy_assigned_votes": 13713,
+          "area_weighted_votes": 8841.0,
+          "deviation_pct": 55.107
+        },
+        "44": {
+          "legacy_assigned_votes": 16843,
+          "area_weighted_votes": 10766.0,
+          "deviation_pct": 56.446
+        },
+        "45": {
+          "legacy_assigned_votes": 27280,
+          "area_weighted_votes": 19143.0,
+          "deviation_pct": 42.506
+        },
+        "46": {
+          "legacy_assigned_votes": 25438,
+          "area_weighted_votes": 20268.0,
+          "deviation_pct": 25.508
+        },
+        "47": {
+          "legacy_assigned_votes": 26547,
+          "area_weighted_votes": 19603.0,
+          "deviation_pct": 35.423
+        },
+        "48": {
+          "legacy_assigned_votes": 22121,
+          "area_weighted_votes": 15390.96,
+          "deviation_pct": 43.727
+        },
+        "49": {
+          "legacy_assigned_votes": 29399,
+          "area_weighted_votes": 24099.98,
+          "deviation_pct": 21.988
+        },
+        "50": {
+          "legacy_assigned_votes": 43010,
+          "area_weighted_votes": 29997.1,
+          "deviation_pct": 43.381
+        },
+        "51": {
+          "legacy_assigned_votes": 38041,
+          "area_weighted_votes": 32804.97,
+          "deviation_pct": 15.961
+        }
+      },
+      "sum_cd_legacy_assigned_vs_raw": {
+        "sum_cd_legacy_assigned": 1143165,
+        "raw_candidate_votes": 1118245,
+        "ratio": 1.022285,
+        "note": "Legacy assignment sends each ED's FULL votes to every council district the ED touches, so split EDs are counted once per overlapping district; the sum over districts therefore exceeds the raw candidate total by the split-ED overlap. The area-weighted benchmark allocates ED votes by the crosswalk's area shares."
+      }
+    },
+    "2024": {
+      "office": "president",
+      "total_candidate_votes_raw": 2701573,
+      "n_election_districts_with_candidate_votes": 4187,
+      "missing_key_eds": 88,
+      "missing_key_candidate_votes": 13778,
+      "missing_key_share": 0.0051,
+      "missing_key_share_pct": 0.51,
+      "missing_after_vintage_xwalk_votes": 9,
+      "missing_after_vintage_xwalk_share_pct": 0.0003,
+      "combined_into_eds": 0,
+      "combined_into_candidate_votes": 0,
+      "combined_into_votes_with_live_crosswalk_key": 0,
+      "combined_into_handling": "Votes in \"COMBINED INTO\" EDs are looked up under the OLD ED's own AD-ED key and are NEVER reassigned to the successor ED named in the status. If the old key still exists in the 2026 crosswalk the votes are assigned normally; otherwise they are dropped together with all other missing-key EDs.",
+      "votes_lost_by_borough": {
+        "Bronx": 3936,
+        "Brooklyn": 5324,
+        "Manhattan": 0,
+        "Queens": 2975,
+        "Staten Island": 1543
+      },
+      "candidate_votes_by_borough": {
+        "Bronx": 359844,
+        "Brooklyn": 823548,
+        "Manhattan": 622911,
+        "Queens": 698786,
+        "Staten Island": 196484
+      },
+      "cd_assignment": {
+        "1": {
+          "legacy_assigned_votes": 72822,
+          "area_weighted_votes": 59235.0,
+          "deviation_pct": 22.937
+        },
+        "2": {
+          "legacy_assigned_votes": 83648,
+          "area_weighted_votes": 65530.0,
+          "deviation_pct": 27.648
+        },
+        "3": {
+          "legacy_assigned_votes": 72786,
+          "area_weighted_votes": 66168.99,
+          "deviation_pct": 10.0
+        },
+        "4": {
+          "legacy_assigned_votes": 98814,
+          "area_weighted_votes": 72510.0,
+          "deviation_pct": 36.276
+        },
+        "5": {
+          "legacy_assigned_votes": 93445,
+          "area_weighted_votes": 74638.0,
+          "deviation_pct": 25.198
+        },
+        "6": {
+          "legacy_assigned_votes": 101822,
+          "area_weighted_votes": 72008.01,
+          "deviation_pct": 41.404
+        },
+        "7": {
+          "legacy_assigned_votes": 79279,
+          "area_weighted_votes": 63677.08,
+          "deviation_pct": 24.502
+        },
+        "8": {
+          "legacy_assigned_votes": 66789,
+          "area_weighted_votes": 46295.0,
+          "deviation_pct": 44.268
+        },
+        "9": {
+          "legacy_assigned_votes": 70720,
+          "area_weighted_votes": 59524.85,
+          "deviation_pct": 18.808
+        },
+        "10": {
+          "legacy_assigned_votes": 67248,
+          "area_weighted_votes": 58184.06,
+          "deviation_pct": 15.578
+        },
+        "11": {
+          "legacy_assigned_votes": 66408,
+          "area_weighted_votes": 52764.23,
+          "deviation_pct": 25.858
+        },
+        "12": {
+          "legacy_assigned_votes": 60260,
+          "area_weighted_votes": 52373.99,
+          "deviation_pct": 15.057
+        },
+        "13": {
+          "legacy_assigned_votes": 66293,
+          "area_weighted_votes": 49287.96,
+          "deviation_pct": 34.501
+        },
+        "14": {
+          "legacy_assigned_votes": 48691,
+          "area_weighted_votes": 35692.63,
+          "deviation_pct": 36.418
+        },
+        "15": {
+          "legacy_assigned_votes": 54475,
+          "area_weighted_votes": 33493.01,
+          "deviation_pct": 62.646
+        },
+        "16": {
+          "legacy_assigned_votes": 49661,
+          "area_weighted_votes": 38344.14,
+          "deviation_pct": 29.514
+        },
+        "17": {
+          "legacy_assigned_votes": 52079,
+          "area_weighted_votes": 36869.04,
+          "deviation_pct": 41.254
+        },
+        "18": {
+          "legacy_assigned_votes": 45429,
+          "area_weighted_votes": 41204.0,
+          "deviation_pct": 10.254
+        },
+        "19": {
+          "legacy_assigned_votes": 66026,
+          "area_weighted_votes": 56952.0,
+          "deviation_pct": 15.933
+        },
+        "20": {
+          "legacy_assigned_votes": 45009,
+          "area_weighted_votes": 32075.0,
+          "deviation_pct": 40.324
+        },
+        "21": {
+          "legacy_assigned_votes": 37841,
+          "area_weighted_votes": 27469.0,
+          "deviation_pct": 37.759
+        },
+        "22": {
+          "legacy_assigned_votes": 64265,
+          "area_weighted_votes": 58035.0,
+          "deviation_pct": 10.735
+        },
+        "23": {
+          "legacy_assigned_votes": 73438,
+          "area_weighted_votes": 59675.0,
+          "deviation_pct": 23.063
+        },
+        "24": {
+          "legacy_assigned_votes": 66262,
+          "area_weighted_votes": 49543.94,
+          "deviation_pct": 33.744
+        },
+        "25": {
+          "legacy_assigned_votes": 57399,
+          "area_weighted_votes": 43023.0,
+          "deviation_pct": 33.415
+        },
+        "26": {
+          "legacy_assigned_votes": 68089,
+          "area_weighted_votes": 49368.01,
+          "deviation_pct": 37.921
+        },
+        "27": {
+          "legacy_assigned_votes": 73466,
+          "area_weighted_votes": 54205.95,
+          "deviation_pct": 35.531
+        },
+        "28": {
+          "legacy_assigned_votes": 60942,
+          "area_weighted_votes": 46899.05,
+          "deviation_pct": 29.943
+        },
+        "29": {
+          "legacy_assigned_votes": 72803,
+          "area_weighted_votes": 55490.05,
+          "deviation_pct": 31.2
+        },
+        "30": {
+          "legacy_assigned_votes": 70653,
+          "area_weighted_votes": 50658.97,
+          "deviation_pct": 39.468
+        },
+        "31": {
+          "legacy_assigned_votes": 60006,
+          "area_weighted_votes": 49548.0,
+          "deviation_pct": 21.107
+        },
+        "32": {
+          "legacy_assigned_votes": 81031,
+          "area_weighted_votes": 55689.02,
+          "deviation_pct": 45.506
+        },
+        "33": {
+          "legacy_assigned_votes": 81468,
+          "area_weighted_votes": 57869.3,
+          "deviation_pct": 40.779
+        },
+        "34": {
+          "legacy_assigned_votes": 72700,
+          "area_weighted_votes": 54473.77,
+          "deviation_pct": 33.459
+        },
+        "35": {
+          "legacy_assigned_votes": 83411,
+          "area_weighted_votes": 66558.94,
+          "deviation_pct": 25.319
+        },
+        "36": {
+          "legacy_assigned_votes": 72850,
+          "area_weighted_votes": 56719.0,
+          "deviation_pct": 28.44
+        },
+        "37": {
+          "legacy_assigned_votes": 58191,
+          "area_weighted_votes": 39560.0,
+          "deviation_pct": 47.096
+        },
+        "38": {
+          "legacy_assigned_votes": 62274,
+          "area_weighted_votes": 38887.94,
+          "deviation_pct": 60.137
+        },
+        "39": {
+          "legacy_assigned_votes": 105376,
+          "area_weighted_votes": 74824.13,
+          "deviation_pct": 40.832
+        },
+        "40": {
+          "legacy_assigned_votes": 80117,
+          "area_weighted_votes": 60200.85,
+          "deviation_pct": 33.083
+        },
+        "41": {
+          "legacy_assigned_votes": 65847,
+          "area_weighted_votes": 45142.0,
+          "deviation_pct": 45.866
+        },
+        "42": {
+          "legacy_assigned_votes": 62873,
+          "area_weighted_votes": 44932.0,
+          "deviation_pct": 39.929
+        },
+        "43": {
+          "legacy_assigned_votes": 45461,
+          "area_weighted_votes": 29162.0,
+          "deviation_pct": 55.891
+        },
+        "44": {
+          "legacy_assigned_votes": 60831,
+          "area_weighted_votes": 41417.0,
+          "deviation_pct": 46.874
+        },
+        "45": {
+          "legacy_assigned_votes": 76145,
+          "area_weighted_votes": 54914.0,
+          "deviation_pct": 38.662
+        },
+        "46": {
+          "legacy_assigned_votes": 74176,
+          "area_weighted_votes": 59746.0,
+          "deviation_pct": 24.152
+        },
+        "47": {
+          "legacy_assigned_votes": 71405,
+          "area_weighted_votes": 50513.18,
+          "deviation_pct": 41.359
+        },
+        "48": {
+          "legacy_assigned_votes": 61125,
+          "area_weighted_votes": 47812.88,
+          "deviation_pct": 27.842
+        },
+        "49": {
+          "legacy_assigned_votes": 64672,
+          "area_weighted_votes": 51411.98,
+          "deviation_pct": 25.792
+        },
+        "50": {
+          "legacy_assigned_votes": 93517,
+          "area_weighted_votes": 69087.08,
+          "deviation_pct": 35.361
+        },
+        "51": {
+          "legacy_assigned_votes": 89381,
+          "area_weighted_votes": 78130.94,
+          "deviation_pct": 14.399
+        }
+      },
+      "sum_cd_legacy_assigned_vs_raw": {
+        "sum_cd_legacy_assigned": 3529719,
+        "raw_candidate_votes": 2701573,
+        "ratio": 1.306542,
+        "note": "Legacy assignment sends each ED's FULL votes to every council district the ED touches, so split EDs are counted once per overlapping district; the sum over districts therefore exceeds the raw candidate total by the split-ED overlap. The area-weighted benchmark allocates ED votes by the crosswalk's area shares."
+      }
+    },
+    "2025": {
+      "office": "mayor",
+      "total_candidate_votes_raw": 2182637,
+      "n_election_districts_with_candidate_votes": 4117,
+      "missing_key_eds": 16,
+      "missing_key_candidate_votes": 0,
+      "missing_key_share": 0.0,
+      "missing_key_share_pct": 0.0,
+      "missing_after_vintage_xwalk_votes": 2,
+      "missing_after_vintage_xwalk_share_pct": 0.0001,
+      "combined_into_eds": 0,
+      "combined_into_candidate_votes": 0,
+      "combined_into_votes_with_live_crosswalk_key": 0,
+      "combined_into_handling": "Votes in \"COMBINED INTO\" EDs are looked up under the OLD ED's own AD-ED key and are NEVER reassigned to the successor ED named in the status. If the old key still exists in the 2026 crosswalk the votes are assigned normally; otherwise they are dropped together with all other missing-key EDs.",
+      "votes_lost_by_borough": {
+        "Bronx": 0,
+        "Brooklyn": 0,
+        "Queens": 0
+      },
+      "candidate_votes_by_borough": {
+        "Bronx": 236042,
+        "Brooklyn": 702471,
+        "Manhattan": 555415,
+        "Queens": 536228,
+        "Staten Island": 152481
+      },
+      "cd_assignment": {
+        "1": {
+          "legacy_assigned_votes": 63374,
+          "area_weighted_votes": 51568.0,
+          "deviation_pct": 22.894
+        },
+        "2": {
+          "legacy_assigned_votes": 75109,
+          "area_weighted_votes": 58676.0,
+          "deviation_pct": 28.006
+        },
+        "3": {
+          "legacy_assigned_votes": 66980,
+          "area_weighted_votes": 60240.99,
+          "deviation_pct": 11.187
+        },
+        "4": {
+          "legacy_assigned_votes": 92923,
+          "area_weighted_votes": 67566.0,
+          "deviation_pct": 37.529
+        },
+        "5": {
+          "legacy_assigned_votes": 89283,
+          "area_weighted_votes": 72405.0,
+          "deviation_pct": 23.311
+        },
+        "6": {
+          "legacy_assigned_votes": 102177,
+          "area_weighted_votes": 73850.01,
+          "deviation_pct": 38.357
+        },
+        "7": {
+          "legacy_assigned_votes": 69796,
+          "area_weighted_votes": 56259.07,
+          "deviation_pct": 24.062
+        },
+        "8": {
+          "legacy_assigned_votes": 47155,
+          "area_weighted_votes": 32926.0,
+          "deviation_pct": 43.215
+        },
+        "9": {
+          "legacy_assigned_votes": 55635,
+          "area_weighted_votes": 47333.9,
+          "deviation_pct": 17.537
+        },
+        "10": {
+          "legacy_assigned_votes": 51047,
+          "area_weighted_votes": 44248.03,
+          "deviation_pct": 15.366
+        },
+        "11": {
+          "legacy_assigned_votes": 48369,
+          "area_weighted_votes": 39739.15,
+          "deviation_pct": 21.716
+        },
+        "12": {
+          "legacy_assigned_votes": 38189,
+          "area_weighted_votes": 33437.99,
+          "deviation_pct": 14.208
+        },
+        "13": {
+          "legacy_assigned_votes": 46550,
+          "area_weighted_votes": 36508.96,
+          "deviation_pct": 27.503
+        },
+        "14": {
+          "legacy_assigned_votes": 28744,
+          "area_weighted_votes": 21066.72,
+          "deviation_pct": 36.443
+        },
+        "15": {
+          "legacy_assigned_votes": 31626,
+          "area_weighted_votes": 19603.02,
+          "deviation_pct": 61.332
+        },
+        "16": {
+          "legacy_assigned_votes": 29785,
+          "area_weighted_votes": 23803.12,
+          "deviation_pct": 25.131
+        },
+        "17": {
+          "legacy_assigned_votes": 32325,
+          "area_weighted_votes": 21634.03,
+          "deviation_pct": 49.417
+        },
+        "18": {
+          "legacy_assigned_votes": 33534,
+          "area_weighted_votes": 30591.0,
+          "deviation_pct": 9.62
+        },
+        "19": {
+          "legacy_assigned_votes": 51720,
+          "area_weighted_votes": 44990.0,
+          "deviation_pct": 14.959
+        },
+        "20": {
+          "legacy_assigned_votes": 33755,
+          "area_weighted_votes": 23086.0,
+          "deviation_pct": 46.214
+        },
+        "21": {
+          "legacy_assigned_votes": 26497,
+          "area_weighted_votes": 18216.0,
+          "deviation_pct": 45.46
+        },
+        "22": {
+          "legacy_assigned_votes": 55281,
+          "area_weighted_votes": 50670.0,
+          "deviation_pct": 9.1
+        },
+        "23": {
+          "legacy_assigned_votes": 58423,
+          "area_weighted_votes": 46922.0,
+          "deviation_pct": 24.511
+        },
+        "24": {
+          "legacy_assigned_votes": 53537,
+          "area_weighted_votes": 39845.95,
+          "deviation_pct": 34.36
+        },
+        "25": {
+          "legacy_assigned_votes": 45427,
+          "area_weighted_votes": 34637.0,
+          "deviation_pct": 31.152
+        },
+        "26": {
+          "legacy_assigned_votes": 60945,
+          "area_weighted_votes": 43995.01,
+          "deviation_pct": 38.527
+        },
+        "27": {
+          "legacy_assigned_votes": 49306,
+          "area_weighted_votes": 35725.96,
+          "deviation_pct": 38.012
+        },
+        "28": {
+          "legacy_assigned_votes": 37607,
+          "area_weighted_votes": 29390.03,
+          "deviation_pct": 27.958
+        },
+        "29": {
+          "legacy_assigned_votes": 57286,
+          "area_weighted_votes": 44222.05,
+          "deviation_pct": 29.542
+        },
+        "30": {
+          "legacy_assigned_votes": 58180,
+          "area_weighted_votes": 41209.98,
+          "deviation_pct": 41.179
+        },
+        "31": {
+          "legacy_assigned_votes": 39300,
+          "area_weighted_votes": 31849.0,
+          "deviation_pct": 23.395
+        },
+        "32": {
+          "legacy_assigned_votes": 63119,
+          "area_weighted_votes": 43642.02,
+          "deviation_pct": 44.629
+        },
+        "33": {
+          "legacy_assigned_votes": 80371,
+          "area_weighted_votes": 59219.23,
+          "deviation_pct": 35.718
+        },
+        "34": {
+          "legacy_assigned_votes": 68684,
+          "area_weighted_votes": 51274.83,
+          "deviation_pct": 33.953
+        },
+        "35": {
+          "legacy_assigned_votes": 80496,
+          "area_weighted_votes": 65989.94,
+          "deviation_pct": 21.982
+        },
+        "36": {
+          "legacy_assigned_votes": 65374,
+          "area_weighted_votes": 50491.0,
+          "deviation_pct": 29.477
+        },
+        "37": {
+          "legacy_assigned_votes": 48440,
+          "area_weighted_votes": 32417.0,
+          "deviation_pct": 49.428
+        },
+        "38": {
+          "legacy_assigned_votes": 51875,
+          "area_weighted_votes": 31379.95,
+          "deviation_pct": 65.313
+        },
+        "39": {
+          "legacy_assigned_votes": 100487,
+          "area_weighted_votes": 71802.15,
+          "deviation_pct": 39.95
+        },
+        "40": {
+          "legacy_assigned_votes": 66819,
+          "area_weighted_votes": 48874.84,
+          "deviation_pct": 36.715
+        },
+        "41": {
+          "legacy_assigned_votes": 45916,
+          "area_weighted_votes": 30667.0,
+          "deviation_pct": 49.724
+        },
+        "42": {
+          "legacy_assigned_votes": 39468,
+          "area_weighted_votes": 27542.0,
+          "deviation_pct": 43.301
+        },
+        "43": {
+          "legacy_assigned_votes": 37889,
+          "area_weighted_votes": 23019.0,
+          "deviation_pct": 64.599
+        },
+        "44": {
+          "legacy_assigned_votes": 61617,
+          "area_weighted_votes": 42204.0,
+          "deviation_pct": 45.998
+        },
+        "45": {
+          "legacy_assigned_votes": 58430,
+          "area_weighted_votes": 42771.0,
+          "deviation_pct": 36.611
+        },
+        "46": {
+          "legacy_assigned_votes": 54061,
+          "area_weighted_votes": 42806.0,
+          "deviation_pct": 26.293
+        },
+        "47": {
+          "legacy_assigned_votes": 60567,
+          "area_weighted_votes": 42723.14,
+          "deviation_pct": 41.766
+        },
+        "48": {
+          "legacy_assigned_votes": 54703,
+          "area_weighted_votes": 43701.91,
+          "deviation_pct": 25.173
+        },
+        "49": {
+          "legacy_assigned_votes": 48498,
+          "area_weighted_votes": 38433.01,
+          "deviation_pct": 26.188
+        },
+        "50": {
+          "legacy_assigned_votes": 75528,
+          "area_weighted_votes": 55313.03,
+          "deviation_pct": 36.546
+        },
+        "51": {
+          "legacy_assigned_votes": 71136,
+          "area_weighted_votes": 62149.96,
+          "deviation_pct": 14.459
+        }
+      },
+      "sum_cd_legacy_assigned_vs_raw": {
+        "sum_cd_legacy_assigned": 2863343,
+        "raw_candidate_votes": 2182637,
+        "ratio": 1.311873,
+        "note": "Legacy assignment sends each ED's FULL votes to every council district the ED touches, so split EDs are counted once per overlapping district; the sum over districts therefore exceeds the raw candidate total by the split-ED overlap. The area-weighted benchmark allocates ED votes by the crosswalk's area shares."
+      }
+    }
+  },
+  "council_district_vintage_note": {
+    "finding": "MISMATCH: PLUTO and the sales file attach CURRENT council district lines (the post-2022 redistricting plan, in force from the 2023 cycle onward), while the 2013, 2017 and 2021 council general elections were contested under the PRE-2022 district plan (the lines adopted after the 2010 census). The close-election IV instrument maps prior-cycle (2013/2017/2021) winners onto current-district sales rows, so district identities do not line up across vintages wherever an old-plan district does not map cleanly onto its 2023-plan successor.",
+    "affected_artifacts": [
+      "data/processed/council_election_margins.parquet (prior-cycle winner/party/margin keyed to current CounDist)",
+      "results/causal/iv_district_fe_results.json (instrument Z built from those margins)"
+    ],
+    "shapefiles_needed_to_fix": [
+      "City Council Districts (2013 plan) \u2014 the NYC Department of City Planning \"Bytes of the Big Apple\" council-district shapefile for the 2013 district plan, which covers the 2013, 2017 and 2021 council races (NYC Open Data dataset \"City Council Districts (2013)\").",
+      "A vintage-matched Election District base file for the same era (BOE/DCP election-district boundaries as they existed for the 2016-2021 elections; the ED file in this repo is the 2026 vintage and already fails to match 2016-2020 ED keys, as quantified in by_year).",
+      "The 2023-plan council district file (already present: data/raw/election_districts/NYC_City_Council_Districts.shp) to build a two-way correspondence (areal overlay ED(old vintage) -> council 2013 plan, then council 2013 plan -> council 2023 plan)."
+    ],
+    "note": "Rebuilding a vintage-correct instrument also needs the 2013/2017/2021 council-race results keyed to the OLD district numbering \u2014 already present under data/raw/council_elections/{2013,2017,2021}/ and keyed to old district numbers, which is the correct side of the correspondence."
+  }
+}
