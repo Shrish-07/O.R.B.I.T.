@@ -35,7 +35,7 @@ def main():
     req_path = ROOT / 'requirements.txt'
     unpinned, mismatched = [], []
     if req_path.exists():
-        for line in req_path.read_text(encoding='utf-8').splitlines():
+        for line in req_path.read_text(encoding='utf-8-sig').splitlines():
             s = line.strip()
             if not s or s.startswith('#'):
                 continue
