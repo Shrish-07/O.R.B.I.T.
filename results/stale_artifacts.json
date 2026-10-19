@@ -1,5 +1,5 @@
 {
-  "run_start_epoch": 1792165299.417543,
+  "run_start_epoch": 1792347997.7826855,
   "run_start_note": "marker written by main.py at run start",
   "watch_dirs": [
     "docs/figures",
@@ -9,17 +9,6 @@
   "stale_files": {
     "docs/figures": [],
     "docs/paper_assets": [],
-    "models/artifacts": [
-      {
-        "file": "models/artifacts/lgbm_all_years_political_sensitivity.json",
-        "size_kb": 3.6,
-        "age_days": 23.0
-      },
-      {
-        "file": "models/artifacts/pdp_prune_log.json",
-        "size_kb": 0.1,
-        "age_days": 4.5
-      }
-    ]
+    "models/artifacts": []
   }
 }

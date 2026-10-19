@@ -6,7 +6,7 @@
   "n_train": 121052,
   "n_test": 56723,
   "n_features": 25,
-  "r2": 0.5900387792297042,
+  "r2": 0.590038779229704,
   "mae": 0.40161417910660113,
   "tuning": {
     "mean_leaves_cap": 3000,
@@ -18,7 +18,7 @@
       "n_estimators": 200
     },
     "chosen_mean_leaves_per_tree": 2519.89,
-    "validation_mae_of_chosen_config": 0.37837633003606436,
+    "validation_mae_of_chosen_config": 0.3783763300360644,
     "grid_results_file": "results/rf_tuning_grid.json",
     "widened_grid_used": false
   }

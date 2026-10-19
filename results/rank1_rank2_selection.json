@@ -1,28 +1,28 @@
 {
   "selection_rule": "lowest test MAE among untainted, non-stale, post-2026-05-18 runs; near-ties (<0.001 MAE) resolve to the base-mode spec",
   "champion_selection_note": "OUTRIGHT WINNER: rf_all_years_political_tuned (mae=0.401614); no other experiment within 0.001 MAE.",
-  "champion_selected_experiment": "exp-20261016T161155Z",
-  "champion_selected_utc": "2026-10-16T16:13:40.442875Z",
-  "selected_utc": "2026-10-16T17:11:38.227948Z",
+  "champion_selected_experiment": "exp-20261018T184335Z",
+  "champion_selected_utc": "2026-10-18T18:45:22.888503Z",
+  "selected_utc": "2026-10-18T19:18:38.391779Z",
   "eligibility_filter": "untainted, non-stale, created_utc >= 2026-05-18 -- identical to src/ops/experiment_runner.py (refresh_champion)",
   "selection_note": "Rank 1 is exactly what experiments/champion.json designates (its own selection logic is untouched); ranks 2..N follow ascending test MAE among the remaining eligible entries, recomputed fresh from experiments/registry.json on this run -- never hard-coded. Current interpretation slots: rank1=rf_all_years_political_tuned (mae=0.401614), rank2=cat_all_years_political_lr0.05_d6 (mae=0.417364).",
   "interpretation_coverage": "every eligible model below is run through SHAP / PDP / confidence intervals / sensitivity / counterfactual scenarios each pipeline run (full coverage)",
   "ranked_eligible_models": [
     {
       "rank": 1,
-      "experiment_id": "exp-20261016T161155Z",
+      "experiment_id": "exp-20261018T184335Z",
       "name": "rf_all_years_political_tuned",
       "family": "sklearn",
       "mode": "political",
       "test_mae": 0.40161417910660113,
-      "test_r2": 0.5900387792297042,
+      "test_r2": 0.590038779229704,
       "model_path": "models/rf_all_years_political_tuned.joblib",
       "features_path": "models/artifacts/rf_all_years_political_tuned_features.json",
-      "created_utc": "2026-10-16T16:11:55.065380Z"
+      "created_utc": "2026-10-18T18:43:35.424523Z"
     },
     {
       "rank": 2,
-      "experiment_id": "exp-20261016T161314Z",
+      "experiment_id": "exp-20261018T184511Z",
       "name": "cat_all_years_political_lr0.05_d6",
       "family": "catboost",
       "mode": "political",
@@ -30,11 +30,11 @@
       "test_r2": 0.5812828576992348,
       "model_path": "models/cat_all_years_political_lr0.05_d6.cbm",
       "features_path": "models/artifacts/cat_all_years_political_lr0.05_d6_features.json",
-      "created_utc": "2026-10-16T16:13:14.428235Z"
+      "created_utc": "2026-10-18T18:45:11.823114Z"
     },
     {
       "rank": 3,
-      "experiment_id": "exp-20261016T161337Z",
+      "experiment_id": "exp-20261018T184521Z",
       "name": "xgb_all_years_political_lr0.05_md6",
       "family": "xgboost",
       "mode": "political",
@@ -42,11 +42,11 @@
       "test_r2": 0.5702048188828388,
       "model_path": "models/xgb_all_years_political_lr0.05_md6.model",
       "features_path": "models/artifacts/xgb_all_years_political_lr0.05_md6_features.json",
-      "created_utc": "2026-10-16T16:13:37.510389Z"
+      "created_utc": "2026-10-18T18:45:21.285110Z"
     },
     {
       "rank": 4,
-      "experiment_id": "exp-20261016T154430Z",
+      "experiment_id": "exp-20261018T182844Z",
       "name": "lgbm_all_years_political",
       "family": "lightgbm",
       "mode": "political",
@@ -54,11 +54,11 @@
       "test_r2": 0.5433591928764994,
       "model_path": "models/lgbm_all_years_political.txt",
       "features_path": "models/artifacts/lgbm_all_years_political_features.json",
-      "created_utc": "2026-10-16T15:44:30.513784Z"
+      "created_utc": "2026-10-18T18:28:44.418831Z"
     },
     {
       "rank": 5,
-      "experiment_id": "exp-20261016T154341Z",
+      "experiment_id": "exp-20261018T182833Z",
       "name": "lgbm_all_years_base",
       "family": "lightgbm",
       "mode": "base",
@@ -66,11 +66,11 @@
       "test_r2": 0.5350382066966075,
       "model_path": "models/lgbm_all_years_base.txt",
       "features_path": "models/artifacts/lgbm_all_years_base_features.json",
-      "created_utc": "2026-10-16T15:43:41.845524Z"
+      "created_utc": "2026-10-18T18:28:33.465609Z"
     },
     {
       "rank": 6,
-      "experiment_id": "exp-20261016T161232Z",
+      "experiment_id": "exp-20261018T184409Z",
       "name": "ridge_all_years_political",
       "family": "linear",
       "mode": "political",
@@ -78,12 +78,12 @@
       "test_r2": 0.1791541147004576,
       "model_path": "models/ridge_all_years_political.joblib",
       "features_path": "models/artifacts/ridge_all_years_political_features.json",
-      "created_utc": "2026-10-16T16:12:32.926350Z",
+      "created_utc": "2026-10-18T18:44:09.617164Z",
       "preproc_path": "models/artifacts/ridge_all_years_political_preproc.joblib"
     },
     {
       "rank": 7,
-      "experiment_id": "exp-20261016T161243Z",
+      "experiment_id": "exp-20261018T184420Z",
       "name": "elasticnet_all_years_political",
       "family": "linear",
       "mode": "political",
@@ -91,7 +91,7 @@
       "test_r2": 0.1770844213769116,
       "model_path": "models/elasticnet_all_years_political.joblib",
       "features_path": "models/artifacts/elasticnet_all_years_political_features.json",
-      "created_utc": "2026-10-16T16:12:43.781867Z",
+      "created_utc": "2026-10-18T18:44:20.348873Z",
       "preproc_path": "models/artifacts/elasticnet_all_years_political_preproc.joblib"
     }
   ]

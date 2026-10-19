@@ -34,7 +34,7 @@
         },
         "comparison_csv": {
           "mae": 0.4016141791066011,
-          "r2": 0.5900387792297042
+          "r2": 0.590038779229704
         },
         "mae_match_rounded_5dp": true,
         "r2_match_rounded_5dp": true
