@@ -7,7 +7,7 @@
   "shap_fallback_note": "exact SHAP for a linear model (shap.LinearExplainer, interventional, on the model's own median-imputed + standardized feature space as trained), standard sampled test slice (n<=2000, seed 42).",
   "shap_model_path": "models/elasticnet_all_years_political.joblib",
   "budget_minutes_per_tier": 90,
-  "computed_utc": "2026-10-18T19:18:34.883982Z",
+  "computed_utc": "2026-10-19T17:23:34.154439Z",
   "sample_n": 2000,
   "tier_attempts": [],
   "summary": [

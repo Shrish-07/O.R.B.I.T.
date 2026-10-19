@@ -109,18 +109,17 @@ report can't be mistaken for evidence of a full pass.
   overlap). The train and test split is 121,052 and 56,723 rows, time
   ordered, and the all_years split always covers the 2017 election cycle
   subset of 177,775 rows.
-- **Last recorded full run.** 2026-10-16, 56 of 56 stages passed in 101.7
+- **Last recorded full run.** 2026-10-19, 84 of 84 stages passed in 91.7
   minutes (`results/PIPELINE_RUN_REPORT.md`, with the durable snapshot
-  `results/PIPELINE_RUN_REPORT_full_20261016.md`). The report footer carries
+  `results/PIPELINE_RUN_REPORT_full_20261019.md`). The report footer carries
   the run provenance (git_commit and git_dirty) and the verification totals
-  (the Round-13 verification gate of 2026-10-19 reports 840 checks, 0
-  mismatches and 26 of 26 verifiers in
-  `results/verification_summary.json`; the last full pipeline run snapshot
-  is `results/PIPELINE_RUN_REPORT_full_20261018.md`). Wall time is dominated
-  by the RF tuning grid (about 27 min), the exact SHAP ladder across all 7
-  models (about 45 min, all tier a or linear exact, with no timeouts and no
-  fallbacks), and the 7 model by 3 scenario counterfactual scoring plus its
-  independent re-derivation verifier (about 19 min combined).
+  (840 checks, 0 mismatches, 26 of 26 verifiers in
+  `results/verification_summary.json`). Wall time is dominated
+  by the RF tuning grid (about 14 min), the exact SHAP ladder across all 7
+  models (about 35 min, all tier a or linear exact, with no timeouts and no
+  fallbacks), the v2/v3 robustness suites (about 16 min combined), the
+  political scenario scoring (about 7 min), and the pre-2024 suite
+  (about 7 min).
 - **Random Forest (Round 10).** The unpruned forest
   `rf_all_years_political_n200` (about 990 MB) was retired because exact
   TreeSHAP could not finish on it within the 90 minute tier budget, so it

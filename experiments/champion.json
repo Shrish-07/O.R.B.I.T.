@@ -1,11 +1,11 @@
 {
-  "selected_experiment": "exp-20261018T184335Z",
+  "selected_experiment": "exp-20261019T161437Z",
   "metric": 0.40161417910660113,
   "selection_note": "OUTRIGHT WINNER: rf_all_years_political_tuned (mae=0.401614); no other experiment within 0.001 MAE.",
   "selection_rule": "lowest test MAE among untainted, non-stale, post-2026-05-18 runs; near-ties (<0.001 MAE) resolve to the base-mode spec",
-  "selected_utc": "2026-10-18T18:45:22.888503Z",
-  "git_commit": "922855c",
+  "selected_utc": "2026-10-19T16:15:30.387123Z",
+  "git_commit": "a5601cc",
   "git_dirty": true,
-  "champion_model_git_commit": "922855c",
+  "champion_model_git_commit": "a5601cc",
   "champion_model_git_dirty": true
 }

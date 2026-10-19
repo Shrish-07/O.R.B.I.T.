@@ -2351,7 +2351,10 @@ new verifier).**
   a pre-existing production-crosswalk key property, not a weighting
   property); the legacy full-to-each assignment is shown for contrast
   (1.29-1.31x). Per-CD correlations between every `_aw`/`_dom` measure and
-  its full-to-each counterpart are recorded (overall r 0.9995-1.0000).
+  its full-to-each counterpart are recorded (overall r across the CD-wave
+  pairs 0.965-0.996; per-CD medians across waves 0.996-1.000 - the lower
+  overall r for the non-vintage _aw pairs reflects the crosswalk-vintage
+  change as well as the weighting).
 - `src/data_pipeline/extend_canonical_v3.py` - NEW:
   `data/canonical/modeling_dataset_canonical_v3.parquet` (566,956 x 73;
   all 64 legacy columns byte-identical; 9 new columns at 97.64%
@@ -2452,3 +2455,13 @@ new verifier).**
 - Commit protocol: the pending 2026-10-18 retrain artifacts were
   committed first as their own commit, then the Round-13 code was
   committed BEFORE the final gate run.
+- Full-pipeline confirmation (2026-10-19): `python main.py` ran all
+  84 stages end-to-end in 91.7 minutes with 84/84 passing
+  (snapshot `results/PIPELINE_RUN_REPORT_full_20261019.md`), and the
+  closing verification gate re-reported 840 checks, 0 mismatches,
+  26/26 verifiers. Every regression coefficient, p-value and wild
+  bootstrap p-value reproduced identically (fixed seeds); the only
+  differences from the committed Round-13 artifacts are run timestamps,
+  fit timings, a fresh champion experiment id (same model:
+  rf_all_years_political_tuned, test MAE 0.401614), and last-digit
+  floating-point jitter in the retrained-model diagnostics.
