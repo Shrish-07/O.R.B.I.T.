@@ -1,12 +1,12 @@
 # Research Summary
 
 ## Champion
-- Selected champion: exp-20261018T184335Z (mae=0.40161417910660113, name=rf_all_years_political_tuned)
+- Selected champion: exp-20261019T161437Z (mae=0.40161417910660113, name=rf_all_years_political_tuned)
 
 ## Model comparison
 
 name,mae,r2
-rf_all_years_political_tuned,0.40161417910660113,0.590038779229704
+rf_all_years_political_tuned,0.40161417910660113,0.5900387792297042
 cat_all_years_political_lr0.05_d6,0.41736433913362825,0.5812828576992348
 xgb_all_years_political_lr0.05_md6,0.41769515091835496,0.5702048188828388
 lgbm_all_years_political,0.43994123422895204,0.5433591928764994
@@ -157,6 +157,6 @@ RESIDENTIAL UNITS       0.140284
          facilfar       0.059704
 
 ## Political scenario summaries
-- conservative_policy_by_council: mean abs delta by council = 0.008099013727689976
-- liberal_policy_by_council: mean abs delta by council = 0.008033364669800648
-- mixed_governance_by_council: mean abs delta by council = 0.03641616892646044
+- conservative_policy_by_council: mean abs delta by council = 0.008099013727690023
+- liberal_policy_by_council: mean abs delta by council = 0.008033364669800628
+- mixed_governance_by_council: mean abs delta by council = 0.03641616892646041

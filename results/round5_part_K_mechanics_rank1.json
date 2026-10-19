@@ -10,7 +10,7 @@
     "model_family": "sklearn",
     "model_mode": "political",
     "test_mae": 0.40161417910660113,
-    "base_pred_min": 9.96152607573028,
+    "base_pred_min": 9.961526075730282,
     "base_pred_max": 18.381971025492724,
     "filter_9.0_removed_rows": 0,
     "filter_9.0_removes_zero_rows": true,

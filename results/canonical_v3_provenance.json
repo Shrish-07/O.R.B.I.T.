@@ -1,5 +1,5 @@
 {
-  "run_utc": "2026-10-19T03:39:15.112456+00:00",
+  "run_utc": "2026-10-19T15:59:11.866632+00:00",
   "base": "data/canonical/modeling_dataset_canonical_v2.parquet",
   "rows": 566956,
   "columns_v2": 64,

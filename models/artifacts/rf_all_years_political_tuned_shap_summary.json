@@ -7,7 +7,7 @@
   "shap_fallback_note": "exact TreeSHAP on the standard sampled test slice (n<=2000, seed 42, low-NA feature sampling).",
   "shap_model_path": "models/rf_all_years_political_tuned.joblib",
   "budget_minutes_per_tier": 90,
-  "computed_utc": "2026-10-18T18:55:38.819991Z",
+  "computed_utc": "2026-10-19T16:49:08.254482Z",
   "sample_n": 2000,
   "tier_attempts": [],
   "summary": [
