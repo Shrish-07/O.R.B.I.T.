@@ -1,0 +1,514 @@
+{
+  "metadata": {
+    "spec": "Model 4: measure + core controls + 51 council-district FE, NO sale-year FE, clustered by district, wild-cluster-bootstrap-t p (Webb 6, 9999 reps, seed 42)",
+    "measures": [
+      "dem_share",
+      "dem_share_mayor_allcand",
+      "dem_share_vintage",
+      "dem_share_mayor_allcand_vintage",
+      "dem_share_vintage_aw",
+      "dem_share_mayor_allcand_vintage_aw",
+      "dem_share_pres",
+      "dem_share_pres_vintage",
+      "dem_share_pres_vintage_aw"
+    ],
+    "wavemean_definition": "citywide mean of the CD-level measure across the districts within the election wave (mayoral: election_year; presidential: election_year_pres), identical for every district in the wave",
+    "dev_definition": "measure - measure_wavemean (mean-zero in wave)",
+    "expected": "(a) wavemean reproduces the sign/magnitude of the original Model 4; (b) dev is near zero"
+  },
+  "dem_share": {
+    "wave_column": "election_year",
+    "n_districts_per_wave": {
+      "2017": 51,
+      "2021": 51,
+      "2025": 51
+    },
+    "wavemean_model4": {
+      "coef": 1.1198193843151392,
+      "se_classical": 0.021039350535887513,
+      "se_cluster": 0.10563073227451879,
+      "p_t_G_minus_1": 2.1728994372332282e-14,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": 0.9076538144872786,
+      "ci95_high_t": 1.3319849541429998,
+      "ci95_low_wild": 0.9030985920039066,
+      "ci95_high_wild": 1.329205179886589,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.19856867426897618,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "dev_model4": {
+      "coef": 0.441813757609872,
+      "se_classical": 0.028968516633565686,
+      "se_cluster": 0.2801928663608734,
+      "p_t_G_minus_1": 0.12114359103669209,
+      "p_wild_cluster_bootstrap_t": 0.1645,
+      "ci95_low_t": -0.12097017726489118,
+      "ci95_high_t": 1.0045976924846352,
+      "ci95_low_wild": -0.18800889048372665,
+      "ci95_high_wild": 1.049837109257007,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.1945652378968724,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "comparison_to_original_model4": {
+      "original_model4_coef": 0.7764419471572419,
+      "sign_matches_original": true,
+      "ratio_wavemean_over_original": 1.442244830299409
+    },
+    "dev_near_zero_verdict": {
+      "near_zero": true,
+      "abs_coef": 0.441813757609872
+    }
+  },
+  "dem_share_mayor_allcand": {
+    "wave_column": "election_year",
+    "n_districts_per_wave": {
+      "2017": 51,
+      "2021": 51,
+      "2025": 51
+    },
+    "wavemean_model4": {
+      "coef": -1.035128313858892,
+      "se_classical": 0.019215461401630073,
+      "se_cluster": 0.09675161831501226,
+      "p_t_G_minus_1": 1.577006950037681e-14,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": -1.2294596584360047,
+      "ci95_high_t": -0.8407969692817793,
+      "ci95_low_wild": -1.2270366300700957,
+      "ci95_high_wild": -0.83648083684391,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.19867440882858411,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "dev_model4": {
+      "coef": 0.20539655475199362,
+      "se_classical": 0.023883611888847134,
+      "se_cluster": 0.19816137070159456,
+      "p_t_G_minus_1": 0.30495055914884567,
+      "p_wild_cluster_bootstrap_t": 0.3289,
+      "ci95_low_t": -0.1926222720370709,
+      "ci95_high_t": 0.6034153815410581,
+      "ci95_low_wild": -0.21690534509880074,
+      "ci95_high_wild": 0.629915163723685,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.19431968290477686,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "comparison_to_original_model4": {
+      "original_model4_coef": -0.5466482831780602,
+      "sign_matches_original": true,
+      "ratio_wavemean_over_original": 1.8935910817115267
+    },
+    "dev_near_zero_verdict": {
+      "near_zero": true,
+      "abs_coef": 0.20539655475199362
+    }
+  },
+  "dem_share_vintage": {
+    "wave_column": "election_year",
+    "n_districts_per_wave": {
+      "2017": 51,
+      "2021": 51,
+      "2025": 51
+    },
+    "wavemean_model4": {
+      "coef": 1.17608043783468,
+      "se_classical": 0.02206521089233976,
+      "se_cluster": 0.1108182065519922,
+      "p_t_G_minus_1": 2.0926439611877323e-14,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": 0.9534955192780119,
+      "ci95_high_t": 1.3986653563913483,
+      "ci95_low_wild": 0.9486960292510304,
+      "ci95_high_wild": 1.3957680007834388,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.19858094860327025,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "dev_model4": {
+      "coef": 0.38864711504296157,
+      "se_classical": 0.025741605772497844,
+      "se_cluster": 0.2579272918533946,
+      "p_t_G_minus_1": 0.13815213797178547,
+      "p_wild_cluster_bootstrap_t": 0.2275,
+      "ci95_low_t": -0.12941509726864653,
+      "ci95_high_t": 0.9067093273545697,
+      "ci95_low_wild": -0.22765891314823172,
+      "ci95_high_wild": 0.9876732354133267,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.19455802944227674,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "comparison_to_original_model4": {
+      "original_model4_coef": 0.721506729013012,
+      "sign_matches_original": true,
+      "ratio_wavemean_over_original": 1.630033914504864
+    },
+    "dev_near_zero_verdict": {
+      "near_zero": true,
+      "abs_coef": 0.38864711504296157
+    }
+  },
+  "dem_share_mayor_allcand_vintage": {
+    "wave_column": "election_year",
+    "n_districts_per_wave": {
+      "2017": 51,
+      "2021": 51,
+      "2025": 51
+    },
+    "wavemean_model4": {
+      "coef": -0.9996984046612536,
+      "se_classical": 0.018455339293751517,
+      "se_cluster": 0.09304942496623643,
+      "p_t_G_minus_1": 1.3611900719000382e-14,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": -1.1865936750529238,
+      "ci95_high_t": -0.8128031342695834,
+      "ci95_low_wild": -1.1843455435518973,
+      "ci95_high_wild": -0.808581462213348,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.1987238746019615,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "dev_model4": {
+      "coef": 0.22503195988193017,
+      "se_classical": 0.02289081136002028,
+      "se_cluster": 0.2097533102611146,
+      "p_t_G_minus_1": 0.2884932411279283,
+      "p_wild_cluster_bootstrap_t": 0.3511,
+      "ci95_low_t": -0.19626996273632966,
+      "ci95_high_t": 0.64633388250019,
+      "ci95_low_wild": -0.25458569964057476,
+      "ci95_high_wild": 0.7085284180243805,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.19435480150548023,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "comparison_to_original_model4": {
+      "original_model4_coef": -0.5342077631657105,
+      "sign_matches_original": true,
+      "ratio_wavemean_over_original": 1.8713662990164157
+    },
+    "dev_near_zero_verdict": {
+      "near_zero": true,
+      "abs_coef": 0.22503195988193017
+    }
+  },
+  "dem_share_vintage_aw": {
+    "wave_column": "election_year",
+    "n_districts_per_wave": {
+      "2017": 51,
+      "2021": 51,
+      "2025": 51
+    },
+    "wavemean_model4": {
+      "coef": 1.2235614735897482,
+      "se_classical": 0.022619510286918616,
+      "se_cluster": 0.11400591278048691,
+      "p_t_G_minus_1": 1.412486522677693e-14,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": 0.9945738586411366,
+      "ci95_high_t": 1.4525490885383598,
+      "ci95_low_wild": 0.98942110332563,
+      "ci95_high_wild": 1.4497695122113836,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.19871138572859914,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "dev_model4": {
+      "coef": 0.4227973965800945,
+      "se_classical": 0.025414084750325507,
+      "se_cluster": 0.2495360073731785,
+      "p_t_G_minus_1": 0.09642276482175197,
+      "p_wild_cluster_bootstrap_t": 0.1884,
+      "ci95_low_t": -0.07841042482654581,
+      "ci95_high_t": 0.9240052179867349,
+      "ci95_low_wild": -0.18979476611240076,
+      "ci95_high_wild": 1.0174470017938042,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.19463355963497098,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "comparison_to_original_model4": {
+      "original_model4_coef": 0.7384213654797066,
+      "sign_matches_original": true,
+      "ratio_wavemean_over_original": 1.6569963042644036
+    },
+    "dev_near_zero_verdict": {
+      "near_zero": true,
+      "abs_coef": 0.4227973965800945
+    }
+  },
+  "dem_share_mayor_allcand_vintage_aw": {
+    "wave_column": "election_year",
+    "n_districts_per_wave": {
+      "2017": 51,
+      "2021": 51,
+      "2025": 51
+    },
+    "wavemean_model4": {
+      "coef": -0.9901628376130767,
+      "se_classical": 0.018506157303217037,
+      "se_cluster": 0.09302813336916088,
+      "p_t_G_minus_1": 1.8898857846994767e-14,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": -1.1770153425734295,
+      "ci95_high_t": -0.8033103326527237,
+      "ci95_low_wild": -1.1745823228776073,
+      "ci95_high_wild": -0.7992412375523428,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.19861437298525597,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "dev_model4": {
+      "coef": 0.22666547608815452,
+      "se_classical": 0.022091739070308127,
+      "se_cluster": 0.2017364875619432,
+      "p_t_G_minus_1": 0.26656041722737206,
+      "p_wild_cluster_bootstrap_t": 0.3355,
+      "ci95_low_t": -0.17853418424758838,
+      "ci95_high_t": 0.6318651364238974,
+      "ci95_low_wild": -0.2455592911603472,
+      "ci95_high_wild": 0.7037222778148153,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.1943681607067188,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "comparison_to_original_model4": {
+      "original_model4_coef": -0.5024923497227504,
+      "sign_matches_original": true,
+      "ratio_wavemean_over_original": 1.9705033084770305
+    },
+    "dev_near_zero_verdict": {
+      "near_zero": true,
+      "abs_coef": 0.22666547608815452
+    }
+  },
+  "dem_share_pres": {
+    "wave_column": "election_year_pres",
+    "n_districts_per_wave": {
+      "2016": 51,
+      "2020": 51,
+      "2024": 51
+    },
+    "wavemean_model4": {
+      "coef": -2.1350518884039316,
+      "se_classical": 0.024523975213829707,
+      "se_cluster": 0.12991820096899345,
+      "p_t_G_minus_1": 8.486907027344727e-22,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": -2.396000274787941,
+      "ci95_high_t": -1.874103502019922,
+      "ci95_low_wild": -2.40222823853898,
+      "ci95_high_wild": -1.8620308398314522,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.20577473845671324,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "dev_model4": {
+      "coef": 0.4952259159859487,
+      "se_classical": 0.04217342963330902,
+      "se_cluster": 0.590486037829107,
+      "p_t_G_minus_1": 0.4056434205289451,
+      "p_wild_cluster_bootstrap_t": 0.4168,
+      "ci95_low_t": -0.6908001958639789,
+      "ci95_high_t": 1.6812520278358762,
+      "ci95_low_wild": -0.8053222151343133,
+      "ci95_high_wild": 1.8124127843748221,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.1944186509360829,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "comparison_to_original_model4": {
+      "original_model4_coef": -1.7057489545778897,
+      "sign_matches_original": true,
+      "ratio_wavemean_over_original": 1.2516800216549326
+    },
+    "dev_near_zero_verdict": {
+      "near_zero": true,
+      "abs_coef": 0.4952259159859487
+    }
+  },
+  "dem_share_pres_vintage": {
+    "wave_column": "election_year_pres",
+    "n_districts_per_wave": {
+      "2016": 51,
+      "2020": 51,
+      "2024": 51
+    },
+    "wavemean_model4": {
+      "coef": -2.1158190589505397,
+      "se_classical": 0.02434143874688507,
+      "se_cluster": 0.12875275085109544,
+      "p_t_G_minus_1": 8.500509813737923e-22,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": -2.3744265698805465,
+      "ci95_high_t": -1.857211548020533,
+      "ci95_low_wild": -2.3806513554517204,
+      "ci95_high_wild": -1.845033508388024,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.20573880588296423,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "dev_model4": {
+      "coef": 0.9606583031365691,
+      "se_classical": 0.05294680196565881,
+      "se_cluster": 0.709188795333433,
+      "p_t_G_minus_1": 0.18163872658510213,
+      "p_wild_cluster_bootstrap_t": 0.2078,
+      "ci95_low_t": -0.46378931393015954,
+      "ci95_high_t": 2.385105920203298,
+      "ci95_low_wild": -0.6152187871940477,
+      "ci95_high_wild": 2.5742253646911983,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.1947146643663501,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "comparison_to_original_model4": {
+      "original_model4_coef": -1.9742827963836727,
+      "sign_matches_original": true,
+      "ratio_wavemean_over_original": 1.0716899639839446
+    },
+    "dev_near_zero_verdict": {
+      "near_zero": true,
+      "abs_coef": 0.9606583031365691
+    }
+  },
+  "dem_share_pres_vintage_aw": {
+    "wave_column": "election_year_pres",
+    "n_districts_per_wave": {
+      "2016": 51,
+      "2020": 51,
+      "2024": 51
+    },
+    "wavemean_model4": {
+      "coef": -2.1468882496845323,
+      "se_classical": 0.024722927084163755,
+      "se_cluster": 0.13064705230742218,
+      "p_t_G_minus_1": 8.510613043116738e-22,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": -2.40930057706571,
+      "ci95_high_t": -1.8844759223033547,
+      "ci95_low_wild": -2.4157498131421518,
+      "ci95_high_wild": -1.8722482686091035,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.20571669515864155,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "dev_model4": {
+      "coef": 0.9883442578650559,
+      "se_classical": 0.05249579281277243,
+      "se_cluster": 0.7089398719111328,
+      "p_t_G_minus_1": 0.16944741155822307,
+      "p_wild_cluster_bootstrap_t": 0.1974,
+      "ci95_low_t": -0.4356033817935965,
+      "ci95_high_t": 2.4122918975237084,
+      "ci95_low_wild": -0.5678859310045217,
+      "ci95_high_wild": 2.588078020956191,
+      "n": 520365,
+      "n_clusters_G": 51,
+      "r_squared": 0.19475373478136193,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      }
+    },
+    "comparison_to_original_model4": {
+      "original_model4_coef": -1.975624411348924,
+      "sign_matches_original": true,
+      "ratio_wavemean_over_original": 1.0866884602922435
+    },
+    "dev_near_zero_verdict": {
+      "near_zero": true,
+      "abs_coef": 0.9883442578650559
+    }
+  }
+}

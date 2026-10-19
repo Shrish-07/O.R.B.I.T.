@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_ideology_v3",
+  "generated_utc": "2026-10-19T15:18:55.455130Z",
+  "n_checks": 54,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Independent re-derivation of the Round-13 _aw/_dom measures, the split-ED reconciliation (overcount = 0.00%, loss = 0.00% per year), the documented _aw == _vintage_aw identity, canonical v3 column integrity, and blacklist registration."
+}

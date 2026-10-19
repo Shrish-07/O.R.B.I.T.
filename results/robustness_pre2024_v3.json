@@ -1,0 +1,1639 @@
+{
+  "metadata": {
+    "canonical_rows": 566956,
+    "canonical_file": "data/canonical/modeling_dataset_canonical_v3.parquet",
+    "sample": "full analysis sample restricted to sample_pre2024 (sale_year <= 2023); pre-2024 rows = 424,730",
+    "motivation": "Tests whether Model 7's positive mayoral estimates come from the 2025 Cuomo-line contamination: sale years 2024-2025 (and the 2024 presidential / 2025 mayoral election waves) are excluded.",
+    "specs": [
+      "model3_boro_fe",
+      "model4_district_fe",
+      "model6_district_year_fe_units",
+      "model7_district_boro_x_year_fe",
+      "model8_district_linear_trends"
+    ],
+    "measures": [
+      "dem_share",
+      "dem_share_mayor_allcand",
+      "dem_share_pres",
+      "dem_share_vintage",
+      "dem_share_mayor_allcand_vintage",
+      "dem_share_pres_vintage",
+      "dem_share_aw",
+      "dem_share_mayor_allcand_aw",
+      "dem_share_pres_aw",
+      "dem_share_vintage_aw",
+      "dem_share_mayor_allcand_vintage_aw",
+      "dem_share_pres_vintage_aw",
+      "dem_share_vintage_dom",
+      "dem_share_mayor_allcand_vintage_dom",
+      "dem_share_pres_vintage_dom"
+    ],
+    "clustering": "council district (CounDist)",
+    "inference": "classical SE, CR1 cluster SE, p from t(G-1), wild-cluster-bootstrap-t p (Webb 6, 9999 reps, seed 42), 95% CI, N, G"
+  },
+  "dem_share": {
+    "model3_boro_fe": {
+      "coef": 0.08193653140542835,
+      "se_classical": 0.010064302242269571,
+      "se_cluster": 0.20351647225466504,
+      "p_t_G_minus_1": 0.6889558069928553,
+      "p_wild_cluster_bootstrap_t": 0.7136,
+      "ci95_low_t": -0.32683833340428087,
+      "ci95_high_t": 0.49071139621513754,
+      "ci95_low_wild": -0.3466136467186684,
+      "ci95_high_wild": 0.518168355254713,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.15613927204874212,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.26
+    },
+    "model4_district_fe": {
+      "coef": 0.09439309101850607,
+      "se_classical": 0.04336027639017096,
+      "se_cluster": 0.4965529715508978,
+      "p_t_G_minus_1": 0.8500030254047941,
+      "p_wild_cluster_bootstrap_t": 0.935,
+      "ci95_low_t": -0.9029629046307597,
+      "ci95_high_t": 1.0917490866677717,
+      "ci95_low_wild": -0.9017937167864429,
+      "ci95_high_wild": 1.0896436184699454,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.19852873413970074,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 1.13
+    },
+    "model6_district_year_fe_units": {
+      "coef": 1.4212464967888674,
+      "se_classical": 0.061846729604573776,
+      "se_cluster": 0.7902856850008217,
+      "p_t_G_minus_1": 0.07815245026326968,
+      "p_wild_cluster_bootstrap_t": 0.18,
+      "ci95_low_t": -0.1660890169823248,
+      "ci95_high_t": 3.0085820105600596,
+      "ci95_low_wild": -0.7168506596907518,
+      "ci95_high_wild": 3.515912930229213,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.28076837904835894,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.98
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": 2.34323541837513,
+      "se_classical": 0.10230459015688535,
+      "se_cluster": 0.8387923902805775,
+      "p_t_G_minus_1": 0.007369770842044124,
+      "p_wild_cluster_bootstrap_t": 0.0067,
+      "ci95_low_t": 0.6584713197162981,
+      "ci95_high_t": 4.027999517033962,
+      "ci95_low_wild": 0.6145358729189225,
+      "ci95_high_wild": 4.088906533224211,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2875452183938082,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.31
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.07608018023406021,
+      "se_classical": 0.10844785159368718,
+      "se_cluster": 0.34355651657830183,
+      "p_t_G_minus_1": 0.825644926132063,
+      "p_wild_cluster_bootstrap_t": 0.846,
+      "ci95_low_t": -0.613973391660884,
+      "ci95_high_t": 0.7661337521290046,
+      "ci95_low_wild": -0.7069567724673271,
+      "ci95_high_wild": 0.8701573614007436,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.290822831487931,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.52
+    }
+  },
+  "dem_share_mayor_allcand": {
+    "model3_boro_fe": {
+      "coef": 0.03496618705423882,
+      "se_classical": 0.010427862819419684,
+      "se_cluster": 0.2009881613290047,
+      "p_t_G_minus_1": 0.8625904279135331,
+      "p_wild_cluster_bootstrap_t": 0.8728,
+      "ci95_low_t": -0.3687304158075114,
+      "ci95_high_t": 0.43866278991598906,
+      "ci95_low_wild": -0.38730686510255,
+      "ci95_high_wild": 0.46304624628918556,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.15602992353938527,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.21
+    },
+    "model4_district_fe": {
+      "coef": 0.4572833306802693,
+      "se_classical": 0.03754426149172183,
+      "se_cluster": 0.33091051857351694,
+      "p_t_G_minus_1": 0.17314739626343886,
+      "p_wild_cluster_bootstrap_t": 0.3113,
+      "ci95_low_t": -0.20737000669055639,
+      "ci95_high_t": 1.121936668051095,
+      "ci95_low_wild": -0.21564269499071542,
+      "ci95_high_wild": 1.124722466978119,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.19879966839482432,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.93
+    },
+    "model6_district_year_fe_units": {
+      "coef": 1.4542321610611577,
+      "se_classical": 0.0570385113332591,
+      "se_cluster": 0.6881144227085753,
+      "p_t_G_minus_1": 0.0395826929980993,
+      "p_wild_cluster_bootstrap_t": 0.1202,
+      "ci95_low_t": 0.07211366716189405,
+      "ci95_high_t": 2.8363506549604214,
+      "ci95_low_wild": -0.4066677106104466,
+      "ci95_high_wild": 3.3169931288191608,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.28104982276661195,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.89
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": 2.130908131711175,
+      "se_classical": 0.09441116924671641,
+      "se_cluster": 0.7464845111192945,
+      "p_t_G_minus_1": 0.0062566484841315734,
+      "p_wild_cluster_bootstrap_t": 0.0061,
+      "ci95_low_t": 0.6315498648604343,
+      "ci95_high_t": 3.6302663985619157,
+      "ci95_low_wild": 0.5890397840534791,
+      "ci95_high_wild": 3.668801206274945,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.28750910847967803,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.23
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.20789400580213724,
+      "se_classical": 0.09982808111963128,
+      "se_cluster": 0.3335595020598546,
+      "p_t_G_minus_1": 0.5359470681883449,
+      "p_wild_cluster_bootstrap_t": 0.5941,
+      "ci95_low_t": -0.4620799714879763,
+      "ci95_high_t": 0.8778679830922508,
+      "ci95_low_wild": -0.5799251422232444,
+      "ci95_high_wild": 0.9918076590551654,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.29083160087864823,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.47
+    }
+  },
+  "dem_share_pres": {
+    "model3_boro_fe": {
+      "coef": -0.15487391227687325,
+      "se_classical": 0.010997333357716474,
+      "se_cluster": 0.22450325448944938,
+      "p_t_G_minus_1": 0.4934771395410258,
+      "p_wild_cluster_bootstrap_t": 0.5362,
+      "ci95_low_t": -0.6058019697779329,
+      "ci95_high_t": 0.29605414522418644,
+      "ci95_low_wild": -0.671622635247805,
+      "ci95_high_wild": 0.3659322810677202,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.15640150729352797,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.2
+    },
+    "model4_district_fe": {
+      "coef": -1.5841506977087272,
+      "se_classical": 0.027499523680739553,
+      "se_cluster": 0.14708087700830552,
+      "p_t_G_minus_1": 1.246602211958048e-14,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": -1.8795713334395305,
+      "ci95_high_t": -1.2887300619779238,
+      "ci95_low_wild": -1.9071382301260706,
+      "ci95_high_wild": -1.2658004807891456,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.20473419131028192,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.92
+    },
+    "model6_district_year_fe_units": {
+      "coef": -0.5141591224547172,
+      "se_classical": 0.06247290132029197,
+      "se_cluster": 0.4246659251849721,
+      "p_t_G_minus_1": 0.23168797675019068,
+      "p_wild_cluster_bootstrap_t": 0.2602,
+      "ci95_low_t": -1.3671257360836928,
+      "ci95_high_t": 0.33880749117425857,
+      "ci95_low_wild": -1.441532440205568,
+      "ci95_high_wild": 0.42699397656570504,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2797038719476549,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.8
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": -0.3200861881592996,
+      "se_classical": 0.07412900712839846,
+      "se_cluster": 0.3738155059221075,
+      "p_t_G_minus_1": 0.3959348148609624,
+      "p_wild_cluster_bootstrap_t": 0.4576,
+      "ci95_low_t": -1.0709167288237047,
+      "ci95_high_t": 0.4307443525051054,
+      "ci95_low_wild": -1.2526189503794654,
+      "ci95_high_wild": 0.6337238309091175,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.28638625670439866,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.24
+    },
+    "model8_district_linear_trends": {
+      "coef": -0.0349914850794743,
+      "se_classical": 0.1035259188231119,
+      "se_cluster": 0.23825623164335766,
+      "p_t_G_minus_1": 0.8838292171522367,
+      "p_wild_cluster_bootstrap_t": 0.8884,
+      "ci95_low_t": -0.51354321016153,
+      "ci95_high_t": 0.44356024000258143,
+      "ci95_low_wild": -0.5303603185435207,
+      "ci95_high_wild": 0.45181104552382045,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.29082196950363315,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.48
+    }
+  },
+  "dem_share_vintage": {
+    "model3_boro_fe": {
+      "coef": 0.04499703140306774,
+      "se_classical": 0.008371250293830455,
+      "se_cluster": 0.19154259525156642,
+      "p_t_G_minus_1": 0.8152308909653055,
+      "p_wild_cluster_bootstrap_t": 0.8419,
+      "ci95_low_t": -0.3397275936448939,
+      "ci95_high_t": 0.42972165645102944,
+      "ci95_low_wild": -0.39904499728244114,
+      "ci95_high_wild": 0.4823543134576449,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.1560649918850301,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.2
+    },
+    "model4_district_fe": {
+      "coef": 0.1997070026758242,
+      "se_classical": 0.03778157742315131,
+      "se_cluster": 0.4373720628129415,
+      "p_t_G_minus_1": 0.6499312248410162,
+      "p_wild_cluster_bootstrap_t": 0.8824,
+      "ci95_low_t": -0.6787806394654159,
+      "ci95_high_t": 1.0781946448170643,
+      "ci95_low_wild": -0.8396644403504206,
+      "ci95_high_wild": 1.2294694717072336,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.1985725174370887,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.89
+    },
+    "model6_district_year_fe_units": {
+      "coef": 1.265492815151575,
+      "se_classical": 0.05485917351719796,
+      "se_cluster": 0.6883764117927434,
+      "p_t_G_minus_1": 0.07195114319988416,
+      "p_wild_cluster_bootstrap_t": 0.2323,
+      "ci95_low_t": -0.11715189930996561,
+      "ci95_high_t": 2.6481375296131153,
+      "ci95_low_wild": -0.7883926561662349,
+      "ci95_high_wild": 3.270514516479981,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2807777232215519,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.82
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": 1.7709306906757436,
+      "se_classical": 0.0821873810357616,
+      "se_cluster": 0.6371714747380938,
+      "p_t_G_minus_1": 0.00765425632437058,
+      "p_wild_cluster_bootstrap_t": 0.012,
+      "ci95_low_t": 0.4911341191198655,
+      "ci95_high_t": 3.0507272622316215,
+      "ci95_low_wild": 0.30461147412445166,
+      "ci95_high_wild": 3.2275461349945953,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.28740757203209943,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.23
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.004653780272767481,
+      "se_classical": 0.09560487512153056,
+      "se_cluster": 0.27066373227880597,
+      "p_t_G_minus_1": 0.9863503122725412,
+      "p_wild_cluster_bootstrap_t": 0.9906,
+      "ci95_low_t": -0.5389903255110291,
+      "ci95_high_t": 0.5482978860565642,
+      "ci95_low_wild": -0.6665281010633919,
+      "ci95_high_wild": 0.6731996513764406,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.29082171433127013,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.44
+    }
+  },
+  "dem_share_mayor_allcand_vintage": {
+    "model3_boro_fe": {
+      "coef": 0.011322588526896016,
+      "se_classical": 0.008673153286988942,
+      "se_cluster": 0.1920925930153241,
+      "p_t_G_minus_1": 0.9532321509644346,
+      "p_wild_cluster_bootstrap_t": 0.9613,
+      "ci95_low_t": -0.37450673954109626,
+      "ci95_high_t": 0.39715191659488824,
+      "ci95_low_wild": -0.432325116875102,
+      "ci95_high_wild": 0.4497207806947131,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.15601096777554246,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.2
+    },
+    "model4_district_fe": {
+      "coef": 0.4416416762571363,
+      "se_classical": 0.03333639897584887,
+      "se_cluster": 0.29069224656919934,
+      "p_t_G_minus_1": 0.1349917499517309,
+      "p_wild_cluster_bootstrap_t": 0.3719,
+      "ci95_low_t": -0.1422308844064703,
+      "ci95_high_t": 1.0255142369207428,
+      "ci95_low_wild": -0.2358042222698467,
+      "ci95_high_wild": 1.1151552299073384,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.19885089114218157,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.88
+    },
+    "model6_district_year_fe_units": {
+      "coef": 1.301646161012306,
+      "se_classical": 0.050687587732389884,
+      "se_cluster": 0.5977556093998726,
+      "p_t_G_minus_1": 0.03418451982697806,
+      "p_wild_cluster_bootstrap_t": 0.1386,
+      "ci95_low_t": 0.10101868494284849,
+      "ci95_high_t": 2.5022736370817635,
+      "ci95_low_wild": -0.4201187599437042,
+      "ci95_high_wild": 3.004452971983479,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.28107156601556627,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.81
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": 1.6867618914924154,
+      "se_classical": 0.07659576544798069,
+      "se_cluster": 0.5855019825189256,
+      "p_t_G_minus_1": 0.005826828520332367,
+      "p_wild_cluster_bootstrap_t": 0.0074,
+      "ci95_low_t": 0.5107465493509669,
+      "ci95_high_t": 2.8627772336338637,
+      "ci95_low_wild": 0.3618919638607425,
+      "ci95_high_wild": 2.992075341005502,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2874539777682791,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.19
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.13973309131654404,
+      "se_classical": 0.08829851007817391,
+      "se_cluster": 0.2849562547591418,
+      "p_t_G_minus_1": 0.6260194292486361,
+      "p_wild_cluster_bootstrap_t": 0.6958,
+      "ci95_low_t": -0.4326183907300361,
+      "ci95_high_t": 0.7120845733631243,
+      "ci95_low_wild": -0.5724013695912764,
+      "ci95_high_wild": 0.8421516445011856,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.29082742105366843,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.41
+    }
+  },
+  "dem_share_pres_vintage": {
+    "model3_boro_fe": {
+      "coef": -0.10704830291287402,
+      "se_classical": 0.009738026409667479,
+      "se_cluster": 0.24202555368230225,
+      "p_t_G_minus_1": 0.6601783330619118,
+      "p_wild_cluster_bootstrap_t": 0.7233,
+      "ci95_low_t": -0.5931709341226941,
+      "ci95_high_t": 0.37907432829694604,
+      "ci95_low_wild": -0.6941628280562153,
+      "ci95_high_wild": 0.48455125576549585,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.15624764673253333,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.2
+    },
+    "model4_district_fe": {
+      "coef": -1.7843827496655071,
+      "se_classical": 0.029693810714754194,
+      "se_cluster": 0.14741609437510686,
+      "p_t_G_minus_1": 1.7803835228366104e-16,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": -2.080476689292934,
+      "ci95_high_t": -1.4882888100380804,
+      "ci95_low_wild": -2.0948325697930645,
+      "ci95_high_wild": -1.4812410700184135,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.20527756880322556,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.88
+    },
+    "model6_district_year_fe_units": {
+      "coef": -0.4831422254394405,
+      "se_classical": 0.07753060850344612,
+      "se_cluster": 0.6917786757497669,
+      "p_t_G_minus_1": 0.48815919266945595,
+      "p_wild_cluster_bootstrap_t": 0.5251,
+      "ci95_low_t": -1.8726205881736329,
+      "ci95_high_t": 0.9063361372947517,
+      "ci95_low_wild": -2.036987669048387,
+      "ci95_high_wild": 1.0533545602532182,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2796369355712055,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.81
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": -0.2772454520499399,
+      "se_classical": 0.10006186797377037,
+      "se_cluster": 0.5173077851524047,
+      "p_t_G_minus_1": 0.5943769421830156,
+      "p_wild_cluster_bootstrap_t": 0.6159,
+      "ci95_low_t": -1.3162887176784652,
+      "ci95_high_t": 0.7617978135785854,
+      "ci95_low_wild": -1.3427810320243225,
+      "ci95_high_wild": 0.7780891565783365,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.28635983050094926,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.17
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.5406251879121916,
+      "se_classical": 0.14440466534464597,
+      "se_cluster": 0.3768979648913855,
+      "p_t_G_minus_1": 0.15768129340850814,
+      "p_wild_cluster_bootstrap_t": 0.1552,
+      "ci95_low_t": -0.2163966538026335,
+      "ci95_high_t": 1.2976470296270168,
+      "ci95_low_wild": -0.23109683102881362,
+      "ci95_high_wild": 1.3540928459544368,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2908536772672107,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.39
+    }
+  },
+  "dem_share_aw": {
+    "model3_boro_fe": {
+      "coef": 0.03444632331518507,
+      "se_classical": 0.007846520543736902,
+      "se_cluster": 0.17684710621350921,
+      "p_t_G_minus_1": 0.8463542910835284,
+      "p_wild_cluster_bootstrap_t": 0.867,
+      "ci95_low_t": -0.32076154331860995,
+      "ci95_high_t": 0.38965418994898016,
+      "ci95_low_wild": -0.3758006106458486,
+      "ci95_high_wild": 0.4343148419544707,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.15604587660731872,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.2
+    },
+    "model4_district_fe": {
+      "coef": 0.3018088791053621,
+      "se_classical": 0.03680926239702151,
+      "se_cluster": 0.3936749188029174,
+      "p_t_G_minus_1": 0.44689739155743735,
+      "p_wild_cluster_bootstrap_t": 0.8068,
+      "ci95_low_t": -0.4889104662617649,
+      "ci95_high_t": 1.092528224472489,
+      "ci95_low_wild": -0.7231119278683971,
+      "ci95_high_wild": 1.3203939202247177,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.19864664829847423,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.88
+    },
+    "model6_district_year_fe_units": {
+      "coef": 1.281366770573411,
+      "se_classical": 0.053524201623463774,
+      "se_cluster": 0.6544572344036858,
+      "p_t_G_minus_1": 0.05583292676266483,
+      "p_wild_cluster_bootstrap_t": 0.2276,
+      "ci95_low_t": -0.03314927106837562,
+      "ci95_high_t": 2.595882812215198,
+      "ci95_low_wild": -0.7965329696068935,
+      "ci95_high_wild": 3.3039948196041466,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2808723466620182,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.8
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": 1.6284568568957154,
+      "se_classical": 0.07623167049706875,
+      "se_cluster": 0.5756469686664591,
+      "p_t_G_minus_1": 0.006704623840404833,
+      "p_wild_cluster_bootstrap_t": 0.0129,
+      "ci95_low_t": 0.47223589262751764,
+      "ci95_high_t": 2.784677821163913,
+      "ci95_low_wild": 0.25980942465591794,
+      "ci95_high_wild": 2.9839033971123854,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.287387312607164,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.19
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.04027394408269857,
+      "se_classical": 0.09349383235550095,
+      "se_cluster": 0.28006931480493213,
+      "p_t_G_minus_1": 0.8862364822151356,
+      "p_wild_cluster_bootstrap_t": 0.9129,
+      "ci95_low_t": -0.5222618301885644,
+      "ci95_high_t": 0.6028097183539616,
+      "ci95_low_wild": -0.6716601983590764,
+      "ci95_high_wild": 0.7495515238801328,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.29082213217157515,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.43
+    }
+  },
+  "dem_share_mayor_allcand_aw": {
+    "model3_boro_fe": {
+      "coef": 0.005095143061589669,
+      "se_classical": 0.008118479224944308,
+      "se_cluster": 0.17709032877994593,
+      "p_t_G_minus_1": 0.9771614167506036,
+      "p_wild_cluster_bootstrap_t": 0.9817,
+      "ci95_low_t": -0.3506012504742904,
+      "ci95_high_t": 0.3607915365974697,
+      "ci95_low_wild": -0.40521943829721296,
+      "ci95_high_wild": 0.40661334856811127,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.1560083638226355,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.2
+    },
+    "model4_district_fe": {
+      "coef": 0.5016911213711518,
+      "se_classical": 0.032394245804079284,
+      "se_cluster": 0.2614879693029374,
+      "p_t_G_minus_1": 0.06075310447970913,
+      "p_wild_cluster_bootstrap_t": 0.2309,
+      "ci95_low_t": -0.02352292207698714,
+      "ci95_high_t": 1.0269051648192908,
+      "ci95_low_wild": -0.1568608250557194,
+      "ci95_high_wild": 1.1543214821285672,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.1989721968774406,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.86
+    },
+    "model6_district_year_fe_units": {
+      "coef": 1.3087468158313889,
+      "se_classical": 0.0493029850328404,
+      "se_cluster": 0.5648601001975239,
+      "p_t_G_minus_1": 0.02464258694826796,
+      "p_wild_cluster_bootstrap_t": 0.1267,
+      "ci95_low_t": 0.17419191451750327,
+      "ci95_high_t": 2.4433017171452747,
+      "ci95_low_wild": -0.369621765236263,
+      "ci95_high_wild": 2.9663850059217616,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2811757929673827,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.8
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": 1.5519490501609228,
+      "se_classical": 0.07096052971642924,
+      "se_cluster": 0.5319355398430958,
+      "p_t_G_minus_1": 0.005272986361331678,
+      "p_wild_cluster_bootstrap_t": 0.0076,
+      "ci95_low_t": 0.4835250745588351,
+      "ci95_high_t": 2.6203730257630102,
+      "ci95_low_wild": 0.3232080450531589,
+      "ci95_high_wild": 2.763472182815861,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2874393465947531,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.17
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.16402121655384808,
+      "se_classical": 0.08612324351007919,
+      "se_cluster": 0.29756581602737064,
+      "p_t_G_minus_1": 0.5839447396149897,
+      "p_wild_cluster_bootstrap_t": 0.6695,
+      "ci95_low_t": -0.4336573146776259,
+      "ci95_high_t": 0.761699747785322,
+      "ci95_low_wild": -0.5929210391241263,
+      "ci95_high_wild": 0.9070825793082667,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.29082998194153964,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.41
+    }
+  },
+  "dem_share_pres_aw": {
+    "model3_boro_fe": {
+      "coef": -0.11348199683437547,
+      "se_classical": 0.009174301206712575,
+      "se_cluster": 0.22501578600089583,
+      "p_t_G_minus_1": 0.6162454981338266,
+      "p_wild_cluster_bootstrap_t": 0.6843,
+      "ci95_low_t": -0.5654395041729897,
+      "ci95_high_t": 0.33847551050423874,
+      "ci95_low_wild": -0.6650596565396852,
+      "ci95_high_wild": 0.4390785865568339,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.15631152076375654,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.2
+    },
+    "model4_district_fe": {
+      "coef": -1.7742473346519143,
+      "se_classical": 0.030033056411257444,
+      "se_cluster": 0.15809778664628066,
+      "p_t_G_minus_1": 2.8808915637094704e-15,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": -2.0917960846232635,
+      "ci95_high_t": -1.4566985846805653,
+      "ci95_low_wild": -2.10742045750354,
+      "ci95_high_wild": -1.4506561439540797,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.2050527785323244,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.88
+    },
+    "model6_district_year_fe_units": {
+      "coef": -0.37441082097848244,
+      "se_classical": 0.076114896946097,
+      "se_cluster": 0.6741726233813765,
+      "p_t_G_minus_1": 0.5811225171763781,
+      "p_wild_cluster_bootstrap_t": 0.6162,
+      "ci95_low_t": -1.728526386800021,
+      "ci95_high_t": 0.979704744843056,
+      "ci95_low_wild": -1.8480847276965369,
+      "ci95_high_wild": 1.0769186780715132,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2796030325706912,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.8
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": -0.09363514135300338,
+      "se_classical": 0.09486508653674298,
+      "se_cluster": 0.4955161677790848,
+      "p_t_G_minus_1": 0.8508853111745069,
+      "p_wild_cluster_bootstrap_t": 0.8622,
+      "ci95_low_t": -1.0889086553389338,
+      "ci95_high_t": 0.9016383726329269,
+      "ci95_low_wild": -1.1117485768622006,
+      "ci95_high_wild": 0.8972134549285995,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2863464927403453,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.18
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.5879085391877907,
+      "se_classical": 0.13870811836374522,
+      "se_cluster": 0.34857225146621634,
+      "p_t_G_minus_1": 0.09790732603451974,
+      "p_wild_cluster_bootstrap_t": 0.1019,
+      "ci95_low_t": -0.112219432720156,
+      "ci95_high_t": 1.2880365110957375,
+      "ci95_low_wild": -0.11610711507714555,
+      "ci95_high_wild": 1.319537770576431,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.29086268216132927,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.42
+    }
+  },
+  "dem_share_vintage_aw": {
+    "model3_boro_fe": {
+      "coef": 0.03444632331518507,
+      "se_classical": 0.007846520543736902,
+      "se_cluster": 0.17684710621350921,
+      "p_t_G_minus_1": 0.8463542910835284,
+      "p_wild_cluster_bootstrap_t": 0.867,
+      "ci95_low_t": -0.32076154331860995,
+      "ci95_high_t": 0.38965418994898016,
+      "ci95_low_wild": -0.3758006106458486,
+      "ci95_high_wild": 0.4343148419544707,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.15604587660731872,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.2
+    },
+    "model4_district_fe": {
+      "coef": 0.3018088791053621,
+      "se_classical": 0.03680926239702151,
+      "se_cluster": 0.3936749188029174,
+      "p_t_G_minus_1": 0.44689739155743735,
+      "p_wild_cluster_bootstrap_t": 0.8068,
+      "ci95_low_t": -0.4889104662617649,
+      "ci95_high_t": 1.092528224472489,
+      "ci95_low_wild": -0.7231119278683971,
+      "ci95_high_wild": 1.3203939202247177,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.19864664829847423,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.87
+    },
+    "model6_district_year_fe_units": {
+      "coef": 1.281366770573411,
+      "se_classical": 0.053524201623463774,
+      "se_cluster": 0.6544572344036858,
+      "p_t_G_minus_1": 0.05583292676266483,
+      "p_wild_cluster_bootstrap_t": 0.2276,
+      "ci95_low_t": -0.03314927106837562,
+      "ci95_high_t": 2.595882812215198,
+      "ci95_low_wild": -0.7965329696068935,
+      "ci95_high_wild": 3.3039948196041466,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2808723466620182,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.81
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": 1.6284568568957154,
+      "se_classical": 0.07623167049706875,
+      "se_cluster": 0.5756469686664591,
+      "p_t_G_minus_1": 0.006704623840404833,
+      "p_wild_cluster_bootstrap_t": 0.0129,
+      "ci95_low_t": 0.47223589262751764,
+      "ci95_high_t": 2.784677821163913,
+      "ci95_low_wild": 0.25980942465591794,
+      "ci95_high_wild": 2.9839033971123854,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.287387312607164,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.18
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.04027394408269857,
+      "se_classical": 0.09349383235550095,
+      "se_cluster": 0.28006931480493213,
+      "p_t_G_minus_1": 0.8862364822151356,
+      "p_wild_cluster_bootstrap_t": 0.9129,
+      "ci95_low_t": -0.5222618301885644,
+      "ci95_high_t": 0.6028097183539616,
+      "ci95_low_wild": -0.6716601983590764,
+      "ci95_high_wild": 0.7495515238801328,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.29082213217157515,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.4
+    }
+  },
+  "dem_share_mayor_allcand_vintage_aw": {
+    "model3_boro_fe": {
+      "coef": 0.005095143061589669,
+      "se_classical": 0.008118479224944308,
+      "se_cluster": 0.17709032877994593,
+      "p_t_G_minus_1": 0.9771614167506036,
+      "p_wild_cluster_bootstrap_t": 0.9817,
+      "ci95_low_t": -0.3506012504742904,
+      "ci95_high_t": 0.3607915365974697,
+      "ci95_low_wild": -0.40521943829721296,
+      "ci95_high_wild": 0.40661334856811127,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.1560083638226355,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.2
+    },
+    "model4_district_fe": {
+      "coef": 0.5016911213711518,
+      "se_classical": 0.032394245804079284,
+      "se_cluster": 0.2614879693029374,
+      "p_t_G_minus_1": 0.06075310447970913,
+      "p_wild_cluster_bootstrap_t": 0.2309,
+      "ci95_low_t": -0.02352292207698714,
+      "ci95_high_t": 1.0269051648192908,
+      "ci95_low_wild": -0.1568608250557194,
+      "ci95_high_wild": 1.1543214821285672,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.1989721968774406,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.87
+    },
+    "model6_district_year_fe_units": {
+      "coef": 1.3087468158313889,
+      "se_classical": 0.0493029850328404,
+      "se_cluster": 0.5648601001975239,
+      "p_t_G_minus_1": 0.02464258694826796,
+      "p_wild_cluster_bootstrap_t": 0.1267,
+      "ci95_low_t": 0.17419191451750327,
+      "ci95_high_t": 2.4433017171452747,
+      "ci95_low_wild": -0.369621765236263,
+      "ci95_high_wild": 2.9663850059217616,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2811757929673827,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.86
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": 1.5519490501609228,
+      "se_classical": 0.07096052971642924,
+      "se_cluster": 0.5319355398430958,
+      "p_t_G_minus_1": 0.005272986361331678,
+      "p_wild_cluster_bootstrap_t": 0.0076,
+      "ci95_low_t": 0.4835250745588351,
+      "ci95_high_t": 2.6203730257630102,
+      "ci95_low_wild": 0.3232080450531589,
+      "ci95_high_wild": 2.763472182815861,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2874393465947531,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.19
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.16402121655384808,
+      "se_classical": 0.08612324351007919,
+      "se_cluster": 0.29756581602737064,
+      "p_t_G_minus_1": 0.5839447396149897,
+      "p_wild_cluster_bootstrap_t": 0.6695,
+      "ci95_low_t": -0.4336573146776259,
+      "ci95_high_t": 0.761699747785322,
+      "ci95_low_wild": -0.5929210391241263,
+      "ci95_high_wild": 0.9070825793082667,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.29082998194153964,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.41
+    }
+  },
+  "dem_share_pres_vintage_aw": {
+    "model3_boro_fe": {
+      "coef": -0.11348199683437547,
+      "se_classical": 0.009174301206712575,
+      "se_cluster": 0.22501578600089583,
+      "p_t_G_minus_1": 0.6162454981338266,
+      "p_wild_cluster_bootstrap_t": 0.6843,
+      "ci95_low_t": -0.5654395041729897,
+      "ci95_high_t": 0.33847551050423874,
+      "ci95_low_wild": -0.6650596565396852,
+      "ci95_high_wild": 0.4390785865568339,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.15631152076375654,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.2
+    },
+    "model4_district_fe": {
+      "coef": -1.7742473346519143,
+      "se_classical": 0.030033056411257444,
+      "se_cluster": 0.15809778664628066,
+      "p_t_G_minus_1": 2.8808915637094704e-15,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": -2.0917960846232635,
+      "ci95_high_t": -1.4566985846805653,
+      "ci95_low_wild": -2.10742045750354,
+      "ci95_high_wild": -1.4506561439540797,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.2050527785323244,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.88
+    },
+    "model6_district_year_fe_units": {
+      "coef": -0.37441082097848244,
+      "se_classical": 0.076114896946097,
+      "se_cluster": 0.6741726233813765,
+      "p_t_G_minus_1": 0.5811225171763781,
+      "p_wild_cluster_bootstrap_t": 0.6162,
+      "ci95_low_t": -1.728526386800021,
+      "ci95_high_t": 0.979704744843056,
+      "ci95_low_wild": -1.8480847276965369,
+      "ci95_high_wild": 1.0769186780715132,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2796030325706912,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.8
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": -0.09363514135300338,
+      "se_classical": 0.09486508653674298,
+      "se_cluster": 0.4955161677790848,
+      "p_t_G_minus_1": 0.8508853111745069,
+      "p_wild_cluster_bootstrap_t": 0.8622,
+      "ci95_low_t": -1.0889086553389338,
+      "ci95_high_t": 0.9016383726329269,
+      "ci95_low_wild": -1.1117485768622006,
+      "ci95_high_wild": 0.8972134549285995,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2863464927403453,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.18
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.5879085391877907,
+      "se_classical": 0.13870811836374522,
+      "se_cluster": 0.34857225146621634,
+      "p_t_G_minus_1": 0.09790732603451974,
+      "p_wild_cluster_bootstrap_t": 0.1019,
+      "ci95_low_t": -0.112219432720156,
+      "ci95_high_t": 1.2880365110957375,
+      "ci95_low_wild": -0.11610711507714555,
+      "ci95_high_wild": 1.319537770576431,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.29086268216132927,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.42
+    }
+  },
+  "dem_share_vintage_dom": {
+    "model3_boro_fe": {
+      "coef": 0.03604058813632113,
+      "se_classical": 0.00783620118433174,
+      "se_cluster": 0.17701554904390407,
+      "p_t_G_minus_1": 0.8394914968327426,
+      "p_wild_cluster_bootstrap_t": 0.8607,
+      "ci95_low_t": -0.3195056058793315,
+      "ci95_high_t": 0.39158678215197384,
+      "ci95_low_wild": -0.3758046121205477,
+      "ci95_high_wild": 0.4379119625777982,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.15604961376794424,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.2
+    },
+    "model4_district_fe": {
+      "coef": 0.3010501886591219,
+      "se_classical": 0.03679613499202209,
+      "se_cluster": 0.39366889939190935,
+      "p_t_G_minus_1": 0.44802706621330934,
+      "p_wild_cluster_bootstrap_t": 0.8058,
+      "ci95_low_t": -0.48965706636517536,
+      "ci95_high_t": 1.0917574436834192,
+      "ci95_low_wild": -0.7217850658924096,
+      "ci95_high_wild": 1.316039190961375,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.19864610146925543,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.86
+    },
+    "model6_district_year_fe_units": {
+      "coef": 1.284690715978995,
+      "se_classical": 0.05344684842510376,
+      "se_cluster": 0.6522578086908408,
+      "p_t_G_minus_1": 0.05443627323021035,
+      "p_wild_cluster_bootstrap_t": 0.2228,
+      "ci95_low_t": -0.025407649105868346,
+      "ci95_high_t": 2.5947890810638583,
+      "ci95_low_wild": -0.7784298713982074,
+      "ci95_high_wild": 3.298997475882989,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2808830709472776,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.8
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": 1.6371181370253478,
+      "se_classical": 0.07608734833802054,
+      "se_cluster": 0.5716180808619481,
+      "p_t_G_minus_1": 0.006099440428908566,
+      "p_wild_cluster_bootstrap_t": 0.0111,
+      "ci95_low_t": 0.4889894320685322,
+      "ci95_high_t": 2.7852468419821634,
+      "ci95_low_wild": 0.2790203251285128,
+      "ci95_high_wild": 2.977238582106552,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2874039665743475,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.19
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.0460791982625097,
+      "se_classical": 0.09339140175461577,
+      "se_cluster": 0.28115299395248095,
+      "p_t_G_minus_1": 0.8704755630911996,
+      "p_wild_cluster_bootstrap_t": 0.8997,
+      "ci95_low_t": -0.518633209635156,
+      "ci95_high_t": 0.6107916061601755,
+      "ci95_low_wild": -0.6672259849790148,
+      "ci95_high_wild": 0.7561936388107195,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2908222641980508,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.44
+    }
+  },
+  "dem_share_mayor_allcand_vintage_dom": {
+    "model3_boro_fe": {
+      "coef": 0.006771988951502163,
+      "se_classical": 0.008109878085748137,
+      "se_cluster": 0.1772634244440555,
+      "p_t_G_minus_1": 0.9696779821652154,
+      "p_wild_cluster_bootstrap_t": 0.9746,
+      "ci95_low_t": -0.34927207745779026,
+      "ci95_high_t": 0.3628160553607946,
+      "ci95_low_wild": -0.4033514235258959,
+      "ci95_high_wild": 0.4108871822437803,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.15600896671977083,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.2
+    },
+    "model4_district_fe": {
+      "coef": 0.5009385438739445,
+      "se_classical": 0.03240155528390867,
+      "se_cluster": 0.2621670974416764,
+      "p_t_G_minus_1": 0.06177763849349776,
+      "p_wild_cluster_bootstrap_t": 0.233,
+      "ci95_low_t": -0.025639568585542727,
+      "ci95_high_t": 1.027516656333432,
+      "ci95_low_wild": -0.15769909314747044,
+      "ci95_high_wild": 1.1528929738894576,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.19897063799690717,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.88
+    },
+    "model6_district_year_fe_units": {
+      "coef": 1.3124607782868059,
+      "se_classical": 0.049264466372978925,
+      "se_cluster": 0.5633904005197179,
+      "p_t_G_minus_1": 0.023907853110911367,
+      "p_wild_cluster_bootstrap_t": 0.1236,
+      "ci95_low_t": 0.18085785565282908,
+      "ci95_high_t": 2.4440637009207826,
+      "ci95_low_wild": -0.35442873546224174,
+      "ci95_high_wild": 2.9603322563850085,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2811875862119252,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.8
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": 1.5623354699286127,
+      "se_classical": 0.07090804034632835,
+      "se_cluster": 0.5279400511080665,
+      "p_t_G_minus_1": 0.004702158376024445,
+      "p_wild_cluster_bootstrap_t": 0.0062,
+      "ci95_low_t": 0.5019366696325642,
+      "ci95_high_t": 2.622734270224661,
+      "ci95_low_wild": 0.34613310481921755,
+      "ci95_high_wild": 2.760505384767521,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2874552873513718,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.19
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.16966446726980228,
+      "se_classical": 0.08607948195619002,
+      "se_cluster": 0.29879560469847266,
+      "p_t_G_minus_1": 0.5726929993581464,
+      "p_wild_cluster_bootstrap_t": 0.6597,
+      "ci95_low_t": -0.43048416720297195,
+      "ci95_high_t": 0.7698131017425764,
+      "ci95_low_wild": -0.5860423671785682,
+      "ci95_high_wild": 0.9152275705441952,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.29083057000648704,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.42
+    }
+  },
+  "dem_share_pres_vintage_dom": {
+    "model3_boro_fe": {
+      "coef": -0.11124912993429574,
+      "se_classical": 0.009171901920163318,
+      "se_cluster": 0.22523040380361056,
+      "p_t_G_minus_1": 0.6235152184831619,
+      "p_wild_cluster_bootstrap_t": 0.6888,
+      "ci95_low_t": -0.5636377098161717,
+      "ci95_high_t": 0.34113944994758016,
+      "ci95_low_wild": -0.6634633040948383,
+      "ci95_high_wild": 0.4435170848074422,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.1562998347127208,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 10,
+      "fit_seconds": 0.2
+    },
+    "model4_district_fe": {
+      "coef": -1.7738598054468566,
+      "se_classical": 0.030040940221486612,
+      "se_cluster": 0.15854262793269783,
+      "p_t_G_minus_1": 3.21300370436904e-15,
+      "p_wild_cluster_bootstrap_t": 0.0001,
+      "ci95_low_t": -2.0923020454374774,
+      "ci95_high_t": -1.4554175654562358,
+      "ci95_low_wild": -2.107849604807147,
+      "ci95_high_wild": -1.4487766922318919,
+      "n": 424730,
+      "n_clusters_G": 51,
+      "r_squared": 0.20504654910336773,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 56,
+      "fit_seconds": 0.87
+    },
+    "model6_district_year_fe_units": {
+      "coef": -0.38269820317108333,
+      "se_classical": 0.07576579601854233,
+      "se_cluster": 0.6701956223549992,
+      "p_t_G_minus_1": 0.5705407411967744,
+      "p_wild_cluster_bootstrap_t": 0.6069,
+      "ci95_low_t": -1.7288257273422574,
+      "ci95_high_t": 0.9634293210000908,
+      "ci95_low_wild": -1.844529349770412,
+      "ci95_high_wild": 1.0612573493812203,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2796060821989286,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 65,
+      "fit_seconds": 0.8
+    },
+    "model7_district_boro_x_year_fe": {
+      "coef": -0.11093974954748076,
+      "se_classical": 0.09392501878056236,
+      "se_cluster": 0.4890533252411245,
+      "p_t_G_minus_1": 0.8214684788706933,
+      "p_wild_cluster_bootstrap_t": 0.8341,
+      "ci95_low_t": -1.0932322622637185,
+      "ci95_high_t": 0.871352763168757,
+      "ci95_low_wild": -1.1118001849913632,
+      "ci95_high_wild": 0.8664597864901986,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.2863448772588518,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 97,
+      "fit_seconds": 1.2
+    },
+    "model8_district_linear_trends": {
+      "coef": 0.5769843137868129,
+      "se_classical": 0.13784392466954726,
+      "se_cluster": 0.34637115505497973,
+      "p_t_G_minus_1": 0.10200772838228929,
+      "p_wild_cluster_bootstrap_t": 0.1067,
+      "ci95_low_t": -0.11872262586773219,
+      "ci95_high_t": 1.2726912534413581,
+      "ci95_low_wild": -0.12515195081691866,
+      "ci95_high_wild": 1.303028496926626,
+      "n": 311033,
+      "n_clusters_G": 51,
+      "r_squared": 0.29086167006474595,
+      "wild_bootstrap": {
+        "weights": "webb6",
+        "reps": 9999,
+        "seed": 42
+      },
+      "k_params": 115,
+      "fit_seconds": 1.42
+    }
+  }
+}

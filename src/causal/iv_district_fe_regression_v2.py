@@ -23,7 +23,12 @@ recorded specification arms:
     as the running variable with a linear term interacted with Z on each
     side (instruments: Z and Z x margin; exog: margin, controls, district
     FE, sale-year FE), reporting the first-stage joint partial F of the
-    excluded instruments.
+    excluded instruments. Round 13 (R4): the fit now uses
+    cov_type='clustered' with clusters=CounDist; a singular clustered
+    covariance marks the spec 'not estimable' with no unadjusted fallback.
+    The JSON also carries an explicit council_district_vintage_mismatch
+    flag (prior-cycle winners elected under the pre-2022 plan mapped onto
+    current-district sales rows).
 
 Output: results/causal/iv_district_fe_results_v2.json (the original
 results/causal/iv_district_fe_results.json is NOT modified).
@@ -115,31 +120,63 @@ def matched_ols(d, measure):
 
 def rd_local_linear(d):
     """2SLS with instruments Z and Z x margin (linear slope each side),
-    margin as an exogenous running-variable control."""
+    margin as an exogenous running-variable control.
+
+    Round 13 (R4) fix: fitted with cov_type='clustered', clusters =
+    CounDist (district-cycle level clustering). The previous default
+    heteroskedasticity-robust covariance produced first-stage joint F
+    values of 3,000-77,000 and second-stage SEs that ignored the
+    district clustering. If the clustered covariance is singular /
+    non-finite, the spec is marked 'not estimable'; there is NO
+    unadjusted fallback."""
     dd = d.copy()
     dd["Zxmargin"] = dd["Z"] * dd["margin"]
     exog = pd.concat([exog_for(dd), dd[["margin"]].astype(float)], axis=1)
     try:
         res = IV2SLS(dd["target_log_price"].astype(float), exog,
                      dd["dem_share"].astype(float),
-                     dd[["Z", "Zxmargin"]].astype(float)).fit()
+                     dd[["Z", "Zxmargin"]].astype(float)).fit(
+                         cov_type="clustered",
+                         clusters=dd["CounDist"].astype(int))
         fs = res.first_stage.diagnostics.loc["dem_share"]
+        f_stat = float(fs["f.stat"])
+        cov_diag = np.asarray(res.cov, dtype=float).diagonal()
+        cov_ok = (np.isfinite(f_stat) and np.isfinite(cov_diag).all()
+                  and (cov_diag > 0).all()
+                  and np.isfinite(float(res.std_errors["dem_share"])))
+        if not cov_ok:
+            return {"identified": False,
+                    "status": "not estimable",
+                    "reason": ("clustered covariance singular or non-finite "
+                               "at this bandwidth; no unadjusted fallback "
+                               "is applied"),
+                    "n": int(len(dd)),
+                    "n_clusters_G": int(dd["CounDist"].nunique())}
         return {
             "identified": True,
-            "first_stage_joint_f_excluded_instruments": float(fs["f.stat"]),
+            "status": "estimated (covariance clustered by CounDist)",
+            "first_stage_joint_f_excluded_instruments": f_stat,
             "first_stage_joint_f_pvalue": float(fs["f.pval"]),
             "dem_share_coef": float(res.params["dem_share"]),
             "dem_share_se": float(res.std_errors["dem_share"]),
             "dem_share_p": float(res.pvalues["dem_share"]),
             "n": int(res.nobs),
             "n_clusters_G": int(dd["CounDist"].nunique()),
+            "covariance": ("clustered by council district (CounDist), "
+                           "district-cycle level clustering; Round 13 (R4) "
+                           "fix — the pre-fix default "
+                           "heteroskedasticity-robust fit reported "
+                           "first-stage F of 3,000-77,000 and SEs that "
+                           "ignored the clustering"),
             "spec": ("instruments: Z, Z x margin_pct (linear each side); "
                      "exog: margin_pct + controls + district FE + "
                      "sale-year FE; sample: close-race cells within the "
                      "bandwidth"),
         }
     except Exception as e:
-        return {"identified": False, "error": str(e),
+        return {"identified": False, "status": "not estimable",
+                "reason": f"clustered fit failed: {e}; no unadjusted "
+                          "fallback is applied",
                 "n": int(len(dd)),
                 "n_clusters_G": int(dd["CounDist"].nunique())}
 
@@ -159,6 +196,25 @@ def main():
                     "results/causal/iv_district_fe_results.json and its 12 "
                     "recorded specification arms are unchanged."),
         "benchmark_pointer": "matched_ols_benchmark",
+        "council_district_vintage_mismatch": {
+            "flag": True,
+            "finding": ("The close-election instrument maps prior-cycle "
+                        "(2013/2017/2021) winners, elected under the "
+                        "PRE-2022 council district plan, onto sales rows "
+                        "keyed to CURRENT (post-2022) council districts; "
+                        "district identities do not line up across "
+                        "vintages wherever an old-plan district does not "
+                        "map cleanly onto its 2023-plan successor."),
+            "see_also": ("results/crosswalk_audit.json "
+                         "council_district_vintage_note; "
+                         "data/processed/council_2013_to_current.parquet "
+                         "(areal correspondence built by "
+                         "build_legacy_ed_crosswalk.py)"),
+            "original_12_arms_untouched": (
+                "results/causal/iv_district_fe_results.json is unchanged; "
+                "this flag documents a known limitation of the instrument "
+                "shared by both files."),
+        },
         "superseded_benchmark_note": (
             "The original file's model4_benchmark (Table 2 Model 4: "
             "district FE only, no unit controls, no sale-year FE, "
@@ -204,8 +260,10 @@ def main():
         r = results["rd_local_linear"][f"bw_{bw}pp"]
         print(f"  RD bw {bw:>2}pp: identified={r.get('identified')} "
               f"F={r.get('first_stage_joint_f_excluded_instruments')} "
+              f"G={r.get('n_clusters_G')} "
               f"N={r.get('n'):,}" if r.get("identified")
-              else f"  RD bw {bw:>2}pp: NOT IDENTIFIED ({r.get('error', '')[:60]})")
+              else f"  RD bw {bw:>2}pp: NOT ESTIMABLE "
+                   f"({str(r.get('reason', ''))[:70]})")
 
     # convenience view: the matched benchmark at the widest primary bandwidth
     results["matched_ols_benchmark"] = {

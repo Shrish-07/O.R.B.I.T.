@@ -8,7 +8,10 @@ polygon centroids, 999 permutations, seed=42), and adds:
 
   * residual Moran's I: Moran's I of the residuals of the district-level
     OLS median_log_price ~ measure + mean numfloors + mean yearbuilt +
-    mean commfar (the spatial_regression_model.py control set);
+    mean commfar (the spatial_regression_model.py control set; the
+    measure itself is included among the regressors — Round 13, R3,
+    previously the measure was omitted and every measure reported the
+    same residual I = 0.3825);
   * a borough-FE version of the same residual computation (district-level
     regression with borough dummies).
 
@@ -61,7 +64,6 @@ def resid_moran(y, X, coords, add_boro_fe, boro_dummies=None):
     I, z, p = moran(res.resid, coords)
     return {'I': I, 'z': z, 'p_sim': p, 'r_squared': float(res.rsquared),
             'borough_fe': bool(add_boro_fe)}
-
 def main():
     df = pd.read_parquet(CANON)
     agg = df.groupby('CounDist').agg(
@@ -107,7 +109,11 @@ def main():
                        'district (same as compute_morans_i.py)'),
         'residual_spec': ('district-level OLS: median_log_price ~ measure + '
                           'mean numfloors + mean yearbuilt + mean commfar '
-                          '(+ borough FE in the borough-FE variant)')}}
+                          '(+ borough FE in the borough-FE variant). '
+                          'Round 13 (R3) fix: the measure IS included among '
+                          'the residual regressors (it was previously '
+                          'omitted, which forced every measure to the same '
+                          'residual I = 0.3825).')}}
     I_p, z_p, p_p = moran(price, coords)
     out['median_log_price'] = {'I': I_p, 'z': z_p, 'p_sim': p_p,
                                'n_districts': int(len(merged))}
@@ -120,14 +126,44 @@ def main():
             'moran_i': I_m, 'z': z_m, 'p_sim': p_m,
             'n_districts': int(len(sub)),
             'residual_morans': resid_moran(
-                sub['median_log_price'], sub[CONTROLS], sub_coords, False),
+                sub['median_log_price'], sub[[m] + CONTROLS], sub_coords,
+                False),
             'residual_morans_boro_fe': (
-                resid_moran(sub['median_log_price'], sub[CONTROLS],
+                resid_moran(sub['median_log_price'], sub[[m] + CONTROLS],
                             sub_coords, True,
                             boro_dummies.loc[sub.index].reset_index(drop=True))
                 if boro_dummies is not None else None),
         }
         out['by_measure'][m] = rec
+        if m == 'dem_share':
+            # Round 13 (R3) regression gate: with the measure included among
+            # the residual regressors, the legacy pooled dem_share residual
+            # Moran's I must reproduce 0.3950. The pre-fix value 0.3825 was
+            # the measure-omitted specification. The z=6.14 companion value
+            # is spreg's normal-theory residual z (the same statistic
+            # spatial_regression_model_v2.py records as ols_residual_morans_i
+            # for the identical design); esda's permutation z_sim is 5.2548
+            # by construction and is asserted separately below.
+            assert abs(rec['residual_morans']['I'] - 0.3950) < 5e-4, (
+                f"dem_share pooled residual Moran's I drifted: "
+                f"{rec['residual_morans']['I']:.4f} != 0.3950")
+            import spreg
+            from libpysal.weights import KNN as LibKNN
+            w_sp = LibKNN(sub_coords, k=K)
+            w_sp.transform = 'r'
+            ols_sp = spreg.OLS(
+                sub['median_log_price'].to_numpy(dtype=float).reshape(-1, 1),
+                sub[[m] + CONTROLS].to_numpy(dtype=float), w=w_sp,
+                spat_diag=True, moran=True)
+            z_spreg = float(ols_sp.moran_res[1])
+            rec['residual_morans_z_spreg_crosscheck'] = {
+                'I': float(ols_sp.moran_res[0]), 'z': z_spreg,
+                'note': ('spreg normal-theory residual z for the identical '
+                         'design, matching spatial_regression_v2.json '
+                         "ols_residual_morans_i (z = 6.14)")}
+            assert abs(z_spreg - 6.14) < 0.01, (
+                f"dem_share pooled residual Moran's spreg z drifted: "
+                f"{z_spreg:.4f} != 6.14")
         print(f'  {m}: I={I_m:.4f} (z={z_m:.2f}, p={p_m:.3f}); '
               f'residual I={rec["residual_morans"]["I"]:.4f}')
     OUT.parent.mkdir(parents=True, exist_ok=True)

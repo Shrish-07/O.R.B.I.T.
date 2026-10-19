@@ -1,0 +1,8 @@
+{
+  "verifier": "verify_analysis_v3",
+  "generated_utc": "2026-10-19T15:19:46.123632Z",
+  "n_checks": 28,
+  "n_mismatches": 0,
+  "mismatches": [],
+  "note": "Independent re-derivation of the Round-13 robustness v3 suite, the Cuomo-free pre-2024 suite, the time-trend placebo identities and the hedonic sample audit + land/units variant."
+}
