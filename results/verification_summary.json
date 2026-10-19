@@ -1,8 +1,8 @@
 {
-  "generated_utc": "2026-10-18T19:32:00.995290+00:00Z",
-  "n_verifiers_expected": 23,
-  "n_verifiers_reported": 23,
-  "total_checks": 726,
+  "generated_utc": "2026-10-19T15:39:04.170956+00:00Z",
+  "n_verifiers_expected": 26,
+  "n_verifiers_reported": 26,
+  "total_checks": 840,
   "total_mismatches": 0,
   "n_problem_verifiers": 0,
   "stale_status_files_ignored": [],
@@ -17,6 +17,12 @@
       "verifier": "verify_analysis_v2",
       "status": "PASS",
       "n_checks": 17,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_analysis_v3",
+      "status": "PASS",
+      "n_checks": 28,
       "n_mismatches": 0
     },
     {
@@ -50,6 +56,12 @@
       "n_mismatches": 0
     },
     {
+      "verifier": "verify_causal_spatial_v3",
+      "status": "PASS",
+      "n_checks": 32,
+      "n_mismatches": 0
+    },
+    {
       "verifier": "verify_cd1_dem_share",
       "status": "PASS",
       "n_checks": 3,
@@ -77,6 +89,12 @@
       "verifier": "verify_ideology_v2",
       "status": "PASS",
       "n_checks": 25,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_ideology_v3",
+      "status": "PASS",
+      "n_checks": 54,
       "n_mismatches": 0
     },
     {

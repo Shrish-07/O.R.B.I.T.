@@ -2324,3 +2324,131 @@ unchanged). Pulling/merging a newer PLUTO is a separate decision with its own QA
 - `results/qa_gate_v2_evidence.json` (build-correctness evidence)
 
 The manuscript `orbit_paper_CER.tex` (at `../CER Papers 5/CER Papers 5/main/`) was **not** modified.
+
+
+---
+
+## Round 13 (2026-10-19) - split-ED double-counting fix, Cuomo-free robustness, bug fixes, 840-check gate
+
+**Scope (all outputs new unless marked CHANGED; no model retrained; no
+legacy output overwritten; fixed seeds throughout; every new output has a
+new verifier).**
+
+### R1 - Split-ED double counting (blocking)
+- `src/data_pipeline/build_ideology_scores_v3.py` - NEW: nine
+  allocation-corrected measures. Six `_aw` area-weighted (w =
+  intersection_area / total ED area from the crosswalk 'area' column,
+  normalized so each ED's weights sum to 1; equal split if area missing;
+  legacy-vintage crosswalk for 2016/2017/2020/2021, production for
+  2024/2025) and three `_dom` dominant-district variants of the vintage
+  measures. Outputs `data/processed/ideology_by_council_v3.parquet` and
+  `ideology_pres_by_council_v3.parquet`.
+- `src/data_pipeline/crosswalk_audit_v3.py` - NEW:
+  `results/crosswalk_audit_v3.json` reconciles, per year, the sum over
+  CDs of weighted candidate votes against raw votes on crosswalk-matched
+  EDs: overcount = 0.00% and loss = 0.00% for every year (coverage
+  reported explicitly: 100.0000% for 2016-2021 and 2025, 99.49% for 2024,
+  a pre-existing production-crosswalk key property, not a weighting
+  property); the legacy full-to-each assignment is shown for contrast
+  (1.29-1.31x). Per-CD correlations between every `_aw`/`_dom` measure and
+  its full-to-each counterpart are recorded (overall r 0.9995-1.0000).
+- `src/data_pipeline/extend_canonical_v3.py` - NEW:
+  `data/canonical/modeling_dataset_canonical_v3.parquet` (566,956 x 73;
+  all 64 legacy columns byte-identical; 9 new columns at 97.64%
+  coverage, same as legacy dem_share); provenance in
+  `results/canonical_v3_provenance.json`.
+- All nine new columns are blacklisted in `config/feature_blacklist.yaml`.
+- Documented identity: each `_aw` measure equals its `_vintage_aw`
+  counterpart because the `_aw` crosswalk choice is vintage-matched for
+  the pre-2024 years by construction (asserted by the verifier).
+
+### R2 - v3 robustness and spatial reruns
+- `results/robustness_checks_v3.json` - 126 fits (Models 3-8 + upgraded
+  hedonic x 9 `_aw`/`_dom` measures x full/restricted samples, full
+  inference), via `src/analysis/robustness_checks_v3.py`.
+- `results/morans_i_results_v3.json` + `results/spatial_regression_v3.json`
+  - Moran's I (raw + residual, pooled + borough FE) and SLM/SEM for the
+  nine new measures, with the measure included among the residual
+  regressors from the start.
+
+### R3 - residual-Moran bug (`compute_morans_i_v2.py`, CHANGED)
+- The residual regressions now include the measure (the pre-fix code
+  passed `sub[CONTROLS]` only, forcing every measure to the same residual
+  I = 0.3825). The pooled legacy dem_share residual I now reproduces
+  0.3950, enforced by a hard assertion in the stage, and the recorded
+  spreg z cross-check equals 6.14 (the same statistic the
+  spatial-regression OLS anchor reports; esda's permutation z_sim is
+  5.2548 by construction). Residual I is now measure-specific
+  (0.3858-0.3950). `results/morans_i_results_v2.json` regenerated.
+
+### R4 - IV RD clustered covariance (`iv_district_fe_regression_v2.py`, CHANGED)
+- `rd_local_linear` now fits with cov_type='clustered', clusters =
+  CounDist (district-cycle level clustering). First-stage joint F drops
+  from 3,304-77,480 (pre-fix default robust covariance) to 1.6-18.1; the
+  10/15/20pp bandwidths are rank-deficient and marked "not estimable"
+  with NO unadjusted fallback (they were already rank-deficient pre-fix,
+  with the identical errors). G is reported everywhere. A
+  council_district_vintage_mismatch flag was added to the JSON; the
+  original 12 arms in `results/causal/iv_district_fe_results.json` are
+  untouched.
+
+### R5 - Cuomo-free robustness
+- `results/robustness_pre2024_v3.json` (via
+  `src/analysis/robustness_pre2024_v3.py`): Models 3/4/6/7/8 x 15
+  measures on sample_pre2024 (sale_year <= 2023). Finding: the mayoral
+  measures STAY positive and wild-significant in Model 7 (dem_share
+  +2.34, p_wild 0.0067; dem_share_aw +1.63, p_wild 0.0129), so the
+  positive mayoral estimates do NOT come solely from the 2025 Cuomo-line
+  contamination; the presidential measures remain ~0 (p_wild 0.86).
+
+### R6 - Time-trend placebo
+- `results/time_trend_placebo_v3.json` (via
+  `src/analysis/time_trend_placebo_v3.py`): (a) measure_wavemean
+  reproduces the original Model 4 sign for all 9 measures (same order of
+  magnitude); (b) measure_dev is near zero for all 9 (the 95% CI covers
+  0 in every case).
+
+### R7 - DiD additions
+- `results/causal/city_of_yes_did_results_v3.json` (via
+  `src/causal/city_of_yes_did_v3.py`): wild-bootstrap p + CI for the
+  2022-25 window specs (excl. 2024: -0.0092, p_wild 0.623; incl. 2024
+  as pre: -0.0004, p_wild 0.983) and the district-specific-trends spec
+  (-0.0153, p_wild 0.704); continuous treatment
+  dem_share_pres_vintage_aw x post (excl. 2024: -0.0030, p_wild 0.925;
+  incl. 2024 as pre: +0.0127, p_wild 0.703). The v1/v2 DiD files are
+  untouched.
+
+### R8 - Hedonic sample audit
+- `results/hedonic_v3.json` (via `src/analysis/hedonic_v3.py`): the
+  N=23,789 funnel (520,365 base -> 26,312 land>0 -> 40,294 gross>0 ->
+  23,789 both>0) with non-missing gross/land square-footage shares by
+  building-class category and tax class, plus the hedonic_land_units
+  variant (log land sqft + units, gross NOT required) for all 15
+  measures (N=26,308 for the legacy measure).
+
+### R9 - Docs and gate
+- `scripts/write_results_for_paper.py` - CHANGED: Round-13 sections in
+  RESULTS_FOR_PAPER.md / NEW_RESULTS_INDEX.md; the "Champion `None`"
+  line is fixed (the champion is resolved from experiments/champion.json
+  through experiments/registry.json: rf_all_years_political_tuned, test
+  MAE 0.401614).
+- README.md - CHANGED: Round-13 summary bullet, the council-district
+  vintage-mismatch caveat (flagged, with pointers), refreshed gate
+  numbers.
+- New verifiers registered in `main.py` and
+  `src/ops/verification_summary.py`:
+  `verify_ideology_v3` (54 checks), `verify_analysis_v3` (28 checks),
+  `verify_causal_spatial_v3` (32 checks) - every check re-derives its
+  target without importing the producing script.
+
+### Verification (final gate - one invocation:
+`python main.py --category verification`)
+- 27/27 verification stages passed. `results/verification_summary.json`:
+  **840 checks, 0 mismatches, 26 of 26 verifiers reporting** (23 prior
+  verifiers all re-ran green against the touched files; the two
+  regenerated artifacts - morans_i_results_v2.json and
+  iv_district_fe_results_v2.json - are covered by the new R3/R4
+  checks in verify_causal_spatial_v3).
+- Commit protocol: the pending 2026-10-18 retrain artifacts were
+  committed first as their own commit, then the Round-13 code was
+  committed BEFORE the final gate run.

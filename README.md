@@ -23,9 +23,9 @@ paper, and then re-derives all of them independently.
   verifiers each write a per check status file. The final
   `verification_summary` stage aggregates them and exits non zero if any
   verifier reports a mismatch, is missing, or carries a stale status file.
-  The last full run reported 647 checks, 0 mismatches and 19 of 19 verifiers
-  reporting. The audit history is in `VERIFICATION_REPORT.md` (Rounds 1 to
-  11c).
+  The last verification gate (Round 13, 2026-10-19) reported 840 checks,
+  0 mismatches and 26 of 26 verifiers reporting. The audit history is in
+  `VERIFICATION_REPORT.md` (Rounds 1 to 11c, Round 13 appended).
 - **Null causal results are reported as findings.** The close election IV
   instrument is not identified at any bandwidth and the City of Yes DiD is a
   null under the preference proxy framing. Every attempted specification is
@@ -113,10 +113,12 @@ report can't be mistaken for evidence of a full pass.
   minutes (`results/PIPELINE_RUN_REPORT.md`, with the durable snapshot
   `results/PIPELINE_RUN_REPORT_full_20261016.md`). The report footer carries
   the run provenance (git_commit and git_dirty) and the verification totals
-  of 647 checks, 0 mismatches and 19 of 19 verifiers reporting
-  (`results/verification_summary.json`). Wall time is dominated by the RF
-  tuning grid (about 27 min), the exact SHAP ladder across all 7 models
-  (about 45 min, all tier a or linear exact, with no timeouts and no
+  (the Round-13 verification gate of 2026-10-19 reports 840 checks, 0
+  mismatches and 26 of 26 verifiers in
+  `results/verification_summary.json`; the last full pipeline run snapshot
+  is `results/PIPELINE_RUN_REPORT_full_20261018.md`). Wall time is dominated
+  by the RF tuning grid (about 27 min), the exact SHAP ladder across all 7
+  models (about 45 min, all tier a or linear exact, with no timeouts and no
   fallbacks), and the 7 model by 3 scenario counterfactual scoring plus its
   independent re-derivation verifier (about 19 min combined).
 - **Random Forest (Round 10).** The unpruned forest
@@ -201,8 +203,8 @@ detailed JSON deltas under `results/`, and write a per verifier status under
 `results/verification/`. Since Round 11 the suite is enforced by the final
 `verification_summary` stage, which aggregates all statuses and exits non
 zero on any mismatch beyond tolerance, on any missing verifier report, or on
-any stale status file. The last full run reported 647 checks, 0 mismatches
-and 19 of 19 verifiers reporting.
+any stale status file. The last verification gate (Round 13, 2026-10-19)
+reported 840 checks, 0 mismatches and 26 of 26 verifiers reporting.
 
 ## Champion selection and interpretability coverage
 
