@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-16T16:11:54.639341Z",
+  "generated_utc": "2026-10-18T18:43:35.014523Z",
   "variant": "all_years",
   "mode": "political",
   "n_estimators": 200,
@@ -15,9 +15,9 @@
     "n_estimators": 200
   },
   "chosen_mean_leaves_per_tree_final_refit": 2519.89,
-  "chosen_config_validation_mae": 0.37837633003606436,
+  "chosen_config_validation_mae": 0.3783763300360644,
   "final_test_mae": 0.40161417910660113,
-  "final_test_r2": 0.5900387792297042,
+  "final_test_r2": 0.590038779229704,
   "n_eligible": 21,
   "n_disqualified_by_cap": 15,
   "grid": [
@@ -30,7 +30,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 698.405,
-      "validation_mae": 0.42293096795262597,
+      "validation_mae": 0.4229309679526258,
       "eligible": true,
       "status": "eligible"
     },
@@ -56,7 +56,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 660.69,
-      "validation_mae": 0.4180754496657934,
+      "validation_mae": 0.41807544966579346,
       "eligible": true,
       "status": "eligible"
     },
@@ -69,7 +69,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 513.75,
-      "validation_mae": 0.42233795919694084,
+      "validation_mae": 0.4223379591969407,
       "eligible": true,
       "status": "eligible"
     },
@@ -108,7 +108,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 363.675,
-      "validation_mae": 0.42375725126402913,
+      "validation_mae": 0.4237572512640292,
       "eligible": true,
       "status": "eligible"
     },
@@ -147,7 +147,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 3160.665,
-      "validation_mae": 0.385005822077824,
+      "validation_mae": 0.3850058220778241,
       "eligible": false,
       "status": "disqualified_by_cap (mean leaves 3161 > 3000)"
     },
@@ -186,7 +186,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 1815.03,
-      "validation_mae": 0.38447554683023233,
+      "validation_mae": 0.38447554683023244,
       "eligible": true,
       "status": "eligible"
     },
@@ -212,7 +212,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 1738.75,
-      "validation_mae": 0.3842593314627234,
+      "validation_mae": 0.38425933146272334,
       "eligible": true,
       "status": "eligible"
     },
@@ -225,7 +225,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 971.3,
-      "validation_mae": 0.38987542197663144,
+      "validation_mae": 0.3898754219766315,
       "eligible": true,
       "status": "eligible"
     },
@@ -303,7 +303,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 3945.525,
-      "validation_mae": 0.37403502884877327,
+      "validation_mae": 0.3740350288487732,
       "eligible": false,
       "status": "disqualified_by_cap (mean leaves 3946 > 3000)"
     },
@@ -329,7 +329,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 3762.425,
-      "validation_mae": 0.3728574996455414,
+      "validation_mae": 0.37285749964554143,
       "eligible": false,
       "status": "disqualified_by_cap (mean leaves 3762 > 3000)"
     },
@@ -368,7 +368,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 1610.81,
-      "validation_mae": 0.3824033602908389,
+      "validation_mae": 0.382403360290839,
       "eligible": true,
       "status": "eligible"
     },
@@ -394,7 +394,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 21449.33,
-      "validation_mae": 0.3772855778612951,
+      "validation_mae": 0.377285577861295,
       "eligible": false,
       "status": "disqualified_by_cap (mean leaves 21449 > 3000)"
     },
@@ -407,7 +407,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 21462.1,
-      "validation_mae": 0.37619324135709126,
+      "validation_mae": 0.3761932413570912,
       "eligible": false,
       "status": "disqualified_by_cap (mean leaves 21462 > 3000)"
     },
@@ -472,7 +472,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 2178.885,
-      "validation_mae": 0.37837633003606436,
+      "validation_mae": 0.3783763300360644,
       "eligible": true,
       "status": "eligible"
     },
@@ -485,7 +485,7 @@
         "n_estimators": 200
       },
       "mean_leaves_per_tree": 2048.83,
-      "validation_mae": 0.38074570283336506,
+      "validation_mae": 0.38074570283336495,
       "eligible": true,
       "status": "eligible"
     }
