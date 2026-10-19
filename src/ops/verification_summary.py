@@ -51,6 +51,9 @@ EXPECTED = [
     'verify_analysis_v2',
     'verify_causal_spatial_v2',
     'verify_repo_hygiene',
+    'verify_ideology_v3',
+    'verify_analysis_v3',
+    'verify_causal_spatial_v3',
 ]
 
 

@@ -140,6 +140,31 @@ report can't be mistaken for evidence of a full pass.
   budget. Rejected depth capped variants are labeled as such and no SHAP
   claim is made on them. The stage prints a OneDrive warning when the repo
   lives under OneDrive.
+- **Round 13 (split-ED fix + new robustness).** The legacy ED-to-council
+  aggregation sent each ED's full votes to every council district it
+  touched, inflating summed CD votes to 1.29-1.31x raw votes
+  (`results/crosswalk_audit.json`). Round 13 adds nine allocation-corrected
+  ideology measures — six `_aw` area-weighted (each ED split across its
+  districts by normalized intersection-area weights, overcount = 0.00% and
+  loss = 0.00% per year, `results/crosswalk_audit_v3.json`) and three `_dom`
+  dominant-district variants — in
+  `data/canonical/modeling_dataset_canonical_v3.parquet` (all 64 legacy
+  columns byte-identical, all nine new columns blacklisted from models; no
+  retraining). New suites: `results/robustness_checks_v3.json` (126 fits),
+  `results/robustness_pre2024_v3.json` (Cuomo-free pre-2024 sample),
+  `results/time_trend_placebo_v3.json` (wave-mean vs demeaned placebo),
+  `results/hedonic_v3.json` (N=23,789 audit + land/units variant),
+  `results/morans_i_results_v3.json` + `results/spatial_regression_v3.json`,
+  and `results/causal/city_of_yes_did_results_v3.json` (wild-bootstrap p
+  for the DiD window/trends specs + the continuous
+  `dem_share_pres_vintage_aw` x post arm). Two verified bug fixes:
+  `compute_morans_i_v2.py` now includes the measure among the residual
+  regressors (legacy dem_share pooled residual I reproduces 0.3950, spreg
+  z = 6.14; previously every measure showed 0.3825), and the IV
+  local-linear RD fits in `iv_district_fe_regression_v2.py` now cluster
+  the covariance by council district (pre-fix first-stage F of 3,000-77,000
+  ignored the clustering; singular clustered fits are marked
+  "not estimable" with no unadjusted fallback).
 
 ### Verification commands (for auditors)
 
@@ -392,6 +417,18 @@ facing tables and figures are generated rather than hand copied by
 
 ## Known caveats
 
+- **Council-district vintage mismatch (flagged).** The close-election IV
+  instrument maps prior-cycle (2013/2017/2021) winners, elected under the
+  PRE-2022 council district plan, onto sales rows keyed to CURRENT
+  (post-2022) council districts, so district identities do not line up
+  across vintages wherever an old-plan district does not map cleanly onto
+  its 2023-plan successor. The flag is recorded in
+  `results/causal/iv_district_fe_results_v2.json`
+  (`council_district_vintage_mismatch`) and in `results/crosswalk_audit.json`
+  (`council_district_vintage_note`); the areal correspondence needed to fix
+  it is already built (`data/processed/council_2013_to_current.parquet`).
+  The original 12 IV arms in
+  `results/causal/iv_district_fe_results.json` are untouched.
 - The council district shapefile still describes **pre-2023 boundaries**,
   so all CounDist level results (Moran's I, Table 5, Appendix A.1) inherit
   that (`VERIFICATION_REPORT.md` Appendix A section 12).

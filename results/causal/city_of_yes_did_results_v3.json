@@ -1,0 +1,134 @@
+{
+  "purpose": "Round 13 (R7): wild-bootstrap inference for the 2022-25 window specs and the district-trends spec, plus the continuous-treatment dem_share_pres_vintage_aw x post arm in the 2022-25 window. The original city_of_yes_did_results.json and _v2.json are unchanged.",
+  "outcome": "target_log_price",
+  "controls": [
+    "yearbuilt",
+    "numfloors",
+    "landuse",
+    "commfar",
+    "RESIDENTIAL UNITS",
+    "COMMERCIAL UNITS",
+    "TOTAL UNITS"
+  ],
+  "fixed_effects": [
+    "council district FE",
+    "sale year FE"
+  ],
+  "clustering": "SEs clustered by council district",
+  "wild_bootstrap": {
+    "weights": "webb6",
+    "reps": 9999,
+    "seed": 42
+  },
+  "window_2022_2025_incl_2024_as_pre": {
+    "coef": -0.00037221205096006166,
+    "se_classical": 0.010163830721685613,
+    "se_cluster": 0.018235667235966313,
+    "p_t_G_minus_1": 0.9837965778376079,
+    "p_wild_cluster_bootstrap_t": 0.9829,
+    "ci95_low_t": -0.036999627642997496,
+    "ci95_high_t": 0.03625520354107738,
+    "ci95_low_wild": -0.035299051896398856,
+    "ci95_high_wild": 0.034290031902915685,
+    "n": 93234,
+    "n_clusters_G": 51,
+    "r_squared": 0.4117826814051836,
+    "wild_bootstrap": {
+      "weights": "webb6",
+      "reps": 9999,
+      "seed": 42
+    },
+    "post_definition": "sale_year == 2025 (pre = 2022-23 and 2024)"
+  },
+  "window_2022_2025_excl_2024": {
+    "coef": -0.009169690575790788,
+    "se_classical": 0.010741964189619145,
+    "se_cluster": 0.01832018093199035,
+    "p_t_G_minus_1": 0.6189022793876299,
+    "p_wild_cluster_bootstrap_t": 0.6234,
+    "ci95_low_t": -0.045966856922074625,
+    "ci95_high_t": 0.027627475770493046,
+    "ci95_low_wild": -0.04456301688296442,
+    "ci95_high_wild": 0.025580204635021826,
+    "n": 71424,
+    "n_clusters_G": 51,
+    "r_squared": 0.41094981791579843,
+    "wild_bootstrap": {
+      "weights": "webb6",
+      "reps": 9999,
+      "seed": 42
+    },
+    "post_definition": "sale_year == 2025 (pre = 2022-23)"
+  },
+  "district_specific_linear_trends": {
+    "coef": -0.015257303594580243,
+    "se_classical": 0.014140256233349765,
+    "se_cluster": 0.03900822346566629,
+    "p_t_G_minus_1": 0.697362623721181,
+    "p_wild_cluster_bootstrap_t": 0.7036,
+    "ci95_low_t": -0.093607626283407,
+    "ci95_high_t": 0.06309301909424651,
+    "ci95_low_wild": -0.09459964970793783,
+    "ci95_high_wild": 0.06652416818883881,
+    "n": 333670,
+    "n_clusters_G": 51,
+    "r_squared": 0.30270543814838036,
+    "wild_bootstrap": {
+      "weights": "webb6",
+      "reps": 9999,
+      "seed": 42
+    },
+    "note": "main design + district FE x (sale_year - 2016) linear trends + sale-year FE, sample excl. 2024"
+  },
+  "continuous_treatment_dem_share_pres_vintage_aw_x_post": {
+    "excl_2024": {
+      "treatment": "dem_share_pres_vintage_aw (continuous) x post(2025), 2022-25 window, 2024 excluded",
+      "interaction_wild_inference": {
+        "coef": -0.003043134975217603,
+        "se_classical": 0.02516306776944458,
+        "se_cluster": 0.03147346876939044,
+        "p_t_G_minus_1": 0.9233599820017959,
+        "p_wild_cluster_bootstrap_t": 0.925,
+        "ci95_low_t": -0.0662594574613955,
+        "ci95_high_t": 0.06017318751096029,
+        "ci95_low_wild": -0.06504029318041094,
+        "ci95_high_wild": 0.05661290467658416,
+        "n": 71424,
+        "n_clusters_G": 51,
+        "r_squared": 0.4109439238433995,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        }
+      },
+      "n": 71424,
+      "n_clusters_G": 51
+    },
+    "incl_2024_as_pre": {
+      "treatment": "dem_share_pres_vintage_aw (continuous) x post(2025), 2022-25 window",
+      "interaction_wild_inference": {
+        "coef": 0.012695514651186374,
+        "se_classical": 0.023827314228989427,
+        "se_cluster": 0.03244134425823315,
+        "p_t_G_minus_1": 0.6972105615311475,
+        "p_wild_cluster_bootstrap_t": 0.703,
+        "ci95_low_t": -0.05246484296748552,
+        "ci95_high_t": 0.07785587226985827,
+        "ci95_low_wild": -0.04941195467265563,
+        "ci95_high_wild": 0.0729134993650761,
+        "n": 93234,
+        "n_clusters_G": 51,
+        "r_squared": 0.4117739796764225,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        }
+      },
+      "n": 93234,
+      "n_clusters_G": 51
+    }
+  },
+  "continuous_treatment_note": "dem_share_pres_vintage_aw is the Round-13 area-weighted, vintage-corrected presidential two-party share; the interaction tests whether more Democratic districts show differential 2025 price trends in the City of Yes window. Both 2024-excluded and 2024-as-pre variants are reported."
+}

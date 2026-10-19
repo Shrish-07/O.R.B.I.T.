@@ -1,0 +1,2227 @@
+{
+  "audit": "Split-ED double-counting reconciliation for the area-weighted (_aw) and dominant-district (_dom) measures (Round 13, R1)",
+  "weights_methodology": {
+    "definition": "w(ED,CD) = intersection_area(ED,CD) / sum over CDs of intersection_area(ED,CD), from the crosswalk 'area' column; each ED's weights sum to exactly 1; equal split across the ED's districts if the area is missing or non-positive",
+    "crosswalk_by_election_year": {
+      "2016/2017/2020/2021": "ed_to_council_crosswalk_legacy.parquet",
+      "2024/2025": "ed_to_council_crosswalk.parquet"
+    },
+    "dominant_district_rule": "ED assigned wholly to the CD with the largest overlap area; ties resolve to the smaller CounDist",
+    "share_convention": "ratios of weighted vote totals",
+    "aw_equals_vintage_aw_identity": "Because the _aw crosswalk choice is vintage-matched for the pre-2024 years by construction, each _aw measure is numerically identical to its _vintage_aw counterpart; both columns are written as the task specifies and both are verified."
+  },
+  "reconciliation_convention": "overcount/loss are computed against raw candidate votes on crosswalk-MATCHED EDs (weights sum to 1 per matched ED, so both are exactly 0). The share of raw ED votes on keys absent from the chosen crosswalk is reported separately as coverage_pct_of_raw / unmatched_ed_votes and is a pre-existing crosswalk-key property, not a property of the weighting.",
+  "by_year": {
+    "2017": {
+      "office": "mayor",
+      "crosswalk_used": "ed_to_council_crosswalk_legacy.parquet",
+      "raw_candidate_votes_all_eds": 1143321,
+      "raw_candidate_votes_matched_eds": 1143321,
+      "unmatched_ed_votes": 0,
+      "coverage_pct_of_raw": 100.0,
+      "sum_cd_aw_votes": 1143321.0,
+      "sum_cd_dom_votes": 1143321.0,
+      "sum_cd_full_to_each_votes": 1476528.0,
+      "overcount_pct_aw_vs_matched": 0.0,
+      "loss_pct_aw_vs_matched": 0.0,
+      "overcount_pct_dom_vs_matched": 0.0,
+      "loss_pct_dom_vs_matched": 0.0,
+      "full_to_each_overcount_ratio_vs_matched": 1.291438,
+      "per_cd_votes": {
+        "1": {
+          "aw_votes": 22731.94,
+          "dom_votes": 22473.0,
+          "full_to_each_votes": 27382.0
+        },
+        "2": {
+          "aw_votes": 25741.37,
+          "dom_votes": 26414.0,
+          "full_to_each_votes": 34154.0
+        },
+        "3": {
+          "aw_votes": 25803.45,
+          "dom_votes": 25491.0,
+          "full_to_each_votes": 29952.0
+        },
+        "4": {
+          "aw_votes": 28112.3,
+          "dom_votes": 27856.0,
+          "full_to_each_votes": 38694.0
+        },
+        "5": {
+          "aw_votes": 29930.51,
+          "dom_votes": 30070.0,
+          "full_to_each_votes": 36428.0
+        },
+        "6": {
+          "aw_votes": 33397.33,
+          "dom_votes": 33343.0,
+          "full_to_each_votes": 45757.0
+        },
+        "7": {
+          "aw_votes": 31000.76,
+          "dom_votes": 30823.0,
+          "full_to_each_votes": 38738.0
+        },
+        "8": {
+          "aw_votes": 18241.56,
+          "dom_votes": 18244.0,
+          "full_to_each_votes": 24199.0
+        },
+        "9": {
+          "aw_votes": 29114.78,
+          "dom_votes": 29241.0,
+          "full_to_each_votes": 34638.0
+        },
+        "10": {
+          "aw_votes": 25579.68,
+          "dom_votes": 25691.0,
+          "full_to_each_votes": 30028.0
+        },
+        "11": {
+          "aw_votes": 23718.47,
+          "dom_votes": 23704.0,
+          "full_to_each_votes": 29999.0
+        },
+        "12": {
+          "aw_votes": 25101.91,
+          "dom_votes": 25154.0,
+          "full_to_each_votes": 27891.0
+        },
+        "13": {
+          "aw_votes": 22541.03,
+          "dom_votes": 22597.0,
+          "full_to_each_votes": 27191.0
+        },
+        "14": {
+          "aw_votes": 12621.35,
+          "dom_votes": 12598.0,
+          "full_to_each_votes": 17586.0
+        },
+        "15": {
+          "aw_votes": 11750.4,
+          "dom_votes": 11589.0,
+          "full_to_each_votes": 16725.0
+        },
+        "16": {
+          "aw_votes": 15466.13,
+          "dom_votes": 15719.0,
+          "full_to_each_votes": 19170.0
+        },
+        "17": {
+          "aw_votes": 13282.65,
+          "dom_votes": 13059.0,
+          "full_to_each_votes": 17351.0
+        },
+        "18": {
+          "aw_votes": 17390.42,
+          "dom_votes": 17460.0,
+          "full_to_each_votes": 19019.0
+        },
+        "19": {
+          "aw_votes": 27101.77,
+          "dom_votes": 27192.0,
+          "full_to_each_votes": 31128.0
+        },
+        "20": {
+          "aw_votes": 11955.83,
+          "dom_votes": 11799.0,
+          "full_to_each_votes": 15247.0
+        },
+        "21": {
+          "aw_votes": 9531.51,
+          "dom_votes": 9547.0,
+          "full_to_each_votes": 13866.0
+        },
+        "22": {
+          "aw_votes": 21709.62,
+          "dom_votes": 21498.0,
+          "full_to_each_votes": 25574.0
+        },
+        "23": {
+          "aw_votes": 25512.19,
+          "dom_votes": 25426.0,
+          "full_to_each_votes": 31125.0
+        },
+        "24": {
+          "aw_votes": 17679.33,
+          "dom_votes": 17738.0,
+          "full_to_each_votes": 23620.0
+        },
+        "25": {
+          "aw_votes": 15006.15,
+          "dom_votes": 15021.0,
+          "full_to_each_votes": 20260.0
+        },
+        "26": {
+          "aw_votes": 19779.9,
+          "dom_votes": 20013.0,
+          "full_to_each_votes": 26715.0
+        },
+        "27": {
+          "aw_votes": 24658.4,
+          "dom_votes": 24825.0,
+          "full_to_each_votes": 34115.0
+        },
+        "28": {
+          "aw_votes": 19055.07,
+          "dom_votes": 18944.0,
+          "full_to_each_votes": 24229.0
+        },
+        "29": {
+          "aw_votes": 19304.92,
+          "dom_votes": 19393.0,
+          "full_to_each_votes": 24208.0
+        },
+        "30": {
+          "aw_votes": 19919.78,
+          "dom_votes": 19658.0,
+          "full_to_each_votes": 26973.0
+        },
+        "31": {
+          "aw_votes": 21747.28,
+          "dom_votes": 21829.0,
+          "full_to_each_votes": 26227.0
+        },
+        "32": {
+          "aw_votes": 26395.07,
+          "dom_votes": 26324.0,
+          "full_to_each_votes": 34152.0
+        },
+        "33": {
+          "aw_votes": 19397.73,
+          "dom_votes": 19300.0,
+          "full_to_each_votes": 30299.0
+        },
+        "34": {
+          "aw_votes": 18446.9,
+          "dom_votes": 18578.0,
+          "full_to_each_votes": 24817.0
+        },
+        "35": {
+          "aw_votes": 31877.26,
+          "dom_votes": 31477.0,
+          "full_to_each_votes": 40032.0
+        },
+        "36": {
+          "aw_votes": 24601.47,
+          "dom_votes": 25105.0,
+          "full_to_each_votes": 32493.0
+        },
+        "37": {
+          "aw_votes": 13414.38,
+          "dom_votes": 13043.0,
+          "full_to_each_votes": 21237.0
+        },
+        "38": {
+          "aw_votes": 16193.93,
+          "dom_votes": 15603.0,
+          "full_to_each_votes": 27465.0
+        },
+        "39": {
+          "aw_votes": 36493.44,
+          "dom_votes": 36415.0,
+          "full_to_each_votes": 47704.0
+        },
+        "40": {
+          "aw_votes": 27225.74,
+          "dom_votes": 26677.0,
+          "full_to_each_votes": 36875.0
+        },
+        "41": {
+          "aw_votes": 20271.15,
+          "dom_votes": 20327.0,
+          "full_to_each_votes": 28463.0
+        },
+        "42": {
+          "aw_votes": 21204.05,
+          "dom_votes": 21888.0,
+          "full_to_each_votes": 27834.0
+        },
+        "43": {
+          "aw_votes": 10207.77,
+          "dom_votes": 10470.0,
+          "full_to_each_votes": 17504.0
+        },
+        "44": {
+          "aw_votes": 17549.59,
+          "dom_votes": 17791.0,
+          "full_to_each_votes": 24413.0
+        },
+        "45": {
+          "aw_votes": 24927.54,
+          "dom_votes": 25613.0,
+          "full_to_each_votes": 35202.0
+        },
+        "46": {
+          "aw_votes": 27244.03,
+          "dom_votes": 26958.0,
+          "full_to_each_votes": 32551.0
+        },
+        "47": {
+          "aw_votes": 25208.25,
+          "dom_votes": 25195.0,
+          "full_to_each_votes": 32615.0
+        },
+        "48": {
+          "aw_votes": 16778.03,
+          "dom_votes": 16527.0,
+          "full_to_each_votes": 22100.0
+        },
+        "49": {
+          "aw_votes": 26260.77,
+          "dom_votes": 26116.0,
+          "full_to_each_votes": 30819.0
+        },
+        "50": {
+          "aw_votes": 36626.2,
+          "dom_votes": 36798.0,
+          "full_to_each_votes": 48347.0
+        },
+        "51": {
+          "aw_votes": 38509.89,
+          "dom_votes": 38707.0,
+          "full_to_each_votes": 43417.0
+        }
+      }
+    },
+    "2021": {
+      "office": "mayor",
+      "crosswalk_used": "ed_to_council_crosswalk_legacy.parquet",
+      "raw_candidate_votes_all_eds": 1118245,
+      "raw_candidate_votes_matched_eds": 1118245,
+      "unmatched_ed_votes": 0,
+      "coverage_pct_of_raw": 100.0,
+      "sum_cd_aw_votes": 1118245.0,
+      "sum_cd_dom_votes": 1118245.0,
+      "sum_cd_full_to_each_votes": 1444105.0,
+      "overcount_pct_aw_vs_matched": 0.0,
+      "loss_pct_aw_vs_matched": 0.0,
+      "overcount_pct_dom_vs_matched": 0.0,
+      "loss_pct_dom_vs_matched": 0.0,
+      "full_to_each_overcount_ratio_vs_matched": 1.291403,
+      "per_cd_votes": {
+        "1": {
+          "aw_votes": 22533.7,
+          "dom_votes": 22265.0,
+          "full_to_each_votes": 27139.0
+        },
+        "2": {
+          "aw_votes": 25746.11,
+          "dom_votes": 26502.0,
+          "full_to_each_votes": 34421.0
+        },
+        "3": {
+          "aw_votes": 27510.28,
+          "dom_votes": 27111.0,
+          "full_to_each_votes": 32152.0
+        },
+        "4": {
+          "aw_votes": 30577.42,
+          "dom_votes": 30273.0,
+          "full_to_each_votes": 42176.0
+        },
+        "5": {
+          "aw_votes": 33699.28,
+          "dom_votes": 33867.0,
+          "full_to_each_votes": 40855.0
+        },
+        "6": {
+          "aw_votes": 37555.86,
+          "dom_votes": 37529.0,
+          "full_to_each_votes": 50771.0
+        },
+        "7": {
+          "aw_votes": 30113.29,
+          "dom_votes": 29943.0,
+          "full_to_each_votes": 37735.0
+        },
+        "8": {
+          "aw_votes": 16167.62,
+          "dom_votes": 16204.0,
+          "full_to_each_votes": 21975.0
+        },
+        "9": {
+          "aw_votes": 27551.48,
+          "dom_votes": 27643.0,
+          "full_to_each_votes": 32410.0
+        },
+        "10": {
+          "aw_votes": 23257.8,
+          "dom_votes": 23358.0,
+          "full_to_each_votes": 27125.0
+        },
+        "11": {
+          "aw_votes": 21588.53,
+          "dom_votes": 21572.0,
+          "full_to_each_votes": 26789.0
+        },
+        "12": {
+          "aw_votes": 21193.22,
+          "dom_votes": 21242.0,
+          "full_to_each_votes": 23512.0
+        },
+        "13": {
+          "aw_votes": 19465.76,
+          "dom_votes": 19512.0,
+          "full_to_each_votes": 23097.0
+        },
+        "14": {
+          "aw_votes": 10695.4,
+          "dom_votes": 10671.0,
+          "full_to_each_votes": 15037.0
+        },
+        "15": {
+          "aw_votes": 9795.3,
+          "dom_votes": 9691.0,
+          "full_to_each_votes": 13903.0
+        },
+        "16": {
+          "aw_votes": 13598.2,
+          "dom_votes": 13802.0,
+          "full_to_each_votes": 16589.0
+        },
+        "17": {
+          "aw_votes": 11522.78,
+          "dom_votes": 11347.0,
+          "full_to_each_votes": 14955.0
+        },
+        "18": {
+          "aw_votes": 13562.06,
+          "dom_votes": 13602.0,
+          "full_to_each_votes": 14851.0
+        },
+        "19": {
+          "aw_votes": 27582.5,
+          "dom_votes": 27689.0,
+          "full_to_each_votes": 31848.0
+        },
+        "20": {
+          "aw_votes": 13336.93,
+          "dom_votes": 13160.0,
+          "full_to_each_votes": 16720.0
+        },
+        "21": {
+          "aw_votes": 8752.56,
+          "dom_votes": 8763.0,
+          "full_to_each_votes": 13315.0
+        },
+        "22": {
+          "aw_votes": 21285.06,
+          "dom_votes": 21100.0,
+          "full_to_each_votes": 24801.0
+        },
+        "23": {
+          "aw_votes": 24051.41,
+          "dom_votes": 23986.0,
+          "full_to_each_votes": 29634.0
+        },
+        "24": {
+          "aw_votes": 18673.94,
+          "dom_votes": 18766.0,
+          "full_to_each_votes": 24466.0
+        },
+        "25": {
+          "aw_votes": 16105.97,
+          "dom_votes": 16106.0,
+          "full_to_each_votes": 21022.0
+        },
+        "26": {
+          "aw_votes": 19230.54,
+          "dom_votes": 19465.0,
+          "full_to_each_votes": 26180.0
+        },
+        "27": {
+          "aw_votes": 22057.52,
+          "dom_votes": 22193.0,
+          "full_to_each_votes": 30418.0
+        },
+        "28": {
+          "aw_votes": 16498.73,
+          "dom_votes": 16404.0,
+          "full_to_each_votes": 21336.0
+        },
+        "29": {
+          "aw_votes": 21430.04,
+          "dom_votes": 21529.0,
+          "full_to_each_votes": 26504.0
+        },
+        "30": {
+          "aw_votes": 21026.45,
+          "dom_votes": 20735.0,
+          "full_to_each_votes": 28476.0
+        },
+        "31": {
+          "aw_votes": 20675.78,
+          "dom_votes": 20730.0,
+          "full_to_each_votes": 24979.0
+        },
+        "32": {
+          "aw_votes": 27553.15,
+          "dom_votes": 27479.0,
+          "full_to_each_votes": 35561.0
+        },
+        "33": {
+          "aw_votes": 21104.89,
+          "dom_votes": 21003.0,
+          "full_to_each_votes": 31959.0
+        },
+        "34": {
+          "aw_votes": 16695.32,
+          "dom_votes": 16820.0,
+          "full_to_each_votes": 23436.0
+        },
+        "35": {
+          "aw_votes": 30920.8,
+          "dom_votes": 30552.0,
+          "full_to_each_votes": 38992.0
+        },
+        "36": {
+          "aw_votes": 22476.2,
+          "dom_votes": 22927.0,
+          "full_to_each_votes": 29481.0
+        },
+        "37": {
+          "aw_votes": 11785.48,
+          "dom_votes": 11497.0,
+          "full_to_each_votes": 18662.0
+        },
+        "38": {
+          "aw_votes": 15840.03,
+          "dom_votes": 15207.0,
+          "full_to_each_votes": 27111.0
+        },
+        "39": {
+          "aw_votes": 36394.94,
+          "dom_votes": 36323.0,
+          "full_to_each_votes": 47502.0
+        },
+        "40": {
+          "aw_votes": 24185.93,
+          "dom_votes": 23827.0,
+          "full_to_each_votes": 33209.0
+        },
+        "41": {
+          "aw_votes": 17861.64,
+          "dom_votes": 17915.0,
+          "full_to_each_votes": 25265.0
+        },
+        "42": {
+          "aw_votes": 18363.2,
+          "dom_votes": 18915.0,
+          "full_to_each_votes": 24354.0
+        },
+        "43": {
+          "aw_votes": 10994.98,
+          "dom_votes": 11269.0,
+          "full_to_each_votes": 17847.0
+        },
+        "44": {
+          "aw_votes": 14847.45,
+          "dom_votes": 15111.0,
+          "full_to_each_votes": 22215.0
+        },
+        "45": {
+          "aw_votes": 23861.93,
+          "dom_votes": 24439.0,
+          "full_to_each_votes": 33400.0
+        },
+        "46": {
+          "aw_votes": 26132.36,
+          "dom_votes": 25900.0,
+          "full_to_each_votes": 31496.0
+        },
+        "47": {
+          "aw_votes": 25007.12,
+          "dom_votes": 24974.0,
+          "full_to_each_votes": 33385.0
+        },
+        "48": {
+          "aw_votes": 20165.3,
+          "dom_votes": 19879.0,
+          "full_to_each_votes": 25895.0
+        },
+        "49": {
+          "aw_votes": 25701.32,
+          "dom_votes": 25545.0,
+          "full_to_each_votes": 30149.0
+        },
+        "50": {
+          "aw_votes": 38527.0,
+          "dom_votes": 38704.0,
+          "full_to_each_votes": 50648.0
+        },
+        "51": {
+          "aw_votes": 42984.47,
+          "dom_votes": 43199.0,
+          "full_to_each_votes": 48347.0
+        }
+      }
+    },
+    "2025": {
+      "office": "mayor",
+      "crosswalk_used": "ed_to_council_crosswalk.parquet",
+      "raw_candidate_votes_all_eds": 2182637,
+      "raw_candidate_votes_matched_eds": 2182637,
+      "unmatched_ed_votes": 0,
+      "coverage_pct_of_raw": 100.0,
+      "sum_cd_aw_votes": 2182637.0,
+      "sum_cd_dom_votes": 2182637.0,
+      "sum_cd_full_to_each_votes": 2863343.0,
+      "overcount_pct_aw_vs_matched": 0.0,
+      "loss_pct_aw_vs_matched": 0.0,
+      "overcount_pct_dom_vs_matched": 0.0,
+      "loss_pct_dom_vs_matched": 0.0,
+      "full_to_each_overcount_ratio_vs_matched": 1.311873,
+      "per_cd_votes": {
+        "1": {
+          "aw_votes": 51568.0,
+          "dom_votes": 51568.0,
+          "full_to_each_votes": 63374.0
+        },
+        "2": {
+          "aw_votes": 58676.0,
+          "dom_votes": 58676.0,
+          "full_to_each_votes": 75109.0
+        },
+        "3": {
+          "aw_votes": 60240.99,
+          "dom_votes": 60241.0,
+          "full_to_each_votes": 66980.0
+        },
+        "4": {
+          "aw_votes": 67566.0,
+          "dom_votes": 67566.0,
+          "full_to_each_votes": 92923.0
+        },
+        "5": {
+          "aw_votes": 72405.0,
+          "dom_votes": 72405.0,
+          "full_to_each_votes": 89283.0
+        },
+        "6": {
+          "aw_votes": 73850.01,
+          "dom_votes": 73850.0,
+          "full_to_each_votes": 102177.0
+        },
+        "7": {
+          "aw_votes": 56259.07,
+          "dom_votes": 56259.0,
+          "full_to_each_votes": 69796.0
+        },
+        "8": {
+          "aw_votes": 32926.0,
+          "dom_votes": 32926.0,
+          "full_to_each_votes": 47155.0
+        },
+        "9": {
+          "aw_votes": 47333.9,
+          "dom_votes": 47334.0,
+          "full_to_each_votes": 55635.0
+        },
+        "10": {
+          "aw_votes": 44248.03,
+          "dom_votes": 44248.0,
+          "full_to_each_votes": 51047.0
+        },
+        "11": {
+          "aw_votes": 39739.15,
+          "dom_votes": 39739.0,
+          "full_to_each_votes": 48369.0
+        },
+        "12": {
+          "aw_votes": 33437.99,
+          "dom_votes": 33438.0,
+          "full_to_each_votes": 38189.0
+        },
+        "13": {
+          "aw_votes": 36508.96,
+          "dom_votes": 36509.0,
+          "full_to_each_votes": 46550.0
+        },
+        "14": {
+          "aw_votes": 21066.72,
+          "dom_votes": 21067.0,
+          "full_to_each_votes": 28744.0
+        },
+        "15": {
+          "aw_votes": 19603.02,
+          "dom_votes": 19603.0,
+          "full_to_each_votes": 31626.0
+        },
+        "16": {
+          "aw_votes": 23803.12,
+          "dom_votes": 23803.0,
+          "full_to_each_votes": 29785.0
+        },
+        "17": {
+          "aw_votes": 21634.03,
+          "dom_votes": 21634.0,
+          "full_to_each_votes": 32325.0
+        },
+        "18": {
+          "aw_votes": 30591.0,
+          "dom_votes": 30591.0,
+          "full_to_each_votes": 33534.0
+        },
+        "19": {
+          "aw_votes": 44990.0,
+          "dom_votes": 44990.0,
+          "full_to_each_votes": 51720.0
+        },
+        "20": {
+          "aw_votes": 23086.0,
+          "dom_votes": 23086.0,
+          "full_to_each_votes": 33755.0
+        },
+        "21": {
+          "aw_votes": 18216.0,
+          "dom_votes": 18216.0,
+          "full_to_each_votes": 26497.0
+        },
+        "22": {
+          "aw_votes": 50670.0,
+          "dom_votes": 50670.0,
+          "full_to_each_votes": 55281.0
+        },
+        "23": {
+          "aw_votes": 46922.0,
+          "dom_votes": 46922.0,
+          "full_to_each_votes": 58423.0
+        },
+        "24": {
+          "aw_votes": 39845.95,
+          "dom_votes": 39846.0,
+          "full_to_each_votes": 53537.0
+        },
+        "25": {
+          "aw_votes": 34637.0,
+          "dom_votes": 34637.0,
+          "full_to_each_votes": 45427.0
+        },
+        "26": {
+          "aw_votes": 43995.01,
+          "dom_votes": 43995.0,
+          "full_to_each_votes": 60945.0
+        },
+        "27": {
+          "aw_votes": 35725.96,
+          "dom_votes": 35726.0,
+          "full_to_each_votes": 49306.0
+        },
+        "28": {
+          "aw_votes": 29390.03,
+          "dom_votes": 29390.0,
+          "full_to_each_votes": 37607.0
+        },
+        "29": {
+          "aw_votes": 44222.05,
+          "dom_votes": 44222.0,
+          "full_to_each_votes": 57286.0
+        },
+        "30": {
+          "aw_votes": 41209.98,
+          "dom_votes": 41210.0,
+          "full_to_each_votes": 58180.0
+        },
+        "31": {
+          "aw_votes": 31849.0,
+          "dom_votes": 31849.0,
+          "full_to_each_votes": 39300.0
+        },
+        "32": {
+          "aw_votes": 43642.02,
+          "dom_votes": 43642.0,
+          "full_to_each_votes": 63119.0
+        },
+        "33": {
+          "aw_votes": 59219.23,
+          "dom_votes": 59219.0,
+          "full_to_each_votes": 80371.0
+        },
+        "34": {
+          "aw_votes": 51274.83,
+          "dom_votes": 51275.0,
+          "full_to_each_votes": 68684.0
+        },
+        "35": {
+          "aw_votes": 65989.94,
+          "dom_votes": 65990.0,
+          "full_to_each_votes": 80496.0
+        },
+        "36": {
+          "aw_votes": 50491.0,
+          "dom_votes": 50491.0,
+          "full_to_each_votes": 65374.0
+        },
+        "37": {
+          "aw_votes": 32417.0,
+          "dom_votes": 32417.0,
+          "full_to_each_votes": 48440.0
+        },
+        "38": {
+          "aw_votes": 31379.95,
+          "dom_votes": 31380.0,
+          "full_to_each_votes": 51875.0
+        },
+        "39": {
+          "aw_votes": 71802.15,
+          "dom_votes": 71802.0,
+          "full_to_each_votes": 100487.0
+        },
+        "40": {
+          "aw_votes": 48874.84,
+          "dom_votes": 48875.0,
+          "full_to_each_votes": 66819.0
+        },
+        "41": {
+          "aw_votes": 30667.0,
+          "dom_votes": 30667.0,
+          "full_to_each_votes": 45916.0
+        },
+        "42": {
+          "aw_votes": 27542.0,
+          "dom_votes": 27542.0,
+          "full_to_each_votes": 39468.0
+        },
+        "43": {
+          "aw_votes": 23019.0,
+          "dom_votes": 23019.0,
+          "full_to_each_votes": 37889.0
+        },
+        "44": {
+          "aw_votes": 42204.0,
+          "dom_votes": 42204.0,
+          "full_to_each_votes": 61617.0
+        },
+        "45": {
+          "aw_votes": 42771.0,
+          "dom_votes": 42771.0,
+          "full_to_each_votes": 58430.0
+        },
+        "46": {
+          "aw_votes": 42806.0,
+          "dom_votes": 42806.0,
+          "full_to_each_votes": 54061.0
+        },
+        "47": {
+          "aw_votes": 42723.14,
+          "dom_votes": 42723.0,
+          "full_to_each_votes": 60567.0
+        },
+        "48": {
+          "aw_votes": 43701.91,
+          "dom_votes": 43702.0,
+          "full_to_each_votes": 54703.0
+        },
+        "49": {
+          "aw_votes": 38433.01,
+          "dom_votes": 38433.0,
+          "full_to_each_votes": 48498.0
+        },
+        "50": {
+          "aw_votes": 55313.03,
+          "dom_votes": 55313.0,
+          "full_to_each_votes": 75528.0
+        },
+        "51": {
+          "aw_votes": 62149.96,
+          "dom_votes": 62150.0,
+          "full_to_each_votes": 71136.0
+        }
+      }
+    },
+    "2016": {
+      "office": "president",
+      "crosswalk_used": "ed_to_council_crosswalk_legacy.parquet",
+      "raw_candidate_votes_all_eds": 2720629,
+      "raw_candidate_votes_matched_eds": 2720629,
+      "unmatched_ed_votes": 0,
+      "coverage_pct_of_raw": 100.0,
+      "sum_cd_aw_votes": 2720629.0,
+      "sum_cd_dom_votes": 2720629.0,
+      "sum_cd_full_to_each_votes": 3568052.0,
+      "overcount_pct_aw_vs_matched": 0.0,
+      "loss_pct_aw_vs_matched": 0.0,
+      "overcount_pct_dom_vs_matched": 0.0,
+      "loss_pct_dom_vs_matched": 0.0,
+      "full_to_each_overcount_ratio_vs_matched": 1.311481,
+      "per_cd_votes": {
+        "1": {
+          "aw_votes": 57822.48,
+          "dom_votes": 56982.0,
+          "full_to_each_votes": 68259.0
+        },
+        "2": {
+          "aw_votes": 69540.66,
+          "dom_votes": 71751.0,
+          "full_to_each_votes": 90954.0
+        },
+        "3": {
+          "aw_votes": 67856.29,
+          "dom_votes": 66803.0,
+          "full_to_each_votes": 79899.0
+        },
+        "4": {
+          "aw_votes": 71735.62,
+          "dom_votes": 70863.0,
+          "full_to_each_votes": 101198.0
+        },
+        "5": {
+          "aw_votes": 73874.79,
+          "dom_votes": 74388.0,
+          "full_to_each_votes": 91838.0
+        },
+        "6": {
+          "aw_votes": 80650.51,
+          "dom_votes": 80699.0,
+          "full_to_each_votes": 111980.0
+        },
+        "7": {
+          "aw_votes": 71691.98,
+          "dom_votes": 70793.0,
+          "full_to_each_votes": 91449.0
+        },
+        "8": {
+          "aw_votes": 52508.3,
+          "dom_votes": 52503.0,
+          "full_to_each_votes": 70444.0
+        },
+        "9": {
+          "aw_votes": 66465.92,
+          "dom_votes": 66785.0,
+          "full_to_each_votes": 81074.0
+        },
+        "10": {
+          "aw_votes": 67425.15,
+          "dom_votes": 67924.0,
+          "full_to_each_votes": 78861.0
+        },
+        "11": {
+          "aw_votes": 55823.71,
+          "dom_votes": 55993.0,
+          "full_to_each_votes": 73929.0
+        },
+        "12": {
+          "aw_votes": 56483.25,
+          "dom_votes": 56573.0,
+          "full_to_each_votes": 63642.0
+        },
+        "13": {
+          "aw_votes": 49074.42,
+          "dom_votes": 49153.0,
+          "full_to_each_votes": 61229.0
+        },
+        "14": {
+          "aw_votes": 41766.01,
+          "dom_votes": 41605.0,
+          "full_to_each_votes": 57668.0
+        },
+        "15": {
+          "aw_votes": 38563.07,
+          "dom_votes": 37933.0,
+          "full_to_each_votes": 55417.0
+        },
+        "16": {
+          "aw_votes": 46710.69,
+          "dom_votes": 47662.0,
+          "full_to_each_votes": 58852.0
+        },
+        "17": {
+          "aw_votes": 42489.88,
+          "dom_votes": 41558.0,
+          "full_to_each_votes": 56224.0
+        },
+        "18": {
+          "aw_votes": 49350.44,
+          "dom_votes": 49865.0,
+          "full_to_each_votes": 54223.0
+        },
+        "19": {
+          "aw_votes": 54673.88,
+          "dom_votes": 54878.0,
+          "full_to_each_votes": 63336.0
+        },
+        "20": {
+          "aw_votes": 32305.99,
+          "dom_votes": 31893.0,
+          "full_to_each_votes": 40379.0
+        },
+        "21": {
+          "aw_votes": 29906.3,
+          "dom_votes": 30019.0,
+          "full_to_each_votes": 43062.0
+        },
+        "22": {
+          "aw_votes": 53400.12,
+          "dom_votes": 52828.0,
+          "full_to_each_votes": 64364.0
+        },
+        "23": {
+          "aw_votes": 58935.43,
+          "dom_votes": 58697.0,
+          "full_to_each_votes": 73494.0
+        },
+        "24": {
+          "aw_votes": 47458.5,
+          "dom_votes": 47648.0,
+          "full_to_each_votes": 65479.0
+        },
+        "25": {
+          "aw_votes": 42769.6,
+          "dom_votes": 42757.0,
+          "full_to_each_votes": 58383.0
+        },
+        "26": {
+          "aw_votes": 47774.97,
+          "dom_votes": 48403.0,
+          "full_to_each_votes": 65094.0
+        },
+        "27": {
+          "aw_votes": 55342.02,
+          "dom_votes": 55910.0,
+          "full_to_each_votes": 81213.0
+        },
+        "28": {
+          "aw_votes": 50680.54,
+          "dom_votes": 50209.0,
+          "full_to_each_votes": 65372.0
+        },
+        "29": {
+          "aw_votes": 52586.79,
+          "dom_votes": 52999.0,
+          "full_to_each_votes": 68009.0
+        },
+        "30": {
+          "aw_votes": 44094.71,
+          "dom_votes": 43345.0,
+          "full_to_each_votes": 64089.0
+        },
+        "31": {
+          "aw_votes": 50707.21,
+          "dom_votes": 51037.0,
+          "full_to_each_votes": 59280.0
+        },
+        "32": {
+          "aw_votes": 53593.11,
+          "dom_votes": 53075.0,
+          "full_to_each_votes": 73493.0
+        },
+        "33": {
+          "aw_votes": 47403.03,
+          "dom_votes": 47289.0,
+          "full_to_each_votes": 74847.0
+        },
+        "34": {
+          "aw_votes": 52233.49,
+          "dom_votes": 52703.0,
+          "full_to_each_votes": 70072.0
+        },
+        "35": {
+          "aw_votes": 67102.69,
+          "dom_votes": 66041.0,
+          "full_to_each_votes": 87850.0
+        },
+        "36": {
+          "aw_votes": 56949.89,
+          "dom_votes": 58299.0,
+          "full_to_each_votes": 74833.0
+        },
+        "37": {
+          "aw_votes": 41168.97,
+          "dom_votes": 40245.0,
+          "full_to_each_votes": 64731.0
+        },
+        "38": {
+          "aw_votes": 38158.59,
+          "dom_votes": 36828.0,
+          "full_to_each_votes": 60710.0
+        },
+        "39": {
+          "aw_votes": 73268.02,
+          "dom_votes": 72836.0,
+          "full_to_each_votes": 97051.0
+        },
+        "40": {
+          "aw_votes": 56530.78,
+          "dom_votes": 55310.0,
+          "full_to_each_votes": 78272.0
+        },
+        "41": {
+          "aw_votes": 49862.12,
+          "dom_votes": 49898.0,
+          "full_to_each_votes": 69958.0
+        },
+        "42": {
+          "aw_votes": 50243.62,
+          "dom_votes": 51991.0,
+          "full_to_each_votes": 66467.0
+        },
+        "43": {
+          "aw_votes": 27490.46,
+          "dom_votes": 28311.0,
+          "full_to_each_votes": 44972.0
+        },
+        "44": {
+          "aw_votes": 33608.92,
+          "dom_votes": 34003.0,
+          "full_to_each_votes": 51234.0
+        },
+        "45": {
+          "aw_votes": 57214.68,
+          "dom_votes": 58886.0,
+          "full_to_each_votes": 79659.0
+        },
+        "46": {
+          "aw_votes": 58477.68,
+          "dom_votes": 57930.0,
+          "full_to_each_votes": 70876.0
+        },
+        "47": {
+          "aw_votes": 50556.33,
+          "dom_votes": 50433.0,
+          "full_to_each_votes": 67609.0
+        },
+        "48": {
+          "aw_votes": 42730.62,
+          "dom_votes": 42119.0,
+          "full_to_each_votes": 55317.0
+        },
+        "49": {
+          "aw_votes": 51416.85,
+          "dom_votes": 51331.0,
+          "full_to_each_votes": 59751.0
+        },
+        "50": {
+          "aw_votes": 65105.92,
+          "dom_votes": 65349.0,
+          "full_to_each_votes": 87367.0
+        },
+        "51": {
+          "aw_votes": 67044.01,
+          "dom_votes": 67296.0,
+          "full_to_each_votes": 74289.0
+        }
+      }
+    },
+    "2020": {
+      "office": "president",
+      "crosswalk_used": "ed_to_council_crosswalk_legacy.parquet",
+      "raw_candidate_votes_all_eds": 3034405,
+      "raw_candidate_votes_matched_eds": 3034404,
+      "unmatched_ed_votes": 1,
+      "coverage_pct_of_raw": 100.0,
+      "sum_cd_aw_votes": 3034404.0,
+      "sum_cd_dom_votes": 3034404.0,
+      "sum_cd_full_to_each_votes": 3972188.0,
+      "overcount_pct_aw_vs_matched": 0.0,
+      "loss_pct_aw_vs_matched": -0.0,
+      "overcount_pct_dom_vs_matched": 0.0,
+      "loss_pct_dom_vs_matched": 0.0,
+      "full_to_each_overcount_ratio_vs_matched": 1.30905,
+      "per_cd_votes": {
+        "1": {
+          "aw_votes": 63126.16,
+          "dom_votes": 62362.0,
+          "full_to_each_votes": 75155.0
+        },
+        "2": {
+          "aw_votes": 69635.09,
+          "dom_votes": 71804.0,
+          "full_to_each_votes": 93032.0
+        },
+        "3": {
+          "aw_votes": 74116.94,
+          "dom_votes": 72972.0,
+          "full_to_each_votes": 86862.0
+        },
+        "4": {
+          "aw_votes": 75267.79,
+          "dom_votes": 74576.0,
+          "full_to_each_votes": 106568.0
+        },
+        "5": {
+          "aw_votes": 80342.38,
+          "dom_votes": 80747.0,
+          "full_to_each_votes": 98152.0
+        },
+        "6": {
+          "aw_votes": 84128.32,
+          "dom_votes": 84004.0,
+          "full_to_each_votes": 115988.0
+        },
+        "7": {
+          "aw_votes": 73010.78,
+          "dom_votes": 72474.0,
+          "full_to_each_votes": 92523.0
+        },
+        "8": {
+          "aw_votes": 54823.07,
+          "dom_votes": 54768.0,
+          "full_to_each_votes": 72588.0
+        },
+        "9": {
+          "aw_votes": 70688.51,
+          "dom_votes": 71002.0,
+          "full_to_each_votes": 85203.0
+        },
+        "10": {
+          "aw_votes": 68174.76,
+          "dom_votes": 68480.0,
+          "full_to_each_votes": 79490.0
+        },
+        "11": {
+          "aw_votes": 59774.91,
+          "dom_votes": 59749.0,
+          "full_to_each_votes": 78677.0
+        },
+        "12": {
+          "aw_votes": 60910.25,
+          "dom_votes": 61113.0,
+          "full_to_each_votes": 68674.0
+        },
+        "13": {
+          "aw_votes": 55242.38,
+          "dom_votes": 55391.0,
+          "full_to_each_votes": 68547.0
+        },
+        "14": {
+          "aw_votes": 43433.34,
+          "dom_votes": 43392.0,
+          "full_to_each_votes": 59706.0
+        },
+        "15": {
+          "aw_votes": 41486.46,
+          "dom_votes": 41055.0,
+          "full_to_each_votes": 59226.0
+        },
+        "16": {
+          "aw_votes": 47785.61,
+          "dom_votes": 48543.0,
+          "full_to_each_votes": 60154.0
+        },
+        "17": {
+          "aw_votes": 44618.05,
+          "dom_votes": 43934.0,
+          "full_to_each_votes": 58629.0
+        },
+        "18": {
+          "aw_votes": 54054.47,
+          "dom_votes": 54253.0,
+          "full_to_each_votes": 59285.0
+        },
+        "19": {
+          "aw_votes": 65271.87,
+          "dom_votes": 65558.0,
+          "full_to_each_votes": 75972.0
+        },
+        "20": {
+          "aw_votes": 37377.49,
+          "dom_votes": 36866.0,
+          "full_to_each_votes": 46670.0
+        },
+        "21": {
+          "aw_votes": 32721.88,
+          "dom_votes": 32861.0,
+          "full_to_each_votes": 46463.0
+        },
+        "22": {
+          "aw_votes": 61094.48,
+          "dom_votes": 60274.0,
+          "full_to_each_votes": 73635.0
+        },
+        "23": {
+          "aw_votes": 67459.04,
+          "dom_votes": 67157.0,
+          "full_to_each_votes": 83207.0
+        },
+        "24": {
+          "aw_votes": 55589.11,
+          "dom_votes": 55965.0,
+          "full_to_each_votes": 75125.0
+        },
+        "25": {
+          "aw_votes": 49443.27,
+          "dom_votes": 49511.0,
+          "full_to_each_votes": 66852.0
+        },
+        "26": {
+          "aw_votes": 56916.1,
+          "dom_votes": 57746.0,
+          "full_to_each_votes": 76075.0
+        },
+        "27": {
+          "aw_votes": 62451.13,
+          "dom_votes": 63035.0,
+          "full_to_each_votes": 88916.0
+        },
+        "28": {
+          "aw_votes": 54907.61,
+          "dom_votes": 54574.0,
+          "full_to_each_votes": 70294.0
+        },
+        "29": {
+          "aw_votes": 61366.07,
+          "dom_votes": 61422.0,
+          "full_to_each_votes": 78860.0
+        },
+        "30": {
+          "aw_votes": 54664.76,
+          "dom_votes": 53702.0,
+          "full_to_each_votes": 76745.0
+        },
+        "31": {
+          "aw_votes": 56350.98,
+          "dom_votes": 56600.0,
+          "full_to_each_votes": 66089.0
+        },
+        "32": {
+          "aw_votes": 61496.9,
+          "dom_votes": 61236.0,
+          "full_to_each_votes": 84322.0
+        },
+        "33": {
+          "aw_votes": 60411.23,
+          "dom_votes": 60258.0,
+          "full_to_each_votes": 93379.0
+        },
+        "34": {
+          "aw_votes": 59987.96,
+          "dom_votes": 60480.0,
+          "full_to_each_votes": 85075.0
+        },
+        "35": {
+          "aw_votes": 75286.32,
+          "dom_votes": 74299.0,
+          "full_to_each_votes": 96071.0
+        },
+        "36": {
+          "aw_votes": 63650.19,
+          "dom_votes": 64894.0,
+          "full_to_each_votes": 84333.0
+        },
+        "37": {
+          "aw_votes": 45059.53,
+          "dom_votes": 44011.0,
+          "full_to_each_votes": 70211.0
+        },
+        "38": {
+          "aw_votes": 44101.74,
+          "dom_votes": 42365.0,
+          "full_to_each_votes": 71636.0
+        },
+        "39": {
+          "aw_votes": 79533.26,
+          "dom_votes": 79211.0,
+          "full_to_each_votes": 107015.0
+        },
+        "40": {
+          "aw_votes": 65106.2,
+          "dom_votes": 63685.0,
+          "full_to_each_votes": 90085.0
+        },
+        "41": {
+          "aw_votes": 53536.86,
+          "dom_votes": 53673.0,
+          "full_to_each_votes": 75621.0
+        },
+        "42": {
+          "aw_votes": 54036.07,
+          "dom_votes": 55856.0,
+          "full_to_each_votes": 71580.0
+        },
+        "43": {
+          "aw_votes": 33159.41,
+          "dom_votes": 34071.0,
+          "full_to_each_votes": 53947.0
+        },
+        "44": {
+          "aw_votes": 43973.85,
+          "dom_votes": 44641.0,
+          "full_to_each_votes": 64895.0
+        },
+        "45": {
+          "aw_votes": 63270.62,
+          "dom_votes": 65142.0,
+          "full_to_each_votes": 88968.0
+        },
+        "46": {
+          "aw_votes": 63438.29,
+          "dom_votes": 62822.0,
+          "full_to_each_votes": 77384.0
+        },
+        "47": {
+          "aw_votes": 58393.97,
+          "dom_votes": 58327.0,
+          "full_to_each_votes": 79177.0
+        },
+        "48": {
+          "aw_votes": 53010.67,
+          "dom_votes": 52347.0,
+          "full_to_each_votes": 67702.0
+        },
+        "49": {
+          "aw_votes": 60155.33,
+          "dom_votes": 59907.0,
+          "full_to_each_votes": 69777.0
+        },
+        "50": {
+          "aw_votes": 78497.28,
+          "dom_votes": 78806.0,
+          "full_to_each_votes": 105429.0
+        },
+        "51": {
+          "aw_votes": 82065.25,
+          "dom_votes": 82483.0,
+          "full_to_each_votes": 92219.0
+        }
+      }
+    },
+    "2024": {
+      "office": "president",
+      "crosswalk_used": "ed_to_council_crosswalk.parquet",
+      "raw_candidate_votes_all_eds": 2701573,
+      "raw_candidate_votes_matched_eds": 2687795,
+      "unmatched_ed_votes": 13778,
+      "coverage_pct_of_raw": 99.49,
+      "sum_cd_aw_votes": 2687795.0,
+      "sum_cd_dom_votes": 2687795.0,
+      "sum_cd_full_to_each_votes": 3529719.0,
+      "overcount_pct_aw_vs_matched": 0.0,
+      "loss_pct_aw_vs_matched": 0.0,
+      "overcount_pct_dom_vs_matched": 0.0,
+      "loss_pct_dom_vs_matched": 0.0,
+      "full_to_each_overcount_ratio_vs_matched": 1.31324,
+      "per_cd_votes": {
+        "1": {
+          "aw_votes": 59235.0,
+          "dom_votes": 59235.0,
+          "full_to_each_votes": 72822.0
+        },
+        "2": {
+          "aw_votes": 65530.0,
+          "dom_votes": 65530.0,
+          "full_to_each_votes": 83648.0
+        },
+        "3": {
+          "aw_votes": 66168.99,
+          "dom_votes": 66169.0,
+          "full_to_each_votes": 72786.0
+        },
+        "4": {
+          "aw_votes": 72510.0,
+          "dom_votes": 72510.0,
+          "full_to_each_votes": 98814.0
+        },
+        "5": {
+          "aw_votes": 74638.0,
+          "dom_votes": 74638.0,
+          "full_to_each_votes": 93445.0
+        },
+        "6": {
+          "aw_votes": 72008.01,
+          "dom_votes": 72008.0,
+          "full_to_each_votes": 101822.0
+        },
+        "7": {
+          "aw_votes": 63677.08,
+          "dom_votes": 63677.0,
+          "full_to_each_votes": 79279.0
+        },
+        "8": {
+          "aw_votes": 46295.0,
+          "dom_votes": 46295.0,
+          "full_to_each_votes": 66789.0
+        },
+        "9": {
+          "aw_votes": 59524.85,
+          "dom_votes": 59525.0,
+          "full_to_each_votes": 70720.0
+        },
+        "10": {
+          "aw_votes": 58184.06,
+          "dom_votes": 58184.0,
+          "full_to_each_votes": 67248.0
+        },
+        "11": {
+          "aw_votes": 52764.23,
+          "dom_votes": 52764.0,
+          "full_to_each_votes": 66408.0
+        },
+        "12": {
+          "aw_votes": 52373.99,
+          "dom_votes": 52374.0,
+          "full_to_each_votes": 60260.0
+        },
+        "13": {
+          "aw_votes": 49287.96,
+          "dom_votes": 49288.0,
+          "full_to_each_votes": 66293.0
+        },
+        "14": {
+          "aw_votes": 35692.63,
+          "dom_votes": 35693.0,
+          "full_to_each_votes": 48691.0
+        },
+        "15": {
+          "aw_votes": 33493.01,
+          "dom_votes": 33493.0,
+          "full_to_each_votes": 54475.0
+        },
+        "16": {
+          "aw_votes": 38344.14,
+          "dom_votes": 38344.0,
+          "full_to_each_votes": 49661.0
+        },
+        "17": {
+          "aw_votes": 36869.04,
+          "dom_votes": 36869.0,
+          "full_to_each_votes": 52079.0
+        },
+        "18": {
+          "aw_votes": 41204.0,
+          "dom_votes": 41204.0,
+          "full_to_each_votes": 45429.0
+        },
+        "19": {
+          "aw_votes": 56952.0,
+          "dom_votes": 56952.0,
+          "full_to_each_votes": 66026.0
+        },
+        "20": {
+          "aw_votes": 32075.0,
+          "dom_votes": 32075.0,
+          "full_to_each_votes": 45009.0
+        },
+        "21": {
+          "aw_votes": 27469.0,
+          "dom_votes": 27469.0,
+          "full_to_each_votes": 37841.0
+        },
+        "22": {
+          "aw_votes": 58035.0,
+          "dom_votes": 58035.0,
+          "full_to_each_votes": 64265.0
+        },
+        "23": {
+          "aw_votes": 59675.0,
+          "dom_votes": 59675.0,
+          "full_to_each_votes": 73438.0
+        },
+        "24": {
+          "aw_votes": 49543.94,
+          "dom_votes": 49544.0,
+          "full_to_each_votes": 66262.0
+        },
+        "25": {
+          "aw_votes": 43023.0,
+          "dom_votes": 43023.0,
+          "full_to_each_votes": 57399.0
+        },
+        "26": {
+          "aw_votes": 49368.01,
+          "dom_votes": 49368.0,
+          "full_to_each_votes": 68089.0
+        },
+        "27": {
+          "aw_votes": 54205.95,
+          "dom_votes": 54206.0,
+          "full_to_each_votes": 73466.0
+        },
+        "28": {
+          "aw_votes": 46899.05,
+          "dom_votes": 46899.0,
+          "full_to_each_votes": 60942.0
+        },
+        "29": {
+          "aw_votes": 55490.05,
+          "dom_votes": 55490.0,
+          "full_to_each_votes": 72803.0
+        },
+        "30": {
+          "aw_votes": 50658.97,
+          "dom_votes": 50659.0,
+          "full_to_each_votes": 70653.0
+        },
+        "31": {
+          "aw_votes": 49548.0,
+          "dom_votes": 49548.0,
+          "full_to_each_votes": 60006.0
+        },
+        "32": {
+          "aw_votes": 55689.02,
+          "dom_votes": 55689.0,
+          "full_to_each_votes": 81031.0
+        },
+        "33": {
+          "aw_votes": 57869.3,
+          "dom_votes": 57869.0,
+          "full_to_each_votes": 81468.0
+        },
+        "34": {
+          "aw_votes": 54473.77,
+          "dom_votes": 54474.0,
+          "full_to_each_votes": 72700.0
+        },
+        "35": {
+          "aw_votes": 66558.94,
+          "dom_votes": 66559.0,
+          "full_to_each_votes": 83411.0
+        },
+        "36": {
+          "aw_votes": 56719.0,
+          "dom_votes": 56719.0,
+          "full_to_each_votes": 72850.0
+        },
+        "37": {
+          "aw_votes": 39560.0,
+          "dom_votes": 39560.0,
+          "full_to_each_votes": 58191.0
+        },
+        "38": {
+          "aw_votes": 38887.94,
+          "dom_votes": 38888.0,
+          "full_to_each_votes": 62274.0
+        },
+        "39": {
+          "aw_votes": 74824.13,
+          "dom_votes": 74824.0,
+          "full_to_each_votes": 105376.0
+        },
+        "40": {
+          "aw_votes": 60200.85,
+          "dom_votes": 60201.0,
+          "full_to_each_votes": 80117.0
+        },
+        "41": {
+          "aw_votes": 45142.0,
+          "dom_votes": 45142.0,
+          "full_to_each_votes": 65847.0
+        },
+        "42": {
+          "aw_votes": 44932.0,
+          "dom_votes": 44932.0,
+          "full_to_each_votes": 62873.0
+        },
+        "43": {
+          "aw_votes": 29162.0,
+          "dom_votes": 29162.0,
+          "full_to_each_votes": 45461.0
+        },
+        "44": {
+          "aw_votes": 41417.0,
+          "dom_votes": 41417.0,
+          "full_to_each_votes": 60831.0
+        },
+        "45": {
+          "aw_votes": 54914.0,
+          "dom_votes": 54914.0,
+          "full_to_each_votes": 76145.0
+        },
+        "46": {
+          "aw_votes": 59746.0,
+          "dom_votes": 59746.0,
+          "full_to_each_votes": 74176.0
+        },
+        "47": {
+          "aw_votes": 50513.18,
+          "dom_votes": 50513.0,
+          "full_to_each_votes": 71405.0
+        },
+        "48": {
+          "aw_votes": 47812.88,
+          "dom_votes": 47813.0,
+          "full_to_each_votes": 61125.0
+        },
+        "49": {
+          "aw_votes": 51411.98,
+          "dom_votes": 51412.0,
+          "full_to_each_votes": 64672.0
+        },
+        "50": {
+          "aw_votes": 69087.08,
+          "dom_votes": 69087.0,
+          "full_to_each_votes": 93517.0
+        },
+        "51": {
+          "aw_votes": 78130.94,
+          "dom_votes": 78131.0,
+          "full_to_each_votes": 89381.0
+        }
+      }
+    }
+  },
+  "per_cd_correlations": {
+    "mayoral_measures": {
+      "dem_share_aw": {
+        "counterpart_full_to_each": "dem_share",
+        "n_cd_wave_pairs": 153,
+        "per_cd_correlation_across_waves": {
+          "1": 0.9982,
+          "2": 0.9984,
+          "3": 0.9903,
+          "4": 0.9961,
+          "5": 1.0,
+          "6": 0.9963,
+          "7": 0.9846,
+          "8": 0.9843,
+          "9": 0.9809,
+          "10": 0.9924,
+          "11": 0.9666,
+          "12": 0.4288,
+          "13": 0.9787,
+          "14": 0.9943,
+          "15": 0.9871,
+          "16": 0.9992,
+          "17": 0.9994,
+          "18": 0.9874,
+          "19": 0.9998,
+          "20": 0.9813,
+          "21": 0.8125,
+          "22": 0.9937,
+          "23": 0.9985,
+          "24": 0.9994,
+          "25": 0.9995,
+          "26": 1.0,
+          "27": 0.9212,
+          "28": 0.9186,
+          "29": 0.9999,
+          "30": 0.9997,
+          "31": 0.9956,
+          "32": 0.9994,
+          "33": 0.9984,
+          "34": 0.9929,
+          "35": 0.9926,
+          "36": 0.9951,
+          "37": 0.9757,
+          "38": 0.9995,
+          "39": 0.9959,
+          "40": 0.9831,
+          "41": 0.9882,
+          "42": 0.9973,
+          "43": 0.9992,
+          "44": 0.9983,
+          "45": 0.9997,
+          "46": 0.9991,
+          "47": 0.9951,
+          "48": 0.9939,
+          "49": 1.0,
+          "50": 0.9992,
+          "51": 0.9999
+        },
+        "per_wave_correlation_across_districts": {
+          "2017": 0.9554,
+          "2021": 0.9564,
+          "2025": 0.9922
+        },
+        "overall_correlation": 0.964919
+      },
+      "dem_share_mayor_allcand_aw": {
+        "counterpart_full_to_each": "dem_share_mayor_allcand",
+        "n_cd_wave_pairs": 153,
+        "per_cd_correlation_across_waves": {
+          "1": 1.0,
+          "2": 0.998,
+          "3": 0.9844,
+          "4": 0.9838,
+          "5": 0.9992,
+          "6": 0.9956,
+          "7": 0.9925,
+          "8": 0.9986,
+          "9": 0.9993,
+          "10": 1.0,
+          "11": 0.9823,
+          "12": 1.0,
+          "13": 0.9997,
+          "14": 1.0,
+          "15": 1.0,
+          "16": 0.9999,
+          "17": 0.9998,
+          "18": 1.0,
+          "19": 0.9595,
+          "20": 0.9334,
+          "21": 0.9971,
+          "22": 0.6695,
+          "23": 0.9956,
+          "24": 0.9998,
+          "25": 0.8788,
+          "26": -0.9706,
+          "27": 1.0,
+          "28": 1.0,
+          "29": 0.9999,
+          "30": -0.9993,
+          "31": 0.9994,
+          "32": 0.9419,
+          "33": 0.9982,
+          "34": 0.9515,
+          "35": 0.9999,
+          "36": 0.996,
+          "37": 0.969,
+          "38": 0.8391,
+          "39": 0.998,
+          "40": 0.9962,
+          "41": 0.9997,
+          "42": 0.9989,
+          "43": 0.8968,
+          "44": 0.9983,
+          "45": 1.0,
+          "46": 0.9997,
+          "47": 0.897,
+          "48": 0.9989,
+          "49": 0.4179,
+          "50": 0.9526,
+          "51": 0.9871
+        },
+        "per_wave_correlation_across_districts": {
+          "2017": 0.9547,
+          "2021": 0.956,
+          "2025": 0.9939
+        },
+        "overall_correlation": 0.969672
+      },
+      "dem_share_vintage_aw": {
+        "counterpart_full_to_each": "dem_share_vintage",
+        "n_cd_wave_pairs": 153,
+        "per_cd_correlation_across_waves": {
+          "1": 0.9999,
+          "2": 0.9995,
+          "3": 1.0,
+          "4": 0.9998,
+          "5": 0.9999,
+          "6": 0.9999,
+          "7": 0.9997,
+          "8": 0.9921,
+          "9": 0.9966,
+          "10": 0.9999,
+          "11": 0.9952,
+          "12": 0.9932,
+          "13": 0.9988,
+          "14": 0.9992,
+          "15": 0.998,
+          "16": 0.9997,
+          "17": 0.999,
+          "18": 0.9998,
+          "19": 0.9999,
+          "20": 0.9981,
+          "21": 0.9784,
+          "22": 0.9995,
+          "23": 0.9996,
+          "24": 0.9994,
+          "25": 0.9982,
+          "26": 0.9996,
+          "27": 0.9888,
+          "28": 0.9901,
+          "29": 0.9993,
+          "30": 0.9999,
+          "31": 0.9997,
+          "32": 0.9997,
+          "33": 0.9923,
+          "34": 0.9982,
+          "35": 0.9998,
+          "36": 0.9989,
+          "37": 0.9958,
+          "38": 0.9983,
+          "39": 0.9998,
+          "40": 0.9988,
+          "41": 0.9957,
+          "42": 0.7843,
+          "43": 0.9999,
+          "44": 1.0,
+          "45": 1.0,
+          "46": 1.0,
+          "47": 0.9993,
+          "48": 0.9998,
+          "49": 0.9995,
+          "50": 0.9996,
+          "51": 1.0
+        },
+        "per_wave_correlation_across_districts": {
+          "2017": 0.9953,
+          "2021": 0.996,
+          "2025": 0.9922
+        },
+        "overall_correlation": 0.995395
+      },
+      "dem_share_mayor_allcand_vintage_aw": {
+        "counterpart_full_to_each": "dem_share_mayor_allcand_vintage",
+        "n_cd_wave_pairs": 153,
+        "per_cd_correlation_across_waves": {
+          "1": 0.9999,
+          "2": 1.0,
+          "3": 1.0,
+          "4": 0.9999,
+          "5": 0.9999,
+          "6": 0.9998,
+          "7": 1.0,
+          "8": 0.999,
+          "9": 0.9998,
+          "10": 0.9998,
+          "11": 0.9973,
+          "12": 1.0,
+          "13": 0.9986,
+          "14": 1.0,
+          "15": 1.0,
+          "16": 1.0,
+          "17": 1.0,
+          "18": 1.0,
+          "19": 0.9998,
+          "20": 0.9959,
+          "21": 1.0,
+          "22": 0.9959,
+          "23": 0.9974,
+          "24": 0.9991,
+          "25": 0.9998,
+          "26": 0.9879,
+          "27": 1.0,
+          "28": 0.9998,
+          "29": 0.9978,
+          "30": 0.9894,
+          "31": 1.0,
+          "32": 0.9856,
+          "33": 0.9866,
+          "34": 0.9996,
+          "35": 0.9999,
+          "36": 0.9997,
+          "37": 1.0,
+          "38": 0.9814,
+          "39": 0.9999,
+          "40": 1.0,
+          "41": 0.9998,
+          "42": 1.0,
+          "43": 0.9477,
+          "44": 0.9999,
+          "45": 1.0,
+          "46": 1.0,
+          "47": 0.9825,
+          "48": 0.9991,
+          "49": 0.9986,
+          "50": 0.981,
+          "51": 0.9997
+        },
+        "per_wave_correlation_across_districts": {
+          "2017": 0.9951,
+          "2021": 0.996,
+          "2025": 0.9939
+        },
+        "overall_correlation": 0.995805
+      },
+      "dem_share_vintage_dom": {
+        "counterpart_full_to_each": "dem_share_vintage",
+        "n_cd_wave_pairs": 153,
+        "per_cd_correlation_across_waves": {
+          "1": 1.0,
+          "2": 0.9998,
+          "3": 1.0,
+          "4": 0.9998,
+          "5": 0.9999,
+          "6": 0.9999,
+          "7": 0.9996,
+          "8": 0.9945,
+          "9": 0.9969,
+          "10": 0.9999,
+          "11": 0.9952,
+          "12": 0.9945,
+          "13": 0.9988,
+          "14": 0.9992,
+          "15": 0.9979,
+          "16": 0.9997,
+          "17": 0.9992,
+          "18": 0.9998,
+          "19": 0.9999,
+          "20": 0.9977,
+          "21": 0.979,
+          "22": 0.9995,
+          "23": 0.9995,
+          "24": 0.9992,
+          "25": 0.9979,
+          "26": 0.9996,
+          "27": 0.9922,
+          "28": 0.988,
+          "29": 0.9992,
+          "30": 0.9999,
+          "31": 0.9998,
+          "32": 0.9997,
+          "33": 0.9929,
+          "34": 0.9981,
+          "35": 0.9995,
+          "36": 0.9992,
+          "37": 0.996,
+          "38": 0.9981,
+          "39": 0.9996,
+          "40": 0.999,
+          "41": 0.9976,
+          "42": 0.7823,
+          "43": 1.0,
+          "44": 1.0,
+          "45": 1.0,
+          "46": 1.0,
+          "47": 0.9994,
+          "48": 0.9997,
+          "49": 0.9995,
+          "50": 0.9996,
+          "51": 1.0
+        },
+        "per_wave_correlation_across_districts": {
+          "2017": 0.9949,
+          "2021": 0.9958,
+          "2025": 0.9922
+        },
+        "overall_correlation": 0.995162
+      },
+      "dem_share_mayor_allcand_vintage_dom": {
+        "counterpart_full_to_each": "dem_share_mayor_allcand_vintage",
+        "n_cd_wave_pairs": 153,
+        "per_cd_correlation_across_waves": {
+          "1": 0.9999,
+          "2": 1.0,
+          "3": 0.9999,
+          "4": 0.9999,
+          "5": 0.9999,
+          "6": 0.9997,
+          "7": 1.0,
+          "8": 0.9993,
+          "9": 0.9999,
+          "10": 0.9998,
+          "11": 0.9973,
+          "12": 1.0,
+          "13": 0.9987,
+          "14": 1.0,
+          "15": 1.0,
+          "16": 1.0,
+          "17": 1.0,
+          "18": 1.0,
+          "19": 0.9998,
+          "20": 0.9955,
+          "21": 0.9999,
+          "22": 0.9955,
+          "23": 0.997,
+          "24": 0.9989,
+          "25": 0.9996,
+          "26": 0.9849,
+          "27": 1.0,
+          "28": 0.9998,
+          "29": 0.9973,
+          "30": 0.9878,
+          "31": 1.0,
+          "32": 0.9882,
+          "33": 0.9869,
+          "34": 0.9994,
+          "35": 0.9998,
+          "36": 0.9998,
+          "37": 0.9998,
+          "38": 0.9985,
+          "39": 0.9998,
+          "40": 1.0,
+          "41": 0.9999,
+          "42": 1.0,
+          "43": 0.9503,
+          "44": 0.9999,
+          "45": 1.0,
+          "46": 1.0,
+          "47": 0.9869,
+          "48": 0.9988,
+          "49": 0.9982,
+          "50": 0.9855,
+          "51": 0.9997
+        },
+        "per_wave_correlation_across_districts": {
+          "2017": 0.9948,
+          "2021": 0.9958,
+          "2025": 0.9939
+        },
+        "overall_correlation": 0.995618
+      }
+    },
+    "presidential_measures": {
+      "dem_share_pres_aw": {
+        "counterpart_full_to_each": "dem_share_pres",
+        "n_cd_wave_pairs": 153,
+        "per_cd_correlation_across_waves": {
+          "1": 0.9836,
+          "2": 1.0,
+          "3": 1.0,
+          "4": 0.9894,
+          "5": 0.994,
+          "6": 1.0,
+          "7": 0.9973,
+          "8": 1.0,
+          "9": 0.9959,
+          "10": 0.9998,
+          "11": 0.9966,
+          "12": 0.0921,
+          "13": 1.0,
+          "14": 0.9999,
+          "15": 0.9999,
+          "16": 0.9997,
+          "17": 0.9998,
+          "18": 0.9996,
+          "19": 0.9974,
+          "20": 1.0,
+          "21": 0.9999,
+          "22": 0.9958,
+          "23": 0.9994,
+          "24": 0.9945,
+          "25": 0.9985,
+          "26": 0.9819,
+          "27": 0.9973,
+          "28": 0.9998,
+          "29": 0.9996,
+          "30": 0.9968,
+          "31": 0.8637,
+          "32": 0.9999,
+          "33": 0.83,
+          "34": 0.9995,
+          "35": 0.9896,
+          "36": 0.9957,
+          "37": 1.0,
+          "38": 0.9388,
+          "39": 0.4771,
+          "40": 0.9788,
+          "41": 0.9972,
+          "42": 0.9972,
+          "43": 0.9991,
+          "44": 0.9761,
+          "45": 0.5812,
+          "46": 0.9937,
+          "47": 0.989,
+          "48": 0.9344,
+          "49": 0.9338,
+          "50": 0.9807,
+          "51": 0.9992
+        },
+        "per_wave_correlation_across_districts": {
+          "2016": 0.9581,
+          "2020": 0.9532,
+          "2024": 0.9945
+        },
+        "overall_correlation": 0.971488
+      },
+      "dem_share_pres_vintage_aw": {
+        "counterpart_full_to_each": "dem_share_pres_vintage",
+        "n_cd_wave_pairs": 153,
+        "per_cd_correlation_across_waves": {
+          "1": 0.9997,
+          "2": 0.9998,
+          "3": 1.0,
+          "4": 0.9994,
+          "5": 1.0,
+          "6": 0.9999,
+          "7": 1.0,
+          "8": 1.0,
+          "9": 1.0,
+          "10": 1.0,
+          "11": 0.9999,
+          "12": 0.9996,
+          "13": 0.9984,
+          "14": 1.0,
+          "15": 0.9999,
+          "16": 1.0,
+          "17": 1.0,
+          "18": 1.0,
+          "19": 0.9998,
+          "20": 0.9998,
+          "21": 0.9999,
+          "22": 0.9999,
+          "23": 0.9998,
+          "24": 0.9998,
+          "25": 1.0,
+          "26": 0.9998,
+          "27": 0.9995,
+          "28": 0.9997,
+          "29": 0.9997,
+          "30": 0.9999,
+          "31": 1.0,
+          "32": 0.9988,
+          "33": 0.9857,
+          "34": 0.9945,
+          "35": 0.9969,
+          "36": 0.9942,
+          "37": 0.9992,
+          "38": 1.0,
+          "39": 0.9999,
+          "40": 0.9916,
+          "41": 1.0,
+          "42": 0.9949,
+          "43": 0.9982,
+          "44": 0.9989,
+          "45": 0.9931,
+          "46": 0.993,
+          "47": 0.9999,
+          "48": 0.9999,
+          "49": 0.9987,
+          "50": 0.9998,
+          "51": 0.9996
+        },
+        "per_wave_correlation_across_districts": {
+          "2016": 0.9952,
+          "2020": 0.995,
+          "2024": 0.9945
+        },
+        "overall_correlation": 0.995174
+      },
+      "dem_share_pres_vintage_dom": {
+        "counterpart_full_to_each": "dem_share_pres_vintage",
+        "n_cd_wave_pairs": 153,
+        "per_cd_correlation_across_waves": {
+          "1": 0.9997,
+          "2": 0.9998,
+          "3": 1.0,
+          "4": 0.9994,
+          "5": 1.0,
+          "6": 0.9998,
+          "7": 1.0,
+          "8": 1.0,
+          "9": 1.0,
+          "10": 1.0,
+          "11": 0.9999,
+          "12": 0.9996,
+          "13": 0.9982,
+          "14": 1.0,
+          "15": 0.9999,
+          "16": 1.0,
+          "17": 1.0,
+          "18": 1.0,
+          "19": 0.9998,
+          "20": 0.9998,
+          "21": 0.9999,
+          "22": 0.9997,
+          "23": 0.9999,
+          "24": 0.9998,
+          "25": 1.0,
+          "26": 0.9998,
+          "27": 0.9993,
+          "28": 0.9996,
+          "29": 0.9998,
+          "30": 1.0,
+          "31": 1.0,
+          "32": 0.9986,
+          "33": 0.9817,
+          "34": 0.9931,
+          "35": 0.9967,
+          "36": 0.9936,
+          "37": 0.9991,
+          "38": 1.0,
+          "39": 0.9989,
+          "40": 0.9903,
+          "41": 0.9997,
+          "42": 0.9946,
+          "43": 0.9982,
+          "44": 0.9995,
+          "45": 0.9944,
+          "46": 0.9925,
+          "47": 0.9999,
+          "48": 0.9999,
+          "49": 0.9987,
+          "50": 0.9999,
+          "51": 0.9998
+        },
+        "per_wave_correlation_across_districts": {
+          "2016": 0.9948,
+          "2020": 0.9947,
+          "2024": 0.9945
+        },
+        "overall_correlation": 0.994982
+      }
+    }
+  }
+}

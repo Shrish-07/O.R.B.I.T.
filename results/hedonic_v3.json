@@ -1,0 +1,792 @@
+{
+  "part1_why_n_23789": {
+    "headline": "The upgraded hedonic specification requires positive GROSS and LAND square feet; only 23,789 of the 520,365-row analysis base sample satisfy both, and after the building-class/tax-class FE requirements 23,789 rows remain for the legacy measures. Missing gross/land square footage is concentrated in the smaller building-class and tax-class categories (see shares below).",
+    "funnel": [
+      {
+        "step": "analysis base sample",
+        "rows": 520365
+      },
+      {
+        "step": "land sq ft > 0",
+        "rows": 26312
+      },
+      {
+        "step": "gross sq ft > 0",
+        "rows": 40294
+      },
+      {
+        "step": "gross and land sq ft both > 0 (upgraded hedonic sample)",
+        "rows": 23789
+      },
+      {
+        "step": "both > 0 + building-class-category non-empty + tax class non-missing (robustness hedonic sample, N=23,789 for the legacy measures)",
+        "rows": 23789
+      }
+    ],
+    "share_nonmissing_by_building_class_category": {
+      "01 ONE FAMILY DWELLINGS": {
+        "rows": 115719.0,
+        "gross_sqft_nonmissing": 21564.0,
+        "land_sqft_nonmissing": 13415.0,
+        "both_nonmissing": 11825.0,
+        "gross_sqft_nonmissing_pct": 18.63,
+        "land_sqft_nonmissing_pct": 11.59,
+        "both_nonmissing_pct": 10.22
+      },
+      "02 TWO FAMILY DWELLINGS": {
+        "rows": 84315.0,
+        "gross_sqft_nonmissing": 8259.0,
+        "land_sqft_nonmissing": 8178.0,
+        "both_nonmissing": 7703.0,
+        "gross_sqft_nonmissing_pct": 9.8,
+        "land_sqft_nonmissing_pct": 9.7,
+        "both_nonmissing_pct": 9.14
+      },
+      "03 THREE FAMILY DWELLINGS": {
+        "rows": 20226.0,
+        "gross_sqft_nonmissing": 1503.0,
+        "land_sqft_nonmissing": 1549.0,
+        "both_nonmissing": 1475.0,
+        "gross_sqft_nonmissing_pct": 7.43,
+        "land_sqft_nonmissing_pct": 7.66,
+        "both_nonmissing_pct": 7.29
+      },
+      "04 TAX CLASS 1 CONDOS": {
+        "rows": 9937.0,
+        "gross_sqft_nonmissing": 410.0,
+        "land_sqft_nonmissing": 11.0,
+        "both_nonmissing": 9.0,
+        "gross_sqft_nonmissing_pct": 4.13,
+        "land_sqft_nonmissing_pct": 0.11,
+        "both_nonmissing_pct": 0.09
+      },
+      "05 TAX CLASS 1 VACANT LAND": {
+        "rows": 977.0,
+        "gross_sqft_nonmissing": 1.0,
+        "land_sqft_nonmissing": 85.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 0.1,
+        "land_sqft_nonmissing_pct": 8.7,
+        "both_nonmissing_pct": 0.0
+      },
+      "06 TAX CLASS 1 - OTHER": {
+        "rows": 325.0,
+        "gross_sqft_nonmissing": 12.0,
+        "land_sqft_nonmissing": 61.0,
+        "both_nonmissing": 3.0,
+        "gross_sqft_nonmissing_pct": 3.69,
+        "land_sqft_nonmissing_pct": 18.77,
+        "both_nonmissing_pct": 0.92
+      },
+      "07 RENTALS - WALKUP APARTMENTS": {
+        "rows": 14865.0,
+        "gross_sqft_nonmissing": 955.0,
+        "land_sqft_nonmissing": 986.0,
+        "both_nonmissing": 955.0,
+        "gross_sqft_nonmissing_pct": 6.42,
+        "land_sqft_nonmissing_pct": 6.63,
+        "both_nonmissing_pct": 6.42
+      },
+      "08 RENTALS - ELEVATOR APARTMENTS": {
+        "rows": 2559.0,
+        "gross_sqft_nonmissing": 190.0,
+        "land_sqft_nonmissing": 191.0,
+        "both_nonmissing": 190.0,
+        "gross_sqft_nonmissing_pct": 7.42,
+        "land_sqft_nonmissing_pct": 7.46,
+        "both_nonmissing_pct": 7.42
+      },
+      "09 COOPS - WALKUP APARTMENTS": {
+        "rows": 22930.0,
+        "gross_sqft_nonmissing": 0.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 0.0,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "10 COOPS - ELEVATOR APARTMENTS": {
+        "rows": 110665.0,
+        "gross_sqft_nonmissing": 0.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 0.0,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "11 SPECIAL CONDO BILLING LOTS": {
+        "rows": 724.0,
+        "gross_sqft_nonmissing": 88.0,
+        "land_sqft_nonmissing": 9.0,
+        "both_nonmissing": 9.0,
+        "gross_sqft_nonmissing_pct": 12.15,
+        "land_sqft_nonmissing_pct": 1.24,
+        "both_nonmissing_pct": 1.24
+      },
+      "11A CONDO-RENTALS": {
+        "rows": 33.0,
+        "gross_sqft_nonmissing": 3.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 9.09,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "12 CONDOS - WALKUP APARTMENTS": {
+        "rows": 5250.0,
+        "gross_sqft_nonmissing": 407.0,
+        "land_sqft_nonmissing": 17.0,
+        "both_nonmissing": 16.0,
+        "gross_sqft_nonmissing_pct": 7.75,
+        "land_sqft_nonmissing_pct": 0.32,
+        "both_nonmissing_pct": 0.3
+      },
+      "13 CONDOS - ELEVATOR APARTMENTS": {
+        "rows": 83359.0,
+        "gross_sqft_nonmissing": 4631.0,
+        "land_sqft_nonmissing": 258.0,
+        "both_nonmissing": 249.0,
+        "gross_sqft_nonmissing_pct": 5.56,
+        "land_sqft_nonmissing_pct": 0.31,
+        "both_nonmissing_pct": 0.3
+      },
+      "14 RENTALS - 4-10 UNIT": {
+        "rows": 3101.0,
+        "gross_sqft_nonmissing": 201.0,
+        "land_sqft_nonmissing": 242.0,
+        "both_nonmissing": 201.0,
+        "gross_sqft_nonmissing_pct": 6.48,
+        "land_sqft_nonmissing_pct": 7.8,
+        "both_nonmissing_pct": 6.48
+      },
+      "15 CONDOS - 2-10 UNIT RESIDENTIAL": {
+        "rows": 8979.0,
+        "gross_sqft_nonmissing": 438.0,
+        "land_sqft_nonmissing": 9.0,
+        "both_nonmissing": 8.0,
+        "gross_sqft_nonmissing_pct": 4.88,
+        "land_sqft_nonmissing_pct": 0.1,
+        "both_nonmissing_pct": 0.09
+      },
+      "16 CONDOS - 2-10 UNIT WITH COMMERCIAL UNIT": {
+        "rows": 522.0,
+        "gross_sqft_nonmissing": 0.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 0.0,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "17 CONDO COOPS": {
+        "rows": 9960.0,
+        "gross_sqft_nonmissing": 0.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 0.0,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "21 OFFICE BUILDINGS": {
+        "rows": 2055.0,
+        "gross_sqft_nonmissing": 206.0,
+        "land_sqft_nonmissing": 207.0,
+        "both_nonmissing": 188.0,
+        "gross_sqft_nonmissing_pct": 10.02,
+        "land_sqft_nonmissing_pct": 10.07,
+        "both_nonmissing_pct": 9.15
+      },
+      "22 STORE BUILDINGS": {
+        "rows": 4744.0,
+        "gross_sqft_nonmissing": 545.0,
+        "land_sqft_nonmissing": 523.0,
+        "both_nonmissing": 452.0,
+        "gross_sqft_nonmissing_pct": 11.49,
+        "land_sqft_nonmissing_pct": 11.02,
+        "both_nonmissing_pct": 9.53
+      },
+      "23 LOFT BUILDINGS": {
+        "rows": 60.0,
+        "gross_sqft_nonmissing": 0.0,
+        "land_sqft_nonmissing": 1.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 0.0,
+        "land_sqft_nonmissing_pct": 1.67,
+        "both_nonmissing_pct": 0.0
+      },
+      "25 LUXURY HOTELS": {
+        "rows": 91.0,
+        "gross_sqft_nonmissing": 8.0,
+        "land_sqft_nonmissing": 8.0,
+        "both_nonmissing": 8.0,
+        "gross_sqft_nonmissing_pct": 8.79,
+        "land_sqft_nonmissing_pct": 8.79,
+        "both_nonmissing_pct": 8.79
+      },
+      "26 OTHER HOTELS": {
+        "rows": 645.0,
+        "gross_sqft_nonmissing": 12.0,
+        "land_sqft_nonmissing": 12.0,
+        "both_nonmissing": 12.0,
+        "gross_sqft_nonmissing_pct": 1.86,
+        "land_sqft_nonmissing_pct": 1.86,
+        "both_nonmissing_pct": 1.86
+      },
+      "27 FACTORIES": {
+        "rows": 959.0,
+        "gross_sqft_nonmissing": 80.0,
+        "land_sqft_nonmissing": 76.0,
+        "both_nonmissing": 75.0,
+        "gross_sqft_nonmissing_pct": 8.34,
+        "land_sqft_nonmissing_pct": 7.92,
+        "both_nonmissing_pct": 7.82
+      },
+      "28 COMMERCIAL CONDOS": {
+        "rows": 312.0,
+        "gross_sqft_nonmissing": 4.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 1.28,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "29 COMMERCIAL GARAGES": {
+        "rows": 1495.0,
+        "gross_sqft_nonmissing": 255.0,
+        "land_sqft_nonmissing": 170.0,
+        "both_nonmissing": 144.0,
+        "gross_sqft_nonmissing_pct": 17.06,
+        "land_sqft_nonmissing_pct": 11.37,
+        "both_nonmissing_pct": 9.63
+      },
+      "30 WAREHOUSES": {
+        "rows": 1501.0,
+        "gross_sqft_nonmissing": 142.0,
+        "land_sqft_nonmissing": 125.0,
+        "both_nonmissing": 124.0,
+        "gross_sqft_nonmissing_pct": 9.46,
+        "land_sqft_nonmissing_pct": 8.33,
+        "both_nonmissing_pct": 8.26
+      },
+      "31 COMMERCIAL VACANT LAND": {
+        "rows": 297.0,
+        "gross_sqft_nonmissing": 0.0,
+        "land_sqft_nonmissing": 23.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 0.0,
+        "land_sqft_nonmissing_pct": 7.74,
+        "both_nonmissing_pct": 0.0
+      },
+      "32 HOSPITAL AND HEALTH FACILITIES": {
+        "rows": 186.0,
+        "gross_sqft_nonmissing": 20.0,
+        "land_sqft_nonmissing": 19.0,
+        "both_nonmissing": 19.0,
+        "gross_sqft_nonmissing_pct": 10.75,
+        "land_sqft_nonmissing_pct": 10.22,
+        "both_nonmissing_pct": 10.22
+      },
+      "33 EDUCATIONAL FACILITIES": {
+        "rows": 242.0,
+        "gross_sqft_nonmissing": 26.0,
+        "land_sqft_nonmissing": 27.0,
+        "both_nonmissing": 26.0,
+        "gross_sqft_nonmissing_pct": 10.74,
+        "land_sqft_nonmissing_pct": 11.16,
+        "both_nonmissing_pct": 10.74
+      },
+      "34 THEATRES": {
+        "rows": 46.0,
+        "gross_sqft_nonmissing": 7.0,
+        "land_sqft_nonmissing": 7.0,
+        "both_nonmissing": 7.0,
+        "gross_sqft_nonmissing_pct": 15.22,
+        "land_sqft_nonmissing_pct": 15.22,
+        "both_nonmissing_pct": 15.22
+      },
+      "35 INDOOR PUBLIC AND CULTURAL FACILITIES": {
+        "rows": 138.0,
+        "gross_sqft_nonmissing": 19.0,
+        "land_sqft_nonmissing": 14.0,
+        "both_nonmissing": 14.0,
+        "gross_sqft_nonmissing_pct": 13.77,
+        "land_sqft_nonmissing_pct": 10.14,
+        "both_nonmissing_pct": 10.14
+      },
+      "36 OUTDOOR RECREATIONAL FACILITIES": {
+        "rows": 17.0,
+        "gross_sqft_nonmissing": 8.0,
+        "land_sqft_nonmissing": 6.0,
+        "both_nonmissing": 6.0,
+        "gross_sqft_nonmissing_pct": 47.06,
+        "land_sqft_nonmissing_pct": 35.29,
+        "both_nonmissing_pct": 35.29
+      },
+      "37 RELIGIOUS FACILITIES": {
+        "rows": 505.0,
+        "gross_sqft_nonmissing": 43.0,
+        "land_sqft_nonmissing": 41.0,
+        "both_nonmissing": 38.0,
+        "gross_sqft_nonmissing_pct": 8.51,
+        "land_sqft_nonmissing_pct": 8.12,
+        "both_nonmissing_pct": 7.52
+      },
+      "38 ASYLUMS AND HOMES": {
+        "rows": 98.0,
+        "gross_sqft_nonmissing": 14.0,
+        "land_sqft_nonmissing": 14.0,
+        "both_nonmissing": 14.0,
+        "gross_sqft_nonmissing_pct": 14.29,
+        "land_sqft_nonmissing_pct": 14.29,
+        "both_nonmissing_pct": 14.29
+      },
+      "39 TRANSPORTATION FACILITIES": {
+        "rows": 6.0,
+        "gross_sqft_nonmissing": 0.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 0.0,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "40 SELECTED GOVERNMENTAL FACILITIES": {
+        "rows": 3.0,
+        "gross_sqft_nonmissing": 0.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 0.0,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "41 TAX CLASS 4 - OTHER": {
+        "rows": 124.0,
+        "gross_sqft_nonmissing": 20.0,
+        "land_sqft_nonmissing": 13.0,
+        "both_nonmissing": 4.0,
+        "gross_sqft_nonmissing_pct": 16.13,
+        "land_sqft_nonmissing_pct": 10.48,
+        "both_nonmissing_pct": 3.23
+      },
+      "42 CONDO CULTURAL/MEDICAL/EDUCATIONAL/ETC": {
+        "rows": 84.0,
+        "gross_sqft_nonmissing": 2.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 2.38,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "43 CONDO OFFICE BUILDINGS": {
+        "rows": 2118.0,
+        "gross_sqft_nonmissing": 0.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 0.0,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "44 CONDO PARKING": {
+        "rows": 6093.0,
+        "gross_sqft_nonmissing": 161.0,
+        "land_sqft_nonmissing": 15.0,
+        "both_nonmissing": 15.0,
+        "gross_sqft_nonmissing_pct": 2.64,
+        "land_sqft_nonmissing_pct": 0.25,
+        "both_nonmissing_pct": 0.25
+      },
+      "45 CONDO HOTELS": {
+        "rows": 1060.0,
+        "gross_sqft_nonmissing": 36.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 3.4,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "46 CONDO STORE BUILDINGS": {
+        "rows": 997.0,
+        "gross_sqft_nonmissing": 24.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 2.41,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "47 CONDO NON-BUSINESS STORAGE": {
+        "rows": 1809.0,
+        "gross_sqft_nonmissing": 0.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 0.0,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "48 CONDO TERRACES/GARDENS/CABANAS": {
+        "rows": 158.0,
+        "gross_sqft_nonmissing": 0.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 0.0,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      },
+      "49 CONDO WAREHOUSES/FACTORY/INDUS": {
+        "rows": 76.0,
+        "gross_sqft_nonmissing": 0.0,
+        "land_sqft_nonmissing": 0.0,
+        "both_nonmissing": 0.0,
+        "gross_sqft_nonmissing_pct": 0.0,
+        "land_sqft_nonmissing_pct": 0.0,
+        "both_nonmissing_pct": 0.0
+      }
+    },
+    "share_nonmissing_by_tax_class_at_time_of_sale": {
+      "1": {
+        "rows": 231499.0,
+        "gross_sqft_nonmissing": 31749.0,
+        "land_sqft_nonmissing": 23299.0,
+        "both_nonmissing": 21015.0,
+        "gross_sqft_nonmissing_pct": 13.71,
+        "land_sqft_nonmissing_pct": 10.06,
+        "both_nonmissing_pct": 9.08
+      },
+      "2": {
+        "rows": 262947.0,
+        "gross_sqft_nonmissing": 6913.0,
+        "land_sqft_nonmissing": 1712.0,
+        "both_nonmissing": 1628.0,
+        "gross_sqft_nonmissing_pct": 2.63,
+        "land_sqft_nonmissing_pct": 0.65,
+        "both_nonmissing_pct": 0.62
+      },
+      "4": {
+        "rows": 25919.0,
+        "gross_sqft_nonmissing": 1632.0,
+        "land_sqft_nonmissing": 1301.0,
+        "both_nonmissing": 1146.0,
+        "gross_sqft_nonmissing_pct": 6.3,
+        "land_sqft_nonmissing_pct": 5.02,
+        "both_nonmissing_pct": 4.42
+      }
+    }
+  },
+  "part2_hedonic_land_units": {
+    "spec": "measure + log(LAND SQUARE FEET) + RESIDENTIAL UNITS + TOTAL UNITS + landuse categorical + building-class-category FE + tax-class-at-sale FE + district FE + sale-year FE; sample = analysis base + land sq ft > 0 + units non-missing + building-class/tax-class non-missing (log GROSS square feet NOT required); clustered by council district, wild p (Webb 6, 9999 reps, seed 42)",
+    "by_measure": {
+      "dem_share": {
+        "coef": -0.875799068488962,
+        "se_classical": 0.24266683457467508,
+        "se_cluster": 0.6384524859996321,
+        "p_t_G_minus_1": 0.17626456663757142,
+        "p_wild_cluster_bootstrap_t": 0.2127,
+        "ci95_low_t": -2.1581686268869067,
+        "ci95_high_t": 0.4065704899089826,
+        "ci95_low_wild": -2.230134645022427,
+        "ci95_high_wild": 0.4601921402036395,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.5438883043529364,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      },
+      "dem_share_mayor_allcand": {
+        "coef": -0.3176803598711663,
+        "se_classical": 0.213610386591768,
+        "se_cluster": 0.5764887785906028,
+        "p_t_G_minus_1": 0.584046163670392,
+        "p_wild_cluster_bootstrap_t": 0.6355,
+        "ci95_low_t": -1.4755921491331598,
+        "ci95_high_t": 0.8402314293908272,
+        "ci95_low_wild": -1.5633191792681238,
+        "ci95_high_wild": 0.9103408204523843,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.543700090196997,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      },
+      "dem_share_pres": {
+        "coef": -0.21851197597726454,
+        "se_classical": 0.31665020646295783,
+        "se_cluster": 0.7380474964594105,
+        "p_t_G_minus_1": 0.7684046561112307,
+        "p_wild_cluster_bootstrap_t": 0.8221,
+        "ci95_low_t": -1.7009240001539676,
+        "ci95_high_t": 1.2639000481994387,
+        "ci95_low_wild": -2.1333933257639646,
+        "ci95_high_wild": 1.6586772735102016,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.5436698678537781,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      },
+      "dem_share_vintage": {
+        "coef": -0.824710483948488,
+        "se_classical": 0.22807931217771493,
+        "se_cluster": 0.6216588140256706,
+        "p_t_G_minus_1": 0.19065893198478961,
+        "p_wild_cluster_bootstrap_t": 0.2299,
+        "ci95_low_t": -2.073348959477501,
+        "ci95_high_t": 0.42392799158052497,
+        "ci95_low_wild": -2.1875803109261307,
+        "ci95_high_wild": 0.5698049245962957,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.543889163370741,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      },
+      "dem_share_mayor_allcand_vintage": {
+        "coef": -0.32701189378154705,
+        "se_classical": 0.20247282148417026,
+        "se_cluster": 0.573490557358409,
+        "p_t_G_minus_1": 0.5710866554259877,
+        "p_wild_cluster_bootstrap_t": 0.6197,
+        "ci95_low_t": -1.4789015784675237,
+        "ci95_high_t": 0.8248777909044297,
+        "ci95_low_wild": -1.5807246047077443,
+        "ci95_high_wild": 0.931097595282477,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.5437069988215341,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      },
+      "dem_share_pres_vintage": {
+        "coef": -1.2706939630238496,
+        "se_classical": 0.37921346613678786,
+        "se_cluster": 0.868592832803242,
+        "p_t_G_minus_1": 0.14974354682693844,
+        "p_wild_cluster_bootstrap_t": 0.2605,
+        "ci95_low_t": -3.015314012056214,
+        "ci95_high_t": 0.4739260860085148,
+        "ci95_low_wild": -3.4246113375005285,
+        "ci95_high_wild": 0.8817726559927452,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.5438570376372269,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      },
+      "dem_share_aw": {
+        "coef": -0.7505340337513657,
+        "se_classical": 0.2283480907478888,
+        "se_cluster": 0.6298319371372425,
+        "p_t_G_minus_1": 0.23902741474101186,
+        "p_wild_cluster_bootstrap_t": 0.2825,
+        "ci95_low_t": -2.015588710180448,
+        "ci95_high_t": 0.5145206426777165,
+        "ci95_low_wild": -2.1416141589435016,
+        "ci95_high_wild": 0.6647863740405493,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.5438496375648951,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      },
+      "dem_share_mayor_allcand_aw": {
+        "coef": -0.25654176077240276,
+        "se_classical": 0.19642528939937487,
+        "se_cluster": 0.5572142198827917,
+        "p_t_G_minus_1": 0.6472248242946448,
+        "p_wild_cluster_bootstrap_t": 0.6867,
+        "ci95_low_t": -1.3757394595101011,
+        "ci95_high_t": 0.8626559379652956,
+        "ci95_low_wild": -1.4779908992955075,
+        "ci95_high_wild": 0.9598413939792045,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.5436912796805521,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      },
+      "dem_share_pres_aw": {
+        "coef": -1.172284359661533,
+        "se_classical": 0.38317892163207407,
+        "se_cluster": 0.795643826203624,
+        "p_t_G_minus_1": 0.14691711780425026,
+        "p_wild_cluster_bootstrap_t": 0.2447,
+        "ci95_low_t": -2.7703820167695365,
+        "ci95_high_t": 0.4258132974464701,
+        "ci95_low_wild": -3.118169348014339,
+        "ci95_high_wild": 0.7534703566493504,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.543824520688468,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      },
+      "dem_share_vintage_aw": {
+        "coef": -0.7505340337513657,
+        "se_classical": 0.2283480907478888,
+        "se_cluster": 0.6298319371372425,
+        "p_t_G_minus_1": 0.23902741474101186,
+        "p_wild_cluster_bootstrap_t": 0.2825,
+        "ci95_low_t": -2.015588710180448,
+        "ci95_high_t": 0.5145206426777165,
+        "ci95_low_wild": -2.1416141589435016,
+        "ci95_high_wild": 0.6647863740405493,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.5438496375648951,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      },
+      "dem_share_mayor_allcand_vintage_aw": {
+        "coef": -0.25654176077240276,
+        "se_classical": 0.19642528939937487,
+        "se_cluster": 0.5572142198827917,
+        "p_t_G_minus_1": 0.6472248242946448,
+        "p_wild_cluster_bootstrap_t": 0.6867,
+        "ci95_low_t": -1.3757394595101011,
+        "ci95_high_t": 0.8626559379652956,
+        "ci95_low_wild": -1.4779908992955075,
+        "ci95_high_wild": 0.9598413939792045,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.5436912796805521,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      },
+      "dem_share_pres_vintage_aw": {
+        "coef": -1.172284359661533,
+        "se_classical": 0.38317892163207407,
+        "se_cluster": 0.795643826203624,
+        "p_t_G_minus_1": 0.14691711780425026,
+        "p_wild_cluster_bootstrap_t": 0.2447,
+        "ci95_low_t": -2.7703820167695365,
+        "ci95_high_t": 0.4258132974464701,
+        "ci95_low_wild": -3.118169348014339,
+        "ci95_high_wild": 0.7534703566493504,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.543824520688468,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      },
+      "dem_share_vintage_dom": {
+        "coef": -0.7457344175114333,
+        "se_classical": 0.22795223336174822,
+        "se_cluster": 0.6256876496941914,
+        "p_t_G_minus_1": 0.23894113886827728,
+        "p_wild_cluster_bootstrap_t": 0.2836,
+        "ci95_low_t": -2.0024650476336108,
+        "ci95_high_t": 0.5109962126107439,
+        "ci95_low_wild": -2.1263037443167683,
+        "ci95_high_wild": 0.6644757545204911,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.5438478860769385,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      },
+      "dem_share_mayor_allcand_vintage_dom": {
+        "coef": -0.2550046471364306,
+        "se_classical": 0.19638219824464065,
+        "se_cluster": 0.5542355821177145,
+        "p_t_G_minus_1": 0.6474379818235694,
+        "p_wild_cluster_bootstrap_t": 0.6879,
+        "ci95_low_t": -1.3682195758494358,
+        "ci95_high_t": 0.8582102815765744,
+        "ci95_low_wild": -1.4663064786628845,
+        "ci95_high_wild": 0.9566619209495801,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.5436909376859116,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.09
+      },
+      "dem_share_pres_vintage_dom": {
+        "coef": -1.1585768394398717,
+        "se_classical": 0.3819726790658486,
+        "se_cluster": 0.7905075617596972,
+        "p_t_G_minus_1": 0.1490149626678822,
+        "p_wild_cluster_bootstrap_t": 0.2494,
+        "ci95_low_t": -2.746358005796867,
+        "ci95_high_t": 0.4292043269171233,
+        "ci95_low_wild": -3.0893416716017854,
+        "ci95_high_wild": 0.7579584678159927,
+        "n": 26308,
+        "n_clusters_G": 51,
+        "r_squared": 0.5438217400933338,
+        "wild_bootstrap": {
+          "weights": "webb6",
+          "reps": 9999,
+          "seed": 42
+        },
+        "k_params": 105,
+        "fit_seconds": 0.08
+      }
+    }
+  }
+}

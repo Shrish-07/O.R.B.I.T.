@@ -1,6 +1,12 @@
 {
   "purpose": "Task G additions: spec-matched OLS benchmark per ideology measure, cluster/cell bookkeeping, and a local-linear RD-style specification. The original results/causal/iv_district_fe_results.json and its 12 recorded specification arms are unchanged.",
   "benchmark_pointer": "matched_ols_benchmark",
+  "council_district_vintage_mismatch": {
+    "flag": true,
+    "finding": "The close-election instrument maps prior-cycle (2013/2017/2021) winners, elected under the PRE-2022 council district plan, onto sales rows keyed to CURRENT (post-2022) council districts; district identities do not line up across vintages wherever an old-plan district does not map cleanly onto its 2023-plan successor.",
+    "see_also": "results/crosswalk_audit.json council_district_vintage_note; data/processed/council_2013_to_current.parquet (areal correspondence built by build_legacy_ed_crosswalk.py)",
+    "original_12_arms_untouched": "results/causal/iv_district_fe_results.json is unchanged; this flag documents a known limitation of the instrument shared by both files."
+  },
   "superseded_benchmark_note": "The original file's model4_benchmark (Table 2 Model 4: district FE only, no unit controls, no sale-year FE, N=520,365 full-sample OLS) does NOT match the 2SLS second stage (district FE + sale-year FE + RESIDENTIAL/COMMERCIAL UNITS on the close-race sample). Compare the 2SLS estimates to matched_ols_benchmark instead.",
   "controls": [
     "yearbuilt",
@@ -248,64 +254,75 @@
   "rd_local_linear": {
     "bw_10pp": {
       "identified": false,
-      "error": "regressors [exog endog] do not have full column rank",
+      "status": "not estimable",
+      "reason": "clustered fit failed: regressors [exog endog] do not have full column rank; no unadjusted fallback is applied",
       "n": 15313,
       "n_clusters_G": 5
     },
     "bw_15pp": {
       "identified": false,
-      "error": "regressors [exog endog] do not have full column rank",
+      "status": "not estimable",
+      "reason": "clustered fit failed: regressors [exog endog] do not have full column rank; no unadjusted fallback is applied",
       "n": 26514,
       "n_clusters_G": 7
     },
     "bw_20pp": {
       "identified": false,
-      "error": "instruments [exog instruments]  do not have full column rank",
+      "status": "not estimable",
+      "reason": "clustered fit failed: instruments [exog instruments]  do not have full column rank; no unadjusted fallback is applied",
       "n": 37555,
       "n_clusters_G": 9
     },
     "bw_25pp": {
       "identified": true,
-      "first_stage_joint_f_excluded_instruments": 3304.08657796988,
-      "first_stage_joint_f_pvalue": 0.0,
+      "status": "estimated (covariance clustered by CounDist)",
+      "first_stage_joint_f_excluded_instruments": 1.6367714606020702,
+      "first_stage_joint_f_pvalue": 0.4411432041423249,
       "dem_share_coef": -1.3626771596027538,
-      "dem_share_se": 0.6825376015428927,
-      "dem_share_p": 0.04588098541857666,
+      "dem_share_se": 1.4233244098860394,
+      "dem_share_p": 0.3383702302403724,
       "n": 44283,
       "n_clusters_G": 11,
+      "covariance": "clustered by council district (CounDist), district-cycle level clustering; Round 13 (R4) fix \u2014 the pre-fix default heteroskedasticity-robust fit reported first-stage F of 3,000-77,000 and SEs that ignored the clustering",
       "spec": "instruments: Z, Z x margin_pct (linear each side); exog: margin_pct + controls + district FE + sale-year FE; sample: close-race cells within the bandwidth"
     },
     "bw_30pp": {
       "identified": true,
-      "first_stage_joint_f_excluded_instruments": 28165.40321261423,
-      "first_stage_joint_f_pvalue": 0.0,
+      "status": "estimated (covariance clustered by CounDist)",
+      "first_stage_joint_f_excluded_instruments": 12.705351943267877,
+      "first_stage_joint_f_pvalue": 0.0017420791389725077,
       "dem_share_coef": -0.5254125143255806,
-      "dem_share_se": 0.23165728781058426,
-      "dem_share_p": 0.023325579886876557,
+      "dem_share_se": 1.3849904452683088,
+      "dem_share_p": 0.704419188706394,
       "n": 74390,
       "n_clusters_G": 17,
+      "covariance": "clustered by council district (CounDist), district-cycle level clustering; Round 13 (R4) fix \u2014 the pre-fix default heteroskedasticity-robust fit reported first-stage F of 3,000-77,000 and SEs that ignored the clustering",
       "spec": "instruments: Z, Z x margin_pct (linear each side); exog: margin_pct + controls + district FE + sale-year FE; sample: close-race cells within the bandwidth"
     },
     "bw_35pp": {
       "identified": true,
-      "first_stage_joint_f_excluded_instruments": 77480.25849616356,
-      "first_stage_joint_f_pvalue": 0.0,
+      "status": "estimated (covariance clustered by CounDist)",
+      "first_stage_joint_f_excluded_instruments": 18.14132256962596,
+      "first_stage_joint_f_pvalue": 0.00011499047204532875,
       "dem_share_coef": -0.3299729587670299,
-      "dem_share_se": 0.20451320527408595,
-      "dem_share_p": 0.10664558065520624,
+      "dem_share_se": 1.0088015242674713,
+      "dem_share_p": 0.7435967650158559,
       "n": 85923,
       "n_clusters_G": 18,
+      "covariance": "clustered by council district (CounDist), district-cycle level clustering; Round 13 (R4) fix \u2014 the pre-fix default heteroskedasticity-robust fit reported first-stage F of 3,000-77,000 and SEs that ignored the clustering",
       "spec": "instruments: Z, Z x margin_pct (linear each side); exog: margin_pct + controls + district FE + sale-year FE; sample: close-race cells within the bandwidth"
     },
     "bw_40pp": {
       "identified": true,
-      "first_stage_joint_f_excluded_instruments": 63249.532826421404,
-      "first_stage_joint_f_pvalue": 0.0,
+      "status": "estimated (covariance clustered by CounDist)",
+      "first_stage_joint_f_excluded_instruments": 17.894242589719198,
+      "first_stage_joint_f_pvalue": 0.00013011117315375742,
       "dem_share_coef": -0.5256661667954177,
-      "dem_share_se": 0.16526993908974427,
-      "dem_share_p": 0.0014694401587560524,
+      "dem_share_se": 0.7420895635557939,
+      "dem_share_p": 0.47872205745521557,
       "n": 92873,
       "n_clusters_G": 19,
+      "covariance": "clustered by council district (CounDist), district-cycle level clustering; Round 13 (R4) fix \u2014 the pre-fix default heteroskedasticity-robust fit reported first-stage F of 3,000-77,000 and SEs that ignored the clustering",
       "spec": "instruments: Z, Z x margin_pct (linear each side); exog: margin_pct + controls + district FE + sale-year FE; sample: close-race cells within the bandwidth"
     }
   },

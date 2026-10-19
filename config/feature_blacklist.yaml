@@ -110,3 +110,22 @@ leakage_features:
   - price_ge_100k
   - multi_parcel_flag
   - building_class_category
+
+  # ============================
+  # Round 13 area-weighted / dominant-district ideology measures
+  # Split-ED double-counting fix: area-weighted (_aw) and dominant-district
+  # (_dom) versions of the six ideology measures, added to
+  # modeling_dataset_canonical_v3.parquet by
+  # src/data_pipeline/build_ideology_scores_v3.py. The trained models are
+  # untouched; blacklisting keeps every future training run on the exact
+  # legacy feature set.
+  # ============================
+  - dem_share_aw
+  - dem_share_mayor_allcand_aw
+  - dem_share_pres_aw
+  - dem_share_vintage_aw
+  - dem_share_mayor_allcand_vintage_aw
+  - dem_share_pres_vintage_aw
+  - dem_share_vintage_dom
+  - dem_share_mayor_allcand_vintage_dom
+  - dem_share_pres_vintage_dom

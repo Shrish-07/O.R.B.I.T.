@@ -1,0 +1,31 @@
+{
+  "run_utc": "2026-10-19T03:39:15.112456+00:00",
+  "base": "data/canonical/modeling_dataset_canonical_v2.parquet",
+  "rows": 566956,
+  "columns_v2": 64,
+  "columns_v3": 73,
+  "new_columns": [
+    "dem_share_aw",
+    "dem_share_mayor_allcand_aw",
+    "dem_share_vintage_aw",
+    "dem_share_mayor_allcand_vintage_aw",
+    "dem_share_vintage_dom",
+    "dem_share_mayor_allcand_vintage_dom",
+    "dem_share_pres_aw",
+    "dem_share_pres_vintage_aw",
+    "dem_share_pres_vintage_dom"
+  ],
+  "merge_semantics": "mayoral on (CounDist, election_year); presidential on (CounDist, election_year_pres); identical to rebuild_canonical.py",
+  "new_columns_blacklisted_from_models": true,
+  "coverage": {
+    "dem_share_aw": 0.9764,
+    "dem_share_mayor_allcand_aw": 0.9764,
+    "dem_share_vintage_aw": 0.9764,
+    "dem_share_mayor_allcand_vintage_aw": 0.9764,
+    "dem_share_vintage_dom": 0.9764,
+    "dem_share_mayor_allcand_vintage_dom": 0.9764,
+    "dem_share_pres_aw": 0.9764,
+    "dem_share_pres_vintage_aw": 0.9764,
+    "dem_share_pres_vintage_dom": 0.9764
+  }
+}
