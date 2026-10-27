@@ -72,7 +72,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 0.92
+      "fit_seconds": 0.84
     },
     "model6_district_year_fe_units": {
       "coef": 1.4212464967888674,
@@ -114,7 +114,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 4.46
+      "fit_seconds": 3.64
     },
     "model8_district_linear_trends": {
       "coef": 0.07608018023406021,
@@ -135,7 +135,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 5.94
+      "fit_seconds": 5.95
     }
   },
   "dem_share_mayor_allcand": {
@@ -158,7 +158,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 0.64
+      "fit_seconds": 0.78
     },
     "model4_district_fe": {
       "coef": 0.4572833306802693,
@@ -179,7 +179,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 3.06
+      "fit_seconds": 3.16
     },
     "model6_district_year_fe_units": {
       "coef": 1.4542321610611577,
@@ -200,7 +200,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 2.61
+      "fit_seconds": 3.13
     },
     "model7_district_boro_x_year_fe": {
       "coef": 2.130908131711175,
@@ -221,7 +221,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 3.89
+      "fit_seconds": 4.14
     },
     "model8_district_linear_trends": {
       "coef": 0.20789400580213724,
@@ -242,7 +242,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 6.24
+      "fit_seconds": 6.46
     }
   },
   "dem_share_pres": {
@@ -265,7 +265,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 1.13
+      "fit_seconds": 0.99
     },
     "model4_district_fe": {
       "coef": -1.5841506977087272,
@@ -286,7 +286,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 4.31
+      "fit_seconds": 3.35
     },
     "model6_district_year_fe_units": {
       "coef": -0.5141591224547172,
@@ -307,7 +307,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 3.53
+      "fit_seconds": 3.06
     },
     "model7_district_boro_x_year_fe": {
       "coef": -0.3200861881592996,
@@ -328,7 +328,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 6.26
+      "fit_seconds": 3.65
     },
     "model8_district_linear_trends": {
       "coef": -0.0349914850794743,
@@ -349,7 +349,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 6.83
+      "fit_seconds": 6.54
     }
   },
   "dem_share_vintage": {
@@ -372,7 +372,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 0.8
+      "fit_seconds": 0.63
     },
     "model4_district_fe": {
       "coef": 0.1997070026758242,
@@ -393,7 +393,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 3.95
+      "fit_seconds": 3.88
     },
     "model6_district_year_fe_units": {
       "coef": 1.265492815151575,
@@ -414,7 +414,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 3.63
+      "fit_seconds": 3.09
     },
     "model7_district_boro_x_year_fe": {
       "coef": 1.7709306906757436,
@@ -435,7 +435,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 3.91
+      "fit_seconds": 4.61
     },
     "model8_district_linear_trends": {
       "coef": 0.004653780272767481,
@@ -456,7 +456,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 6.23
+      "fit_seconds": 6.4
     }
   },
   "dem_share_mayor_allcand_vintage": {
@@ -479,7 +479,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 0.67
+      "fit_seconds": 1.0
     },
     "model4_district_fe": {
       "coef": 0.4416416762571363,
@@ -500,7 +500,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 3.71
+      "fit_seconds": 4.31
     },
     "model6_district_year_fe_units": {
       "coef": 1.301646161012306,
@@ -521,7 +521,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 3.09
+      "fit_seconds": 3.47
     },
     "model7_district_boro_x_year_fe": {
       "coef": 1.6867618914924154,
@@ -542,7 +542,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 5.5
+      "fit_seconds": 5.1
     },
     "model8_district_linear_trends": {
       "coef": 0.13973309131654404,
@@ -563,7 +563,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 2.27
+      "fit_seconds": 6.07
     }
   },
   "dem_share_pres_vintage": {
@@ -586,7 +586,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 0.99
+      "fit_seconds": 0.75
     },
     "model4_district_fe": {
       "coef": -1.7843827496655071,
@@ -607,7 +607,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 4.96
+      "fit_seconds": 4.74
     },
     "model6_district_year_fe_units": {
       "coef": -0.4831422254394405,
@@ -628,7 +628,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 4.87
+      "fit_seconds": 4.06
     },
     "model7_district_boro_x_year_fe": {
       "coef": -0.2772454520499399,
@@ -649,7 +649,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 6.86
+      "fit_seconds": 4.78
     },
     "model8_district_linear_trends": {
       "coef": 0.5406251879121916,
@@ -670,7 +670,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 7.08
+      "fit_seconds": 6.04
     }
   },
   "dem_share_aw": {
@@ -693,7 +693,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 1.11
+      "fit_seconds": 0.59
     },
     "model4_district_fe": {
       "coef": 0.3018088791053621,
@@ -714,7 +714,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 4.89
+      "fit_seconds": 2.86
     },
     "model6_district_year_fe_units": {
       "coef": 1.281366770573411,
@@ -735,7 +735,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 3.49
+      "fit_seconds": 4.18
     },
     "model7_district_boro_x_year_fe": {
       "coef": 1.6284568568957154,
@@ -756,7 +756,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 6.06
+      "fit_seconds": 5.75
     },
     "model8_district_linear_trends": {
       "coef": 0.04027394408269857,
@@ -777,7 +777,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 8.39
+      "fit_seconds": 8.15
     }
   },
   "dem_share_mayor_allcand_aw": {
@@ -800,7 +800,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 0.74
+      "fit_seconds": 0.61
     },
     "model4_district_fe": {
       "coef": 0.5016911213711518,
@@ -821,7 +821,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 5.97
+      "fit_seconds": 4.12
     },
     "model6_district_year_fe_units": {
       "coef": 1.3087468158313889,
@@ -842,7 +842,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 4.69
+      "fit_seconds": 4.06
     },
     "model7_district_boro_x_year_fe": {
       "coef": 1.5519490501609228,
@@ -863,7 +863,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 6.9
+      "fit_seconds": 5.41
     },
     "model8_district_linear_trends": {
       "coef": 0.16402121655384808,
@@ -884,7 +884,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 10.25
+      "fit_seconds": 6.1
     }
   },
   "dem_share_pres_aw": {
@@ -907,7 +907,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 0.98
+      "fit_seconds": 0.85
     },
     "model4_district_fe": {
       "coef": -1.7742473346519143,
@@ -928,7 +928,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 5.02
+      "fit_seconds": 3.14
     },
     "model6_district_year_fe_units": {
       "coef": -0.37441082097848244,
@@ -949,7 +949,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 4.63
+      "fit_seconds": 3.48
     },
     "model7_district_boro_x_year_fe": {
       "coef": -0.09363514135300338,
@@ -970,7 +970,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 7.13
+      "fit_seconds": 5.09
     },
     "model8_district_linear_trends": {
       "coef": 0.5879085391877907,
@@ -991,7 +991,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 7.96
+      "fit_seconds": 6.53
     }
   },
   "dem_share_vintage_aw": {
@@ -1014,7 +1014,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 0.58
+      "fit_seconds": 1.01
     },
     "model4_district_fe": {
       "coef": 0.3018088791053621,
@@ -1035,7 +1035,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 4.62
+      "fit_seconds": 3.73
     },
     "model6_district_year_fe_units": {
       "coef": 1.281366770573411,
@@ -1056,7 +1056,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 4.71
+      "fit_seconds": 3.06
     },
     "model7_district_boro_x_year_fe": {
       "coef": 1.6284568568957154,
@@ -1077,7 +1077,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 6.38
+      "fit_seconds": 4.98
     },
     "model8_district_linear_trends": {
       "coef": 0.04027394408269857,
@@ -1098,7 +1098,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 7.4
+      "fit_seconds": 6.42
     }
   },
   "dem_share_mayor_allcand_vintage_aw": {
@@ -1121,7 +1121,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 1.23
+      "fit_seconds": 1.02
     },
     "model4_district_fe": {
       "coef": 0.5016911213711518,
@@ -1142,7 +1142,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 5.26
+      "fit_seconds": 2.91
     },
     "model6_district_year_fe_units": {
       "coef": 1.3087468158313889,
@@ -1163,7 +1163,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 5.56
+      "fit_seconds": 4.97
     },
     "model7_district_boro_x_year_fe": {
       "coef": 1.5519490501609228,
@@ -1184,7 +1184,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 7.93
+      "fit_seconds": 4.77
     },
     "model8_district_linear_trends": {
       "coef": 0.16402121655384808,
@@ -1205,7 +1205,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 7.13
+      "fit_seconds": 5.67
     }
   },
   "dem_share_pres_vintage_aw": {
@@ -1228,7 +1228,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 0.94
+      "fit_seconds": 0.75
     },
     "model4_district_fe": {
       "coef": -1.7742473346519143,
@@ -1249,7 +1249,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 4.19
+      "fit_seconds": 4.35
     },
     "model6_district_year_fe_units": {
       "coef": -0.37441082097848244,
@@ -1270,7 +1270,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 4.07
+      "fit_seconds": 3.05
     },
     "model7_district_boro_x_year_fe": {
       "coef": -0.09363514135300338,
@@ -1291,7 +1291,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 5.05
+      "fit_seconds": 5.46
     },
     "model8_district_linear_trends": {
       "coef": 0.5879085391877907,
@@ -1312,7 +1312,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 6.98
+      "fit_seconds": 6.15
     }
   },
   "dem_share_vintage_dom": {
@@ -1335,7 +1335,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 0.69
+      "fit_seconds": 0.47
     },
     "model4_district_fe": {
       "coef": 0.3010501886591219,
@@ -1356,7 +1356,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 4.41
+      "fit_seconds": 3.73
     },
     "model6_district_year_fe_units": {
       "coef": 1.284690715978995,
@@ -1377,7 +1377,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 3.65
+      "fit_seconds": 3.02
     },
     "model7_district_boro_x_year_fe": {
       "coef": 1.6371181370253478,
@@ -1398,7 +1398,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 8.07
+      "fit_seconds": 4.87
     },
     "model8_district_linear_trends": {
       "coef": 0.0460791982625097,
@@ -1419,7 +1419,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 8.68
+      "fit_seconds": 6.06
     }
   },
   "dem_share_mayor_allcand_vintage_dom": {
@@ -1442,7 +1442,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 0.84
+      "fit_seconds": 0.6
     },
     "model4_district_fe": {
       "coef": 0.5009385438739445,
@@ -1463,7 +1463,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 4.79
+      "fit_seconds": 4.14
     },
     "model6_district_year_fe_units": {
       "coef": 1.3124607782868059,
@@ -1484,7 +1484,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 5.22
+      "fit_seconds": 2.94
     },
     "model7_district_boro_x_year_fe": {
       "coef": 1.5623354699286127,
@@ -1505,7 +1505,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 5.27
+      "fit_seconds": 5.16
     },
     "model8_district_linear_trends": {
       "coef": 0.16966446726980228,
@@ -1526,7 +1526,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 8.6
+      "fit_seconds": 5.26
     }
   },
   "dem_share_pres_vintage_dom": {
@@ -1549,7 +1549,7 @@
         "seed": 42
       },
       "k_params": 10,
-      "fit_seconds": 1.61
+      "fit_seconds": 1.21
     },
     "model4_district_fe": {
       "coef": -1.7738598054468566,
@@ -1570,7 +1570,7 @@
         "seed": 42
       },
       "k_params": 56,
-      "fit_seconds": 4.18
+      "fit_seconds": 3.7
     },
     "model6_district_year_fe_units": {
       "coef": -0.38269820317108333,
@@ -1591,7 +1591,7 @@
         "seed": 42
       },
       "k_params": 65,
-      "fit_seconds": 0.82
+      "fit_seconds": 3.29
     },
     "model7_district_boro_x_year_fe": {
       "coef": -0.11093974954748076,
@@ -1612,7 +1612,7 @@
         "seed": 42
       },
       "k_params": 97,
-      "fit_seconds": 4.71
+      "fit_seconds": 5.04
     },
     "model8_district_linear_trends": {
       "coef": 0.5769843137868129,
@@ -1633,7 +1633,7 @@
         "seed": 42
       },
       "k_params": 115,
-      "fit_seconds": 5.6
+      "fit_seconds": 6.51
     }
   }
 }

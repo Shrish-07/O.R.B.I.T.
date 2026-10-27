@@ -65,43 +65,43 @@
   "models": [
     {
       "name": "rf_all_years_political_tuned",
-      "experiment_id": "exp-20261019T161437Z",
+      "experiment_id": "exp-20261027T221500Z",
       "family": "sklearn",
       "test_mae": 0.40161417910660113
     },
     {
       "name": "cat_all_years_political_lr0.05_d6",
-      "experiment_id": "exp-20261019T161517Z",
+      "experiment_id": "exp-20261027T221601Z",
       "family": "catboost",
       "test_mae": 0.41736433913362825
     },
     {
       "name": "xgb_all_years_political_lr0.05_md6",
-      "experiment_id": "exp-20261019T161529Z",
+      "experiment_id": "exp-20261027T221619Z",
       "family": "xgboost",
       "test_mae": 0.41769515091835496
     },
     {
       "name": "lgbm_all_years_political",
-      "experiment_id": "exp-20261019T160027Z",
+      "experiment_id": "exp-20261027T215722Z",
       "family": "lightgbm",
       "test_mae": 0.43994123422895204
     },
     {
       "name": "lgbm_all_years_base",
-      "experiment_id": "exp-20261019T160004Z",
+      "experiment_id": "exp-20261027T215656Z",
       "family": "lightgbm",
       "test_mae": 0.44182670516761613
     },
     {
       "name": "ridge_all_years_political",
-      "experiment_id": "exp-20261019T161449Z",
+      "experiment_id": "exp-20261027T221517Z",
       "family": "linear",
       "test_mae": 0.629341791343628
     },
     {
       "name": "elasticnet_all_years_political",
-      "experiment_id": "exp-20261019T161455Z",
+      "experiment_id": "exp-20261027T221523Z",
       "family": "linear",
       "test_mae": 0.6312658045356286
     }
