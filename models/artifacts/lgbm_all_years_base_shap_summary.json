@@ -7,7 +7,7 @@
   "shap_fallback_note": "exact TreeSHAP on the standard sampled test slice (n<=2000, seed 42, low-NA feature sampling).",
   "shap_model_path": "models/lgbm_all_years_base.txt",
   "budget_minutes_per_tier": 90,
-  "computed_utc": "2026-10-19T17:23:25.836913Z",
+  "computed_utc": "2026-10-27T23:21:40.160145Z",
   "sample_n": 2000,
   "tier_attempts": [],
   "summary": [

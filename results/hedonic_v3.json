@@ -680,7 +680,7 @@
           "seed": 42
         },
         "k_params": 105,
-        "fit_seconds": 0.12
+        "fit_seconds": 0.08
       },
       "dem_share_mayor_allcand_vintage_aw": {
         "coef": -0.25654176077240276,
@@ -701,7 +701,7 @@
           "seed": 42
         },
         "k_params": 105,
-        "fit_seconds": 0.28
+        "fit_seconds": 0.15
       },
       "dem_share_pres_vintage_aw": {
         "coef": -1.172284359661533,
@@ -743,7 +743,7 @@
           "seed": 42
         },
         "k_params": 105,
-        "fit_seconds": 0.32
+        "fit_seconds": 0.28
       },
       "dem_share_mayor_allcand_vintage_dom": {
         "coef": -0.2550046471364306,
@@ -764,7 +764,7 @@
           "seed": 42
         },
         "k_params": 105,
-        "fit_seconds": 0.37
+        "fit_seconds": 0.28
       },
       "dem_share_pres_vintage_dom": {
         "coef": -1.1585768394398717,
@@ -785,7 +785,7 @@
           "seed": 42
         },
         "k_params": 105,
-        "fit_seconds": 0.28
+        "fit_seconds": 0.29
       }
     }
   }

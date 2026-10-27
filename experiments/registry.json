@@ -30,9 +30,9 @@
     "stale_reason": "Retired in Round 10: unpruned forest (max_depth=None, ~990 MB) -- exact TreeSHAP intractable (tiers a/c exceeded the 90-min per-tier budget on 2026-09-28; tier-b depth-25 variant rejected on MAE fidelity), so it only ever received gain importance. Replaced by rf_all_years_political_tuned, selected on validation data only under the pre-specified 3000-mean-leaves tractability cap. Kept for audit history; excluded from champion selection and all downstream analysis via the existing stale filter."
   },
   {
-    "id": "exp-20261019T160004Z",
-    "created_utc": "2026-10-19T16:00:04.017558Z",
-    "git_commit": "a5601cc",
+    "id": "exp-20261027T215656Z",
+    "created_utc": "2026-10-27T21:56:56.949752Z",
+    "git_commit": "613669a",
     "git_dirty": true,
     "script": "models/training/train_lgbm.py",
     "name": "lgbm_all_years_base",
@@ -59,9 +59,9 @@
     "model_path": "models/lgbm_all_years_base.txt"
   },
   {
-    "id": "exp-20261019T160027Z",
-    "created_utc": "2026-10-19T16:00:27.827580Z",
-    "git_commit": "a5601cc",
+    "id": "exp-20261027T215722Z",
+    "created_utc": "2026-10-27T21:57:22.733116Z",
+    "git_commit": "613669a",
     "git_dirty": true,
     "script": "models/training/train_lgbm.py",
     "name": "lgbm_all_years_political",
@@ -88,9 +88,9 @@
     "model_path": "models/lgbm_all_years_political.txt"
   },
   {
-    "id": "exp-20261019T161437Z",
-    "created_utc": "2026-10-19T16:14:37.019403Z",
-    "git_commit": "a5601cc",
+    "id": "exp-20261027T221500Z",
+    "created_utc": "2026-10-27T22:15:00.917317Z",
+    "git_commit": "613669a",
     "git_dirty": true,
     "script": "models/training/train_random_forest.py",
     "name": "rf_all_years_political_tuned",
@@ -99,7 +99,7 @@
     "hypothesis": "Complexity-constrained, validation-tuned RandomForest (SHAP-tractable replacement for the unpruned forest)",
     "reasoning": "Round 10: the unpruned forest was intractable for exact TreeSHAP; this entry is selected on validation data only under a pre-specified mean-leaves cap",
     "metrics": {
-      "r2": 0.5900387792297042,
+      "r2": 0.590038779229704,
       "mae": 0.40161417910660113
     },
     "results": {
@@ -110,7 +110,7 @@
       "n_train": 121052,
       "n_test": 56723,
       "n_features": 25,
-      "r2": 0.5900387792297042,
+      "r2": 0.590038779229704,
       "mae": 0.40161417910660113,
       "tuning": {
         "mean_leaves_cap": 3000,
@@ -145,9 +145,9 @@
     }
   },
   {
-    "id": "exp-20261019T161449Z",
-    "created_utc": "2026-10-19T16:14:49.277647Z",
-    "git_commit": "a5601cc",
+    "id": "exp-20261027T221517Z",
+    "created_utc": "2026-10-27T22:15:17.560427Z",
+    "git_commit": "613669a",
     "git_dirty": true,
     "script": "models/training/train_linear_baselines.py",
     "name": "ridge_all_years_political",
@@ -179,9 +179,9 @@
     "model_path": "models/ridge_all_years_political.joblib"
   },
   {
-    "id": "exp-20261019T161455Z",
-    "created_utc": "2026-10-19T16:14:55.432235Z",
-    "git_commit": "a5601cc",
+    "id": "exp-20261027T221523Z",
+    "created_utc": "2026-10-27T22:15:23.286814Z",
+    "git_commit": "613669a",
     "git_dirty": true,
     "script": "models/training/train_linear_baselines.py",
     "name": "elasticnet_all_years_political",
@@ -215,9 +215,9 @@
     "model_path": "models/elasticnet_all_years_political.joblib"
   },
   {
-    "id": "exp-20261019T161517Z",
-    "created_utc": "2026-10-19T16:15:17.800025Z",
-    "git_commit": "a5601cc",
+    "id": "exp-20261027T221601Z",
+    "created_utc": "2026-10-27T22:16:01.490584Z",
+    "git_commit": "613669a",
     "git_dirty": true,
     "script": "models/training/train_catboost.py",
     "name": "cat_all_years_political_lr0.05_d6",
@@ -245,9 +245,9 @@
     "model_path": "models/cat_all_years_political_lr0.05_d6.cbm"
   },
   {
-    "id": "exp-20261019T161529Z",
-    "created_utc": "2026-10-19T16:15:29.441441Z",
-    "git_commit": "a5601cc",
+    "id": "exp-20261027T221619Z",
+    "created_utc": "2026-10-27T22:16:19.646661Z",
+    "git_commit": "613669a",
     "git_dirty": true,
     "script": "models/training/train_xgboost.py",
     "name": "xgb_all_years_political_lr0.05_md6",

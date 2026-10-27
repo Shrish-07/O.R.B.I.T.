@@ -51,7 +51,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 0.24
+        "fit_seconds": 0.26
       },
       "model4_district_fe": {
         "coef": 0.7384213654797066,
@@ -72,7 +72,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 1.8
+        "fit_seconds": 1.14
       },
       "model5_boro_year_fe": {
         "coef": 0.015402725230304082,
@@ -93,7 +93,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 1.41
+        "fit_seconds": 0.43
       },
       "model6_district_year_fe_units": {
         "coef": 0.6516738709368571,
@@ -114,7 +114,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 2.42
+        "fit_seconds": 1.08
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.7474493110779863,
@@ -135,7 +135,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 4.25
+        "fit_seconds": 1.59
       },
       "model8_district_linear_trends": {
         "coef": -0.07562357316117264,
@@ -156,7 +156,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 4.72
+        "fit_seconds": 1.78
       },
       "hedonic_upgraded": {
         "coef": -0.20314126690399437,
@@ -177,7 +177,7 @@
           "seed": 42
         },
         "k_params": 103,
-        "fit_seconds": 0.23
+        "fit_seconds": 0.07
       }
     },
     "dem_share_mayor_allcand_aw": {
@@ -200,7 +200,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 0.69
+        "fit_seconds": 0.26
       },
       "model4_district_fe": {
         "coef": -0.5024923497227504,
@@ -221,7 +221,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 3.4
+        "fit_seconds": 1.15
       },
       "model5_boro_year_fe": {
         "coef": 0.012389942869489383,
@@ -242,7 +242,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 1.21
+        "fit_seconds": 0.45
       },
       "model6_district_year_fe_units": {
         "coef": 0.4414753100057595,
@@ -263,7 +263,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 3.31
+        "fit_seconds": 1.15
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.5398251387979016,
@@ -284,7 +284,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 5.72
+        "fit_seconds": 1.59
       },
       "model8_district_linear_trends": {
         "coef": 0.08765828275250413,
@@ -305,7 +305,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 6.61
+        "fit_seconds": 1.83
       },
       "hedonic_upgraded": {
         "coef": 0.32496377841958307,
@@ -326,7 +326,7 @@
           "seed": 42
         },
         "k_params": 103,
-        "fit_seconds": 0.24
+        "fit_seconds": 0.07
       }
     },
     "dem_share_pres_aw": {
@@ -349,7 +349,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 1.03
+        "fit_seconds": 0.27
       },
       "model4_district_fe": {
         "coef": -1.975624411348924,
@@ -370,7 +370,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 3.09
+        "fit_seconds": 1.19
       },
       "model5_boro_year_fe": {
         "coef": 0.06760448382911464,
@@ -391,7 +391,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 1.92
+        "fit_seconds": 0.44
       },
       "model6_district_year_fe_units": {
         "coef": -0.1459620754178734,
@@ -412,7 +412,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 3.17
+        "fit_seconds": 1.05
       },
       "model7_district_boro_x_year_fe": {
         "coef": -0.02946352714761272,
@@ -433,7 +433,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 5.26
+        "fit_seconds": 1.98
       },
       "model8_district_linear_trends": {
         "coef": 0.27971058878130267,
@@ -454,7 +454,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 5.56
+        "fit_seconds": 6.57
       },
       "hedonic_upgraded": {
         "coef": -0.27842785486404226,
@@ -475,7 +475,7 @@
           "seed": 42
         },
         "k_params": 103,
-        "fit_seconds": 0.07
+        "fit_seconds": 0.56
       }
     },
     "dem_share_vintage_aw": {
@@ -498,7 +498,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 0.26
+        "fit_seconds": 2.77
       },
       "model4_district_fe": {
         "coef": 0.7384213654797066,
@@ -519,7 +519,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 1.06
+        "fit_seconds": 8.85
       },
       "model5_boro_year_fe": {
         "coef": 0.015402725230304082,
@@ -540,7 +540,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 0.39
+        "fit_seconds": 2.8
       },
       "model6_district_year_fe_units": {
         "coef": 0.6516738709368571,
@@ -561,7 +561,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 0.91
+        "fit_seconds": 5.46
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.7474493110779863,
@@ -582,7 +582,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 4.82
+        "fit_seconds": 9.53
       },
       "model8_district_linear_trends": {
         "coef": -0.07562357316117264,
@@ -603,7 +603,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 7.82
+        "fit_seconds": 12.39
       },
       "hedonic_upgraded": {
         "coef": -0.20314126690399437,
@@ -624,7 +624,7 @@
           "seed": 42
         },
         "k_params": 103,
-        "fit_seconds": 0.24
+        "fit_seconds": 0.87
       }
     },
     "dem_share_mayor_allcand_vintage_aw": {
@@ -647,7 +647,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 1.75
+        "fit_seconds": 1.92
       },
       "model4_district_fe": {
         "coef": -0.5024923497227504,
@@ -668,7 +668,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 6.19
+        "fit_seconds": 6.88
       },
       "model5_boro_year_fe": {
         "coef": 0.012389942869489383,
@@ -689,7 +689,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 1.86
+        "fit_seconds": 2.62
       },
       "model6_district_year_fe_units": {
         "coef": 0.4414753100057595,
@@ -710,7 +710,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 4.43
+        "fit_seconds": 5.77
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.5398251387979016,
@@ -731,7 +731,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 6.93
+        "fit_seconds": 8.26
       },
       "model8_district_linear_trends": {
         "coef": 0.08765828275250413,
@@ -752,7 +752,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 5.85
+        "fit_seconds": 9.48
       },
       "hedonic_upgraded": {
         "coef": 0.32496377841958307,
@@ -773,7 +773,7 @@
           "seed": 42
         },
         "k_params": 103,
-        "fit_seconds": 0.37
+        "fit_seconds": 0.56
       }
     },
     "dem_share_pres_vintage_aw": {
@@ -796,7 +796,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 1.0
+        "fit_seconds": 1.94
       },
       "model4_district_fe": {
         "coef": -1.975624411348924,
@@ -817,7 +817,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 6.29
+        "fit_seconds": 6.16
       },
       "model5_boro_year_fe": {
         "coef": 0.06760448382911464,
@@ -838,7 +838,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 2.7
+        "fit_seconds": 2.42
       },
       "model6_district_year_fe_units": {
         "coef": -0.1459620754178734,
@@ -859,7 +859,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 5.08
+        "fit_seconds": 4.82
       },
       "model7_district_boro_x_year_fe": {
         "coef": -0.02946352714761272,
@@ -880,7 +880,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 6.13
+        "fit_seconds": 4.59
       },
       "model8_district_linear_trends": {
         "coef": 0.27971058878130267,
@@ -901,7 +901,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 7.38
+        "fit_seconds": 5.45
       },
       "hedonic_upgraded": {
         "coef": -0.27842785486404226,
@@ -922,7 +922,7 @@
           "seed": 42
         },
         "k_params": 103,
-        "fit_seconds": 0.36
+        "fit_seconds": 0.23
       }
     },
     "dem_share_vintage_dom": {
@@ -945,7 +945,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 0.71
+        "fit_seconds": 0.7
       },
       "model4_district_fe": {
         "coef": 0.737732239854811,
@@ -966,7 +966,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 5.93
+        "fit_seconds": 5.46
       },
       "model5_boro_year_fe": {
         "coef": 0.016899780378284882,
@@ -987,7 +987,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 2.15
+        "fit_seconds": 2.29
       },
       "model6_district_year_fe_units": {
         "coef": 0.6514712059048317,
@@ -1008,7 +1008,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 5.22
+        "fit_seconds": 2.88
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.7470347649662626,
@@ -1029,7 +1029,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 6.69
+        "fit_seconds": 7.56
       },
       "model8_district_linear_trends": {
         "coef": -0.07362198621853384,
@@ -1050,7 +1050,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 8.14
+        "fit_seconds": 6.41
       },
       "hedonic_upgraded": {
         "coef": -0.21292521100175205,
@@ -1094,7 +1094,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 1.18
+        "fit_seconds": 0.78
       },
       "model4_district_fe": {
         "coef": -0.5026479795936327,
@@ -1115,7 +1115,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 6.44
+        "fit_seconds": 4.62
       },
       "model5_boro_year_fe": {
         "coef": 0.013826384044439734,
@@ -1136,7 +1136,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 2.57
+        "fit_seconds": 1.98
       },
       "model6_district_year_fe_units": {
         "coef": 0.4426623983293499,
@@ -1157,7 +1157,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 5.77
+        "fit_seconds": 4.78
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.54130507564258,
@@ -1178,7 +1178,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 7.82
+        "fit_seconds": 6.63
       },
       "model8_district_linear_trends": {
         "coef": 0.08916697251967018,
@@ -1199,7 +1199,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 9.21
+        "fit_seconds": 7.34
       },
       "hedonic_upgraded": {
         "coef": 0.3153438051012551,
@@ -1220,7 +1220,7 @@
           "seed": 42
         },
         "k_params": 103,
-        "fit_seconds": 0.26
+        "fit_seconds": 0.47
       }
     },
     "dem_share_pres_vintage_dom": {
@@ -1243,7 +1243,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 1.37
+        "fit_seconds": 0.85
       },
       "model4_district_fe": {
         "coef": -1.9748801613833906,
@@ -1264,7 +1264,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 6.31
+        "fit_seconds": 4.15
       },
       "model5_boro_year_fe": {
         "coef": 0.06916015939097199,
@@ -1285,7 +1285,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 2.26
+        "fit_seconds": 1.3
       },
       "model6_district_year_fe_units": {
         "coef": -0.1583891072148035,
@@ -1306,7 +1306,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 5.27
+        "fit_seconds": 3.18
       },
       "model7_district_boro_x_year_fe": {
         "coef": -0.0511517447017043,
@@ -1327,7 +1327,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 8.72
+        "fit_seconds": 5.15
       },
       "model8_district_linear_trends": {
         "coef": 0.27476500025339057,
@@ -1348,7 +1348,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 10.5
+        "fit_seconds": 6.05
       },
       "hedonic_upgraded": {
         "coef": -0.3622141862254376,
@@ -1369,7 +1369,7 @@
           "seed": 42
         },
         "k_params": 103,
-        "fit_seconds": 0.35
+        "fit_seconds": 0.25
       }
     }
   },
@@ -1394,7 +1394,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 1.57
+        "fit_seconds": 0.74
       },
       "model4_district_fe": {
         "coef": 0.42261982284939165,
@@ -1415,7 +1415,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 5.66
+        "fit_seconds": 3.76
       },
       "model5_boro_year_fe": {
         "coef": 0.012144466391674286,
@@ -1436,7 +1436,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 1.96
+        "fit_seconds": 1.49
       },
       "model6_district_year_fe_units": {
         "coef": 0.2931694030216046,
@@ -1457,7 +1457,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 5.32
+        "fit_seconds": 2.85
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.4423209207981262,
@@ -1478,7 +1478,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 7.5
+        "fit_seconds": 6.49
       },
       "model8_district_linear_trends": {
         "coef": 0.04879870637078474,
@@ -1499,7 +1499,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 8.5
+        "fit_seconds": 5.06
       },
       "hedonic_upgraded": {
         "coef": 1.063940953230328,
@@ -1520,7 +1520,7 @@
           "seed": 42
         },
         "k_params": 85,
-        "fit_seconds": 0.26
+        "fit_seconds": 0.14
       }
     },
     "dem_share_mayor_allcand_aw": {
@@ -1543,7 +1543,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 0.95
+        "fit_seconds": 0.69
       },
       "model4_district_fe": {
         "coef": -0.42602664798928835,
@@ -1564,7 +1564,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 4.54
+        "fit_seconds": 4.91
       },
       "model5_boro_year_fe": {
         "coef": 0.011518697908486463,
@@ -1585,7 +1585,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 1.88
+        "fit_seconds": 1.47
       },
       "model6_district_year_fe_units": {
         "coef": 0.18716051538985493,
@@ -1606,7 +1606,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 3.03
+        "fit_seconds": 2.87
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.3097946397866915,
@@ -1627,7 +1627,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 4.7
+        "fit_seconds": 4.31
       },
       "model8_district_linear_trends": {
         "coef": 0.1601149190787407,
@@ -1648,7 +1648,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 5.92
+        "fit_seconds": 5.51
       },
       "hedonic_upgraded": {
         "coef": 1.279340037556498,
@@ -1669,7 +1669,7 @@
           "seed": 42
         },
         "k_params": 85,
-        "fit_seconds": 0.21
+        "fit_seconds": 0.15
       }
     },
     "dem_share_pres_aw": {
@@ -1692,7 +1692,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 0.61
+        "fit_seconds": 0.62
       },
       "model4_district_fe": {
         "coef": -1.4639229397237685,
@@ -1713,7 +1713,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 3.62
+        "fit_seconds": 4.72
       },
       "model5_boro_year_fe": {
         "coef": 0.07583588106745966,
@@ -1734,7 +1734,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 1.73
+        "fit_seconds": 1.26
       },
       "model6_district_year_fe_units": {
         "coef": -0.3362712354250171,
@@ -1755,7 +1755,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 2.82
+        "fit_seconds": 3.12
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.05075590674743599,
@@ -1776,7 +1776,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 8.08
+        "fit_seconds": 5.76
       },
       "model8_district_linear_trends": {
         "coef": 0.15689414986308017,
@@ -1797,7 +1797,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 5.9
+        "fit_seconds": 5.04
       },
       "hedonic_upgraded": {
         "coef": 0.22185855013619799,
@@ -1818,7 +1818,7 @@
           "seed": 42
         },
         "k_params": 85,
-        "fit_seconds": 0.2
+        "fit_seconds": 0.17
       }
     },
     "dem_share_vintage_aw": {
@@ -1841,7 +1841,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 0.71
+        "fit_seconds": 0.98
       },
       "model4_district_fe": {
         "coef": 0.42261982284939165,
@@ -1862,7 +1862,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 5.37
+        "fit_seconds": 3.8
       },
       "model5_boro_year_fe": {
         "coef": 0.012144466391674286,
@@ -1883,7 +1883,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 1.94
+        "fit_seconds": 1.11
       },
       "model6_district_year_fe_units": {
         "coef": 0.2931694030216046,
@@ -1904,7 +1904,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 5.3
+        "fit_seconds": 2.85
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.4423209207981262,
@@ -1925,7 +1925,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 6.62
+        "fit_seconds": 5.95
       },
       "model8_district_linear_trends": {
         "coef": 0.04879870637078474,
@@ -1946,7 +1946,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 9.36
+        "fit_seconds": 8.47
       },
       "hedonic_upgraded": {
         "coef": 1.063940953230328,
@@ -1967,7 +1967,7 @@
           "seed": 42
         },
         "k_params": 85,
-        "fit_seconds": 0.44
+        "fit_seconds": 0.18
       }
     },
     "dem_share_mayor_allcand_vintage_aw": {
@@ -1990,7 +1990,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 0.98
+        "fit_seconds": 0.79
       },
       "model4_district_fe": {
         "coef": -0.42602664798928835,
@@ -2011,7 +2011,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 2.35
+        "fit_seconds": 3.7
       },
       "model5_boro_year_fe": {
         "coef": 0.011518697908486463,
@@ -2032,7 +2032,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 1.51
+        "fit_seconds": 1.42
       },
       "model6_district_year_fe_units": {
         "coef": 0.18716051538985493,
@@ -2053,7 +2053,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 2.77
+        "fit_seconds": 5.0
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.3097946397866915,
@@ -2074,7 +2074,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 3.8
+        "fit_seconds": 6.0
       },
       "model8_district_linear_trends": {
         "coef": 0.1601149190787407,
@@ -2095,7 +2095,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 7.06
+        "fit_seconds": 6.57
       },
       "hedonic_upgraded": {
         "coef": 1.279340037556498,
@@ -2116,7 +2116,7 @@
           "seed": 42
         },
         "k_params": 85,
-        "fit_seconds": 0.21
+        "fit_seconds": 0.2
       }
     },
     "dem_share_pres_vintage_aw": {
@@ -2160,7 +2160,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 4.0
+        "fit_seconds": 2.76
       },
       "model5_boro_year_fe": {
         "coef": 0.07583588106745966,
@@ -2181,7 +2181,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 1.75
+        "fit_seconds": 1.15
       },
       "model6_district_year_fe_units": {
         "coef": -0.3362712354250171,
@@ -2202,7 +2202,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 3.83
+        "fit_seconds": 3.23
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.05075590674743599,
@@ -2223,7 +2223,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 6.57
+        "fit_seconds": 5.91
       },
       "model8_district_linear_trends": {
         "coef": 0.15689414986308017,
@@ -2244,7 +2244,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 7.38
+        "fit_seconds": 6.95
       },
       "hedonic_upgraded": {
         "coef": 0.22185855013619799,
@@ -2265,7 +2265,7 @@
           "seed": 42
         },
         "k_params": 85,
-        "fit_seconds": 0.17
+        "fit_seconds": 0.19
       }
     },
     "dem_share_vintage_dom": {
@@ -2309,7 +2309,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 2.66
+        "fit_seconds": 3.86
       },
       "model5_boro_year_fe": {
         "coef": 0.013584291839907564,
@@ -2330,7 +2330,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 1.35
+        "fit_seconds": 2.12
       },
       "model6_district_year_fe_units": {
         "coef": 0.2938207833419033,
@@ -2351,7 +2351,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 4.37
+        "fit_seconds": 3.29
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.44264127693787525,
@@ -2372,7 +2372,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 4.67
+        "fit_seconds": 6.82
       },
       "model8_district_linear_trends": {
         "coef": 0.04903001938948057,
@@ -2393,7 +2393,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 7.63
+        "fit_seconds": 7.16
       },
       "hedonic_upgraded": {
         "coef": 1.0506890863581448,
@@ -2437,7 +2437,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 0.7
+        "fit_seconds": 0.78
       },
       "model4_district_fe": {
         "coef": -0.426187281166241,
@@ -2458,7 +2458,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 3.06
+        "fit_seconds": 4.34
       },
       "model5_boro_year_fe": {
         "coef": 0.012954637913774332,
@@ -2479,7 +2479,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 1.08
+        "fit_seconds": 1.29
       },
       "model6_district_year_fe_units": {
         "coef": 0.18840885346776418,
@@ -2500,7 +2500,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 2.98
+        "fit_seconds": 3.52
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.3113439384672886,
@@ -2521,7 +2521,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 6.24
+        "fit_seconds": 6.41
       },
       "model8_district_linear_trends": {
         "coef": 0.16054213333223313,
@@ -2542,7 +2542,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 6.72
+        "fit_seconds": 7.2
       },
       "hedonic_upgraded": {
         "coef": 1.2732892381962408,
@@ -2563,7 +2563,7 @@
           "seed": 42
         },
         "k_params": 85,
-        "fit_seconds": 0.18
+        "fit_seconds": 0.17
       }
     },
     "dem_share_pres_vintage_dom": {
@@ -2586,7 +2586,7 @@
           "seed": 42
         },
         "k_params": 10,
-        "fit_seconds": 0.63
+        "fit_seconds": 0.85
       },
       "model4_district_fe": {
         "coef": -1.464209353331947,
@@ -2607,7 +2607,7 @@
           "seed": 42
         },
         "k_params": 56,
-        "fit_seconds": 4.85
+        "fit_seconds": 4.29
       },
       "model5_boro_year_fe": {
         "coef": 0.07748221446943311,
@@ -2628,7 +2628,7 @@
           "seed": 42
         },
         "k_params": 19,
-        "fit_seconds": 1.45
+        "fit_seconds": 1.15
       },
       "model6_district_year_fe_units": {
         "coef": -0.34043496772520804,
@@ -2649,7 +2649,7 @@
           "seed": 42
         },
         "k_params": 67,
-        "fit_seconds": 3.51
+        "fit_seconds": 4.28
       },
       "model7_district_boro_x_year_fe": {
         "coef": 0.035843308123667816,
@@ -2670,7 +2670,7 @@
           "seed": 42
         },
         "k_params": 107,
-        "fit_seconds": 7.17
+        "fit_seconds": 4.89
       },
       "model8_district_linear_trends": {
         "coef": 0.15714579312658455,
@@ -2691,7 +2691,7 @@
           "seed": 42
         },
         "k_params": 117,
-        "fit_seconds": 7.77
+        "fit_seconds": 7.67
       },
       "hedonic_upgraded": {
         "coef": 0.16427914157179788,
@@ -2712,7 +2712,7 @@
           "seed": 42
         },
         "k_params": 85,
-        "fit_seconds": 0.18
+        "fit_seconds": 0.2
       }
     }
   }
