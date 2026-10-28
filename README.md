@@ -4,9 +4,12 @@ This repository is the single-command pipeline that reproduces the paper
 "Political Ideology and Property Values in New York City". The O.R.B.I.T.
 name is kept for identity. The repository is a single command
 research pipeline that reproduces every number, table and figure in the
-paper, and then re-derives all of them independently.
+paper, and then re-derives all of them independently. The current (rewritten,
+October 2026) manuscript is titled "No Robust Ideology Premium in New York
+City Home Prices"; the v2/v3 analysis stages and `results/NEW_RESULTS_INDEX.md`
+track it.
 
-- **One command, 56 stages, about 100 minutes.** `python main.py` builds the
+- **One command, 84 stages, about 100 minutes.** `python main.py` builds the
   canonical dataset from public NYC sources (845,607 property sales for 2016
   to 2025, merged with PLUTO and Board of Elections returns, giving 566,956
   canonical rows), trains all 7 registered model experiments (the champion is
@@ -23,8 +26,8 @@ paper, and then re-derives all of them independently.
   verifiers each write a per check status file. The final
   `verification_summary` stage aggregates them and exits non zero if any
   verifier reports a mismatch, is missing, or carries a stale status file.
-  The last verification gate (Round 13, 2026-10-19) reported 840 checks,
-  0 mismatches and 26 of 26 verifiers reporting. The audit history is in
+  The Round 13 gate (2026-10-19) and the full re-run on 2026-10-27 each
+  reported 840 checks, 0 mismatches and 26 of 26 verifiers reporting. The audit history is in
   `VERIFICATION_REPORT.md` (Rounds 1 to 11c, Round 13 appended).
 - **Null causal results are reported as findings.** The close election IV
   instrument is not identified at any bandwidth and the City of Yes DiD is a
@@ -59,7 +62,10 @@ paper, and then re-derives all of them independently.
   rounding bound, yearbuilt SEs compared at the printed "(0.0000)", uncited
   adj R2 and F checks deleted, and post refresh District 1 targets), Round
   11c (2026-10-16, first full 56 of 56 run with 647 checks and 0 mismatches
-  in 101.7 minutes, plus stale file cleanup), and the 2026-09-10 data
+  in 101.7 minutes, plus stale file cleanup), Round 13 (2026-10-19, the
+  split-ED double-counting fix, the nine allocation-corrected `_aw`/`_dom`
+  ideology measures, the Cuomo-free pre-2024 robustness suite, two verified
+  bug fixes and the 840-check verification gate), and the 2026-09-10 data
   refresh impact record appended as Appendix A.
 - `docs/paper_assets/` holds the paper's Tables 1 to 5, Appendix A.1 and
   Figures 3 to 7, generated from repo artifacts with no hand assembled
@@ -74,7 +80,7 @@ pip install -r requirements.txt      # Python 3.12+ required (esda==2.10.0
                                      # needs >=3.12); CI and local run 3.13
 # populate data/ per the Data sources section below
 python main.py --check-data          # confirm data/ is populated correctly
-python main.py                       # run the entire 56-stage pipeline
+python main.py                       # run the entire 84-stage pipeline
                                      # (data build, training, analysis,
                                      # figures, fact-check suite)
 ```
@@ -97,8 +103,12 @@ report can't be mistaken for evidence of a full pass.
 ## System status
 
 - **Canonical dataset.** `data/canonical/modeling_dataset_canonical_v2.parquet`
-  holds 566,956 rows and 53 columns covering sale years 2016 to 2025
-  (provenance in `data/DATA_MANIFEST.json`). The 2026-09-24/25 build ended
+  holds 566,956 rows and 64 columns covering sale years 2016 to 2025
+  (provenance in `data/DATA_MANIFEST.json`). Round 13 adds
+  `data/canonical/modeling_dataset_canonical_v3.parquet`: the same 566,956
+  rows with 73 columns — all 64 v2 columns byte-identical plus nine
+  allocation-corrected `_aw`/`_dom` ideology measures, all blacklisted
+  from every model. The 2026-09-24/25 build ended
   with `drop_duplicates()`, which removed 1,041 exact duplicate transactions
   relative to the 2026-09-10 refresh, and coerced the string typed square
   footage, area and unit columns to numeric. That widened the modeling spec
@@ -109,17 +119,18 @@ report can't be mistaken for evidence of a full pass.
   overlap). The train and test split is 121,052 and 56,723 rows, time
   ordered, and the all_years split always covers the 2017 election cycle
   subset of 177,775 rows.
-- **Last recorded full run.** 2026-10-19, 84 of 84 stages passed in 91.7
-  minutes (`results/PIPELINE_RUN_REPORT.md`, with the durable snapshot
-  `results/PIPELINE_RUN_REPORT_full_20261019.md`). The report footer carries
-  the run provenance (git_commit and git_dirty) and the verification totals
-  (840 checks, 0 mismatches, 26 of 26 verifiers in
-  `results/verification_summary.json`). Wall time is dominated
-  by the RF tuning grid (about 14 min), the exact SHAP ladder across all 7
-  models (about 35 min, all tier a or linear exact, with no timeouts and no
-  fallbacks), the v2/v3 robustness suites (about 16 min combined), the
-  political scenario scoring (about 7 min), and the pre-2024 suite
-  (about 7 min).
+- **Last recorded full run.** 2026-10-27, 84 of 84 stages passed, 95.9
+  minutes of summed stage time (`results/PIPELINE_RUN_REPORT.md`, with the
+  durable snapshot `results/PIPELINE_RUN_REPORT_full_20261027.md`). The
+  report footer carries the run provenance (git_commit and git_dirty) and
+  the verification totals (840 checks, 0 mismatches, 26 of 26 verifiers in
+  `results/verification_summary.json`). Wall time is dominated by the exact
+  SHAP ladder across all 7 models (about 37 min) and the RF tuning grid
+  (about 18 min). The run is deterministic end to end: every derived data
+  artifact was regenerated byte-identical (the only byte-level change
+  anywhere was the `run_utc` stamp in `data/DATA_MANIFEST.json`), and the
+  retrained models reproduce the same test MAEs, with the tuned Random
+  Forest remaining champion at 0.4016.
 - **Random Forest (Round 10).** The unpruned forest
   `rf_all_years_political_n200` (about 990 MB) was retired because exact
   TreeSHAP could not finish on it within the 90 minute tier budget, so it
@@ -202,8 +213,9 @@ detailed JSON deltas under `results/`, and write a per verifier status under
 `results/verification/`. Since Round 11 the suite is enforced by the final
 `verification_summary` stage, which aggregates all statuses and exits non
 zero on any mismatch beyond tolerance, on any missing verifier report, or on
-any stale status file. The last verification gate (Round 13, 2026-10-19)
-reported 840 checks, 0 mismatches and 26 of 26 verifiers reporting.
+any stale status file. The Round 13 verification gate (2026-10-19) and the
+2026-10-27 full re-run both reported 840 checks, 0 mismatches and 26 of 26
+verifiers reporting.
 
 ## Champion selection and interpretability coverage
 
@@ -250,9 +262,12 @@ table below says **ASK AUTHOR** rather than guessing.
 |---|---|
 | Property sales from `data/raw/sales/NYC_Citywide_Annualized_Calendar_Sales_Update_20260910.csv` (845,607 rows, sale years 2016 to 2025, 2025 complete) | NYC Open Data dataset **"NYC Citywide Annualized Calendar Sales Update"** (data.cityofnewyork.us). **ASK AUTHOR** for the exact dataset ID and download URL, which are not recorded in the provenance files. |
 | PLUTO map from `data/raw/pluto/Primary_Land_Use_Tax_Lot_Output_(PLUTO)_20260105.csv` | NYC Department of City Planning **Primary Land Use Tax Lot Output (PLUTO)**, 2026-01-05 vintage (NYC Open Data PLUTO dataset). **ASK AUTHOR** for the exact dataset ID and URL. |
-| Election returns (mayoral and council, election district level) from `data/raw/election_results/…/recap` files, 2013 PDFs and 2017/2021/2025 CSVs (204 BOE Recap files incl. the council margin build) | **NYC Board of Elections** election results (public Recap PDFs and CSVs. RCV years 2021 and 2025 use certified first choice totals with fusion lines aggregated, see the `build_council_election_margins.py` docstring). **ASK AUTHOR** for the exact download URLs. |
+| ED-level election returns from `data/raw/election_results/` — mayoral 2017/2021/2025 (`ed_results_{year}_mayor.csv`) and presidential 2016/2020/2024 (`ed_results_{year}_president.csv`) | NYC Board of Elections **vote.nyc** "Statement and Return Report by Election District" exports (Mayor and President/Vice President, election-district level). **ASK AUTHOR** for the exact download URLs. |
+| Council general-election Recap files from `data/raw/council_elections/{2013,2017,2021,2025}/` — 204 files (2013 PDFs and 2017/2021/2025 CSVs; 51 districts x 4 cycles), feeding the close-election margin build | **NYC Board of Elections** election results (public Recap PDFs and CSVs. RCV years 2021 and 2025 use certified first choice totals with fusion lines aggregated, see the `build_council_election_margins.py` docstring). **ASK AUTHOR** for the exact download URLs. |
 | Council roll calls (City of Yes) from `data/processed/city_of_yes_roll_calls.parquet` | NYC Council **Legistar** API at `https://webapi.legistar.com/` with the `council.nyc.gov` site. Per Round 6 section 14 of `VERIFICATION_REPORT.md`, the Carbon Neutrality (Dec 2023) and Economic Opportunity (June 2024) roll calls could not be retrieved without a token and are absent. |
 | Council district boundaries from `data/raw/election_districts/NYC_City_Council_Districts.shp` | official NYC Council District shapefile. **ASK AUTHOR** for the download URL. Known limitation, the boundaries are pre-2023 (`VERIFICATION_REPORT.md` Appendix A section 12). |
+| Current election-district boundaries from `data/raw/election_districts/` (`Election_Districts_20260105.csv` plus the `geo_export_9895bb0a…` ED shapefile) | NYC Department of City Planning election-district release; off-path input to the production crosswalk. **ASK AUTHOR** for the download URL. |
+| Historical election-district and council boundaries from `data/raw/election_districts_legacy/` (DCP Bytes vintages `nyed_16a`, `nyed_18a`, `nyed_20a` and the 2013 Adopted Council Districts `nycc_13a`) | NYC DCP **Bytes of the Big Apple** historical boundary files (https://www1.nyc.gov/assets/planning/download/zip/data-maps/open-data/), consumed by `src/data_pipeline/build_legacy_ed_crosswalk.py` to recover the 17.8-24.1% of 2016-2021 ED-level candidate votes whose pre-redistricting keys are missing from the current-vintage crosswalk. |
 | `data/processed/ed_to_council_crosswalk.parquet` boundary crosswalk | built in repo from NYC Planning Geosupport and the ED shapefile (`Election_Districts_20260105.csv` is an off path input), see `src/data_pipeline/build_district_crosswalk.py`. |
 
 The pipeline is source reproducible but not source frozen. Two runs differ
@@ -260,24 +275,59 @@ only if the underlying NYC files are republished. The analysis figures come
 only from the canonical parquet and the split parquets. `data/` is not in
 git (see `.gitignore`), and on a fresh clone use `python main.py --check-data`.
 
+### Replication bundles (local; `data/` is not in git)
+
+- **`Data Export.zip`** (repo root; 223 MB, 273 files) is the complete data
+  bundle for the manuscript's results. It mirrors the repository layout so
+  it unzips at the project root: `data/raw/` (250 files — every primary
+  input except the superseded `sales/_archive` pull), `data/processed/`
+  (all 13 derived parquets), `data/canonical/` (v2 + v3), `data/splits/`
+  (the 4 time-ordered train/test parquets), `data/DATA_MANIFEST.json`, and
+  the `docs/` schema trio (`modeling_schema.csv`,
+  `feature_manifest.json`, `FEATURE_DICTIONARY.md`). Every file was
+  SHA-256-verified byte-identical to the working tree on 2026-10-27, and a
+  string scan of all text files found no absolute paths or identifying
+  strings.
+- The three-part bundle `data/Data 1.zip` (256 files: every raw input —
+  including the superseded `sales/_archive` pull — plus the 4 splits and
+  `DATA_MANIFEST.json`), `data/Data 2.zip` (all 13 processed parquets) and
+  `data/Data 3.zip` (canonical v2 + v3) was rebuilt from the current tree
+  on 2026-10-27 and is fully current (presidential returns, historical
+  boundary vintages, every processed intermediate and canonical v3 are all
+  present). It is a three-part alternative to `Data Export.zip`; the
+  2026-09-25 originals it replaced were stale and no longer exist.
+
+### What a full run does not regenerate
+
+`python main.py` rebuilds every derived artifact, but three things already
+on disk are inputs it never reconstructs: (1) all of `data/raw/` — the
+pipeline never downloads anything, `--check-data` only checks presence;
+(2) `data/processed/ed_to_council_crosswalk.parquet`, the production
+ED-to-council crosswalk, whose stage validates rather than rebuilds it;
+and (3) `data/processed/district_ideology.parquet` +
+`data/processed/ed_ideology.parquet`, the audit trail of a superseded
+ideology construction whose producer scripts are no longer in the repo.
+`data/raw/sales/_archive/` is never read (the sales glob is
+non-recursive).
+
 
 ## Project structure
 
 ```
-main.py                            # single-entry 56-stage orchestrator
+main.py                            # single-entry 84-stage orchestrator
 PAPER_TO_CODE_MAP.md               # maps paper sections to producer and verifier scripts
 VERIFICATION_REPORT.md             # 11-round independent re-verification record + Appendix A
 requirements.txt                   # pinned, py3.12+ CI-tested
 .github/workflows/ci.yml           # build-canonical + 8-column audit stages
 
-app/                               # Streamlit app (run_app.py / dashboard engine / explainability/)
+app/                               # Streamlit app (app.py dashboard + auth.py login/save-user-data helper)
 archive/                           # superseded verification harness scripts (read-only; git history)
 config/
   config.yaml                      # OLS regression spec (Table 1)
   feature_blacklist.yaml           # leakage + null columns hard-removed from ALL training
 data/                              # not in git (raw, intermediate, processed, canonical, splits)
 docs/
-  modeling_schema.csv              # frozen 53-column schema (column, dtype)
+  modeling_schema.csv              # frozen 64-column schema (column, dtype)
   feature_manifest.json            # mirrored manifest (same build)
   FEATURE_DICTIONARY.md            # the 24-feature base / 25-feature political specification
   model_comparison_table.csv       # pipeline-written table of every eligible registry model
@@ -310,7 +360,7 @@ results/
   causal/                          # IV + City-of-Yes DiD results and their verification
   logs/pipeline/                   # per-stage logs from main.py runs
 src/
-  data_pipeline/                   # normalize -> crosswalk -> ideology -> rebuild -> freeze -> split
+  data_pipeline/                   # normalize -> crosswalk(s) -> ideology v1/v2/v3 -> audits -> canonical v2/v3 -> freeze -> split
   analysis/                        # Moran, regressions, robustness, SHAP, PDP, sensitivity, scenarios
   causal/                          # close-election IV (incl. rescue) + City of Yes DiD
   figures/                         # figure writers + generate_paper_assets.py
@@ -324,7 +374,7 @@ legacy/                            # the original pre-reorganization ORBIT snaps
 
 - **CI** (`.github/workflows/ci.yml`) keeps a slim build-canonical +
   8-column audit pass on every push (Ubuntu, Python 3.13).
-- **Full pipeline tests** are the 56-stage `python main.py` run. Every
+- **Full pipeline tests** are the 84-stage `python main.py` run. Every
   verifier stage writes a machine readable status under
   `results/verification/`, which the `verification_summary` stage aggregates
   into `results/verification_summary.json` and enforces by exiting non zero
@@ -388,18 +438,37 @@ facing tables and figures are generated rather than hand copied by
 4. The unused but computed assets (PDP panels, prediction intervals,
    sensitivity analyses, all regenerated each run) are optional paper
    appendices or app only surfaces.
-5. **Current state (Round 11).** There are 7 registered model experiments
+5. **Current state (Round 13).** There are 7 registered model experiments
    (LightGBM base and political, the tuned Random Forest as champion per
    `experiments/champion.json`, CatBoost, XGBoost, Ridge and ElasticNet),
-   56 pipeline stages, and a full run of about 100 minutes on this machine
-   (the RF tuning grid at about 27 min, the exact SHAP ladder at about
-   45 min, and scenario scoring plus verification at about 19 min are the
-   long parts). Every verifier reports through
+   84 pipeline stages, and a full run of about 96 minutes on this machine
+   (the exact SHAP ladder at about 37 min and the RF tuning grid at about
+   18 min are the long parts). Every verifier reports through
    `src/verification/_shared.record_status`, and the `verification_summary`
    stage prints and records the total checks and mismatches, exiting non
    zero on any mismatch or missing report. All registry entries and
    `champion.json` record `git_commit` and `git_dirty`, and
    `PIPELINE_RUN_REPORT.md` shows both.
+6. **Manuscript cross-check (2026-10-27).** Every data-level number in the
+   manuscript was re-derived from the replication bundle; all match, with
+   one rounding-level exception. Verified from the data alone: the sales
+   funnel (845,607 raw, 567,997 after the >$10,000 filter, 566,956 after
+   dropping 1,041 exact duplicates, 520,365 analysis sample, 469,697
+   restricted sample, 355,480 where unit counts are required); the Table 1
+   district means (mayoral two-party 0.715 / 0.709 / 0.864; all-candidate
+   0.672 / 0.677 / 0.508; presidential 0.805 / 0.764 / 0.679); the
+   citywide other-line vote shares (6.3% / 4.4% / 42.3%) and the 2025
+   two-party vs all-candidate shares (88.4% / 51.0%); the orphaned-vote
+   rates by election (17.8% / 23.7% / 24.1% / 23.8% / 0.5% / none) and
+   their recovery to zero through the historical boundary files; the
+   close-election counts (204 council races, of which 4 / 7 / 12 / 17 are
+   decided within 5 / 10 / 15 / 20 points); the City of Yes roll call
+   (31 Yes, 20 No); and the model table (MAE 0.4418 without ideology,
+   0.4399 with, 0.4016 for the tuned Random Forest, on 121,052 / 56,723
+   train / test rows). The one exception: the manuscript prints the 2025
+   mayoral two-party mean as 0.865 (change +0.150) where the archived
+   measure is 0.864453, i.e. 0.864 (change +0.149); that cell is
+   descriptive and no reported estimate depends on it.
 
 
 ## Documentation index
@@ -412,7 +481,7 @@ facing tables and figures are generated rather than hand copied by
 | `docs/paper_assets/` | the manuscript's tables/figures (+ `manifest.json` output->source map) |
 | `docs/research_summary.md` | pipeline-generated champion/comparison/SHAP digest (rewritten every full run; never edit by hand) |
 | `results/rf_tuning_grid.json` | the full Random-Forest tuning grid and cap/selection audit |
-| `archive/legacy_results_pre_canonical_v2/README.md` | what the archived pre-canonical-v2 result files are |
+| `legacy/legacy_results_pre_canonical_v2/README.md` | what the archived pre-canonical-v2 result files are |
 | `legacy/README.md` | the original pre-reorganization ORBIT snapshot |
 | `results/FULL_PAPER_FACT_CHECK.md` | frozen Round-5 human-reviewed fact-check record (local, gitignored) |
 

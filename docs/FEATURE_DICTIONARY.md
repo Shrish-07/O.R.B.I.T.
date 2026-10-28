@@ -10,7 +10,7 @@ that exist), so the authoritative machine-readable lists are:
 - `models/artifacts/lgbm_all_years_political_features.json` (25)
 
 This document is the human-readable dictionary for the current build
-(566,956 rows × 53 columns; splits 121,052 / 56,723). (Round 8 note: the old
+(566,956 rows × 64 columns; splits 121,052 / 56,723). (Round 8 note: the old
 dictionary, absorbed into README.md in 2026-09-25 doc consolidation, described
 a 16/17-feature era and listed `BBL_pluto` "used in both" — both statements
 were stale and are corrected here; this file is the replacement.)
