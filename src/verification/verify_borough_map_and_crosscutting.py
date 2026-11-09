@@ -99,7 +99,8 @@ M['tex_files'] = tex
 M['docx_files'] = docx
 # Allowed .tex roots: tables/ (pre-existing drop-ins) and docs/paper_assets/
 # (Round 10: generate_paper_assets.py writes the paper's tables there).
-_allowed_tex_roots = [str(ROOT / 'tables'), str(ROOT / 'docs' / 'paper_assets')]
+_allowed_tex_roots = [str(ROOT / 'tables'), str(ROOT / 'docs' / 'paper_assets'),
+                      str(ROOT / 'docs' / 'manuscript_assets' / 'tables')]
 M['tex_files_are_repo_tables_only'] = all(
     any(r in t for r in _allowed_tex_roots) for t in tex)
 M['no_manuscript_docx_in_repo'] = (len(docx) == 0)

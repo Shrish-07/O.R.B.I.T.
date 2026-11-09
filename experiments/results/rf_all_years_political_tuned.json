@@ -18,7 +18,7 @@
       "n_estimators": 200
     },
     "chosen_mean_leaves_per_tree": 2519.89,
-    "validation_mae_of_chosen_config": 0.3783763300360644,
+    "validation_mae_of_chosen_config": 0.37837633003606436,
     "grid_results_file": "results/rf_tuning_grid.json",
     "widened_grid_used": false
   }

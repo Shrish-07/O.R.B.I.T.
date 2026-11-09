@@ -18,6 +18,19 @@ logs/*.log
 .DS_Store
 Thumbs.db
 
+# ---- Manuscript source (NEVER commit) --------------------------------------
+# The manuscript (main.tex + figs/) is hand-typed and lives locally only while
+# the paper is under double-anonymous review. src/verification/
+# verify_manuscript_tables.py reads it via $MANUSCRIPT_TEX (or manuscript/
+# main.tex by default) and MUST never see it committed: this repo is public.
+manuscript/
+manuscript_source/
+main.tex
+BER_manuscript*.zip
+BER_manuscript_LaTeX_source/
+BER_manuscript*/
+*.pdf
+
 # Data
 data/raw/
 data/intermediate/
@@ -87,6 +100,9 @@ data/**/*.csv
 !figures/*.csv
 
 # Local snapshot/backup archives (never commit; .github/workflows/ci.yml is tracked directly)
+# Any zip is a local data/manuscript bundle (Data Export.zip, data/Data N.zip,
+# "all data used.zip", BER_manuscript*.zip, ...); no zip is ever tracked.
+*.zip
 .github.zip
 Read Everything.zip
 READ ALL.zip

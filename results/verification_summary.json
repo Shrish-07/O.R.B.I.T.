@@ -1,8 +1,8 @@
 {
-  "generated_utc": "2026-10-27T23:26:52.579767+00:00Z",
-  "n_verifiers_expected": 26,
-  "n_verifiers_reported": 26,
-  "total_checks": 840,
+  "generated_utc": "2026-10-31T03:00:08.705139+00:00Z",
+  "n_verifiers_expected": 27,
+  "n_verifiers_reported": 27,
+  "total_checks": 841,
   "total_mismatches": 0,
   "n_problem_verifiers": 0,
   "stale_status_files_ignored": [],
@@ -107,6 +107,12 @@
       "verifier": "verify_iv_district_fe_rescue",
       "status": "PASS",
       "n_checks": 108,
+      "n_mismatches": 0
+    },
+    {
+      "verifier": "verify_manuscript_tables",
+      "status": "PASS",
+      "n_checks": 1,
       "n_mismatches": 0
     },
     {
