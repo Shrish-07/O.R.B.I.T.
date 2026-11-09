@@ -668,7 +668,7 @@ with tabs[0]:
         """
 **Project Title:** NYC Property Price Prediction Using Ensemble Learning  
 
-**Author:** Shrish Mudumby Venugopal, Sourish Mudumby Venugopal & Raghav Ganesh
+**Author:** [redacted-author], [redacted-author] & [redacted-author]
 
 **Institution:** Inspirit AI
 
@@ -699,9 +699,9 @@ standardize/prepare inputs, and present a full research-facing Streamlit app wit
 - **Deployment**: Streamlit app with guard rails for large files, zip-bombs, and long-running charts.
 
 ### Credits & Meta
-- **Authors**: **Shrish Mudumby Venugopal, Sourish Mudumby Venugopal & Raghav Ganesh**  
+- **Authors**: **[redacted-author], [redacted-author] & [redacted-author]**  
 - **Affiliation**: **Inspirit AI**  
-- **Contact / Repo**: **Shrishvenugopal11@gmail.com**
+- **Contact / Repo**: **[redacted-email]**
 """
     )
     st.info("Edit the Author/Affiliation/Contact items above to personalize the project page.")
@@ -1302,4 +1302,4 @@ with tabs[2]:
 # ---------------------------
 # Footer
 # ---------------------------
-st.markdown("<hr><div style='text-align:center'>NYC Property Price Predictor • Research Showcase • © 2025 • Author: <b>Shrish Mudumby Venugopal, Sourish Mudumby Venugopal & Raghav Ganesh </b></div>", unsafe_allow_html=True)
+st.markdown("<hr><div style='text-align:center'>NYC Property Price Predictor • Research Showcase • © 2025 • Author: <b>[redacted-author], [redacted-author] & [redacted-author] </b></div>", unsafe_allow_html=True)

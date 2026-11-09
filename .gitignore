@@ -116,3 +116,9 @@ anonymous_release.zip
 src/_truth_*.py
 src/_truth_assemble_data.json
 
+docs/manuscript_assets/
+config/scrub_terms.txt
+results/anonymous_release_report.json
+results/verification/verify_manuscript_tables.json
+archive/FULL_PAPER_FACT_CHECK.md
+*.pdf

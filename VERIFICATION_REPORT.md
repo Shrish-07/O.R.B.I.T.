@@ -1610,7 +1610,7 @@ Layout repairs (same stage):
   emits repo-relative POSIX model/features/preproc paths (fixes both
   `results/rank1_rank2_selection.json` and
   `results/political_scenarios/scenario_run_metadata.json`, where
-  `C:\Users\Shris\...` paths leaked). `src/ops/predictors._as_path` re-anchors
+  `<redacted>...` paths leaked). `src/ops/predictors._as_path` re-anchors
   relative paths to the repo root for consumers. Also fixed:
   `data/DATA_MANIFEST.json` `canonical_output_path`
   (src/data_pipeline/rebuild_canonical.py),

@@ -1021,7 +1021,7 @@
   },
   "I": {
     "section_I_model_comparison": {
-      "comparison_table_source": "C:\\Users\\Shris\\OneDrive\\Desktop\\Project\\O.R.B.I.T v2\\O.R.B.I.T v2\\docs\\model_comparison_table.csv",
+      "comparison_table_source": "O.R.B.I.T v2\\docs\\model_comparison_table.csv",
       "rows_in_table": 7,
       "models": {
         "lgbm_all_years_base": {

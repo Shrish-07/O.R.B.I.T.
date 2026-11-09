@@ -56,8 +56,8 @@ W("**Command run:**")
 W(CMD("git branch --show-current\ngit remote -v\ngit fetch origin\ngit log origin/master..HEAD --oneline"))
 W("**Output (this session, fresh):**")
 W(OUT("master    # current branch\n"
-     "origin  https://github.com/Shrish-07/O.R.B.I.T..git (fetch)\n"
-     "origin  https://github.com/Shrish-07/O.R.B.I.T..git (push)\n"
+     "origin  https://github.com/[redacted-handle]/O.R.B.I.T..git (fetch)\n"
+     "origin  https://github.com/[redacted-handle]/O.R.B.I.T..git (push)\n"
      "(git fetch origin produced no new refs)\n"
      "git log origin/master..HEAD --oneline  ->  EMPTY  (zero commits ahead)"))
 W("**Interpretation:** `git log origin/master..HEAD` is **empty** — there are ZERO local commits that have not reached `origin/master`. This already contradicts the premise that 8 commits are unpushed.")
