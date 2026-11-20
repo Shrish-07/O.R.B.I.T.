@@ -1,4 +1,6 @@
-﻿# Paper &lrarr; Code Map
+﻿Scripts referenced below that no longer exist in this tree are preserved at git tag baseline-2026-11.
+
+# Paper &lrarr; Code Map
 
 This file is the single index a reader should use to go from a claim, table,
 or figure in `orbit_paper_CER.tex` to the exact script(s) that produced it,

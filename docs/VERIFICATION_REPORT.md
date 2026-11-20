@@ -1,3 +1,5 @@
+Scripts referenced below that no longer exist in this tree are preserved at git tag baseline-2026-11.
+
 # Independent Re-Verification Report — `ORBIT_reorganized`
 
 **Date:** 2026-09-01

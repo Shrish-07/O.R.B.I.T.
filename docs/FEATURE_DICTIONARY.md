@@ -61,7 +61,7 @@ were stale and are corrected here; this file is the replacement.)
 - **Row keys / split-only IDs:** `bin`, `bbl`, `lot`, `block`, `taxlot`, `record_id`, `sale_id`.
 - **`BBL_pluto`:** PLUTO-side duplicate BBL kept by pandas' merge suffixing — a
   parcel-identifier artifact, blacklisted in Round 7 (see
-  `VERIFICATION_REPORT.md` Round 7).
+  [VERIFICATION_REPORT.md](VERIFICATION_REPORT.md) Round 7).
 - **Raw geo:** `latitude`, `longitude`, `xcoord`, `ycoord` (offset leaked into
   coordinates; Moran/spatial work uses official polygon centroids instead).
 - **Raw election variables:** `district_ideology`, `weighted_dem`, `weighted_rep`,
