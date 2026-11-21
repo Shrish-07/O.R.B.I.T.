@@ -9,6 +9,7 @@ O.R.B.I.T. studies whether council-district voting patterns are associated with 
 ```text
 main.py                         Pipeline entry point
 requirements.txt                Pinned Python dependencies
+Dockerfile                      Docker image definition for the Streamlit app
 .github/workflows/ci.yml         CI smoke checks
 app/                            Streamlit interface
 config/                         Pipeline configuration and feature blacklist
@@ -95,6 +96,8 @@ python main.py
 | DiD, IV, and local-linear IV tables | DiD, original and rescue IV, and v2 IV JSONs under `results/causal/` |
 | Model and scenario appendix tables | Supplemental model performance, cross-model SHAP, and scenario summary fragments under `docs/paper_assets/` |
 | Figures 1–4 | Processed ideology Parquets, `robustness_checks_v3.json`, v3 placebo and robustness JSONs, and the three DiD result versions, respectively |
+
+The four figures embedded in the submitted manuscript came from a separate plotting script and differ in layout and pixel dimensions from the pipeline's corresponding fig1 through fig4 PNGs, so the files are not byte-identical.
 
 The generators define the complete mapping from input files to individual fragments. [Table and figure source](src/figures/generate_manuscript_assets.py) · [Supplemental asset source](src/figures/generate_paper_assets.py) · [Historical verification record](docs/VERIFICATION_REPORT.md) · [Producer and verifier map](docs/PAPER_TO_CODE_MAP.md)
 
